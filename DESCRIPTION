@@ -1,11 +1,18 @@
 Package: mipdeval
-Title: What the Package Does (One Line, Title Case)
+Title: Run evaluation of iterative predictive performance based
+  on historical datasets.
 Version: 0.0.0.9000
 Authors@R: c(
     person("Michael", "McCarthy", , "michael.mccarthy@insight-rx.com", role = c("aut", "cre")),
+    person("Ron", "Keizer", , "ron@insight-rx.com", role = c("aut", "cre")),
     person("InsightRX", role = c("cph", "fnd"))
   )
-Description: What the package does (one paragraph).
+Description: The package provides functionality to run through a
+  NONMEM-style dataset iteratively, performing MAP Bayesian updating
+  and forecasting at each step. This is very much like the `proseval` 
+  tool in PsN, however this package provides more options, 
+  specifically for use in MIPD, such as flattening priors, 
+  time-based weighting, sample grouping, etc.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
