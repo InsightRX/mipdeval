@@ -33,7 +33,12 @@ remotes::install_github("InsightRX/mipdeval")
 
 ## Usage
 
-TBD
+```
+run_eval(
+  model,
+  data
+)
+```
 
 ## Roadmap
 
