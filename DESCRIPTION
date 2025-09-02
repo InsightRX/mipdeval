@@ -3,7 +3,7 @@ Title: Run evaluation of iterative predictive performance based
   on historical datasets.
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Michael", "McCarthy", , "michael.mccarthy@insight-rx.com", role = c("aut", "cre")),
+    person("Michael", "McCarthy", , "michael.mccarthy@insight-rx.com", role = c("aut")),
     person("Ron", "Keizer", , "ron@insight-rx.com", role = c("aut", "cre")),
     person("InsightRX", role = c("cph", "fnd"))
   )
