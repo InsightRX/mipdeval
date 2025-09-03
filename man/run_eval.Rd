@@ -7,6 +7,7 @@
 run_eval(
   model,
   data,
+  dictionary = list(id = "ID", evid = "EVID", dv = "DV", mdv = "MDV"),
   parameters = NULL,
   omega = NULL,
   error = NULL,
@@ -22,6 +23,9 @@ run_eval(
 \item{model}{model, created using `PKPDsim::new_ode_model()`}
 
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
+
+\item{dictionary}{data dictionary. Optional, a list that specifies the
+column names to be used from the dataset.}
 
 \item{parameters}{list of parameters}
 

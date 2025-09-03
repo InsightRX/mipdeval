@@ -3,6 +3,8 @@
 #' @inheritParams PKPDmap::get_map_estimates
 #'
 #' @param data NONMEM-style data.frame, or path to CSV file with NONMEM data
+#' @param dictionary data dictionary. Optional, a list that specifies the
+#' column names to be used from the dataset.
 #' @param groups variable in dataset that groups observations together in
 #' iterative flow. By default each observation will be its own "group", but
 #' this can be used to group peaks and troughs together, or to group
@@ -29,6 +31,7 @@
 run_eval <- function(
   model,
   data,
+  dictionary = list(id = "ID", evid = "EVID", dv = "DV", mdv = "MDV"),
   parameters = NULL,
   omega = NULL,
   error = NULL,
@@ -41,10 +44,18 @@ run_eval <- function(
 ) {
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
+  input_data <- read_input_data(data) |>
+    check_input_data(
+      dictionary = dictionary
+    )
 
-  ## 2. parse into separate, individual-level datasets
+  ## 2. parse into separate, individual-level datasets, joined into a list object:
+  split_data <- split_input_data(
+    data = input_data,
+    dictionary = dictionary
+  )
 
-  ## 3. run the core function on each individual-level dataset
+  ## 3. run the core function on each individual-level dataset in the list
   ##    Use purrr::map() functions and multi-core variant
 
   ## 4. Combine results into object that has:
@@ -55,4 +66,3 @@ run_eval <- function(
   ## 5. Return results
 
 }
-
