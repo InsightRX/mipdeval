@@ -16,7 +16,8 @@ run_eval(
   prior_weight = 1,
   leak_covariates = FALSE,
   incremental = FALSE,
-  threads = 1
+  threads = 1,
+  progress = TRUE
 )
 }
 \arguments{

@@ -41,7 +41,8 @@ run_eval <- function(
   prior_weight = 1,
   leak_covariates = FALSE,
   incremental = FALSE,
-  threads = 1
+  threads = 1,
+  progress = TRUE
 ) {
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
@@ -60,6 +61,17 @@ run_eval <- function(
     covariates = covariates
   )
 
+  ## Set up progress bars
+  ## Need to loop this through the progressr package
+  ## because furrr currently doesn't support progressbars with cli.
+  if(progress) {
+    progressr::handlers(global = TRUE)
+    progressr::handlers("cli")
+    p <- progressr::progressor(along = data_parsed)
+  } else {
+    p <- function() { }
+  }
+
   ## 3. run the core function on each individual-level dataset in the list
   res <- purrr::map(
     .x = data_parsed,
@@ -68,7 +80,8 @@ run_eval <- function(
     parameters = parameters,
     omega = omega,
     ruv = ruv,
-    groups = groups
+    groups = groups,
+    progress_function = p
   )
 
   ## 4. Combine results and basic stats into return object
@@ -83,7 +96,6 @@ run_eval <- function(
     )
   out <- list(
     results = res_df,
-    parameters = list(),
     stats = stats_summ
   )
 

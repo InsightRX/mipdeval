@@ -17,11 +17,15 @@ run_eval_core <- function(
   weights = NULL,
   prior_weight = 1,
   leak_covariates = FALSE,
-  incremental = FALSE
+  incremental = FALSE,
+  progress_function = function() {}
 ) {
+
+  progress_function()
 
   obs_data <- data$observations
   comb <- data.frame()
+  fit_pars <- data.frame()
   for(i in 1:nrow(obs_data)) {
     weights <- rep(0, nrow(obs_data))
     weights[1:i] <- 1
@@ -45,9 +49,13 @@ run_eval_core <- function(
       iter = i,
       group = 1:length(fit$dv) # simple grouping by sample for now, change!
     )
+    ## Add parameter estimates
+    fit_pars <- as.data.frame(fit$parameters) |>
+      dplyr::mutate(id = obs_data$id[1])
     comb <- dplyr::bind_rows(
       comb,
-      pred_data
+      pred_data |>
+        dplyr::left_join(fit_pars, by = "id")
     )
   }
 
@@ -58,7 +66,13 @@ run_eval_core <- function(
       dplyr::mutate(
         iter = 0,
         ipred = pred
-      ),
+      ) |> # set to population parameters, not individual estimates
+        dplyr::select(-!!names(parameters)) |>
+        dplyr::left_join(
+          as.data.frame(parameters) |>
+            dplyr::mutate(id = obs_data$id[1]),
+          by = "id"
+        ),
     comb
   ) |> # and filter only the next grouped prediction for each iteration
     dplyr::filter(iter == (group - 1)) |>
@@ -67,7 +81,10 @@ run_eval_core <- function(
       map_ipred = pred_data$ipred, # ipred from last fit (full MAP)
       apriori = (iter == 0)
     ) |>
-    dplyr::select(id, t, dv, pred, map_ipred, iter_ipred, iter, group, apriori)
+    dplyr::select(
+      id, iter, group, t, dv, pred, map_ipred, iter_ipred, apriori,
+      !!names(parameters)
+    )
 
   out
 

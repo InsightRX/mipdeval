@@ -15,7 +15,9 @@ run_eval_core(
   weights = NULL,
   prior_weight = 1,
   leak_covariates = FALSE,
-  incremental = FALSE
+  incremental = FALSE,
+  progress_function = function() {
+ }
 )
 }
 \arguments{
