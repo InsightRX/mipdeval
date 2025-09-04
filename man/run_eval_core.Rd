@@ -10,7 +10,7 @@ run_eval_core(
   data,
   parameters = NULL,
   omega = NULL,
-  error = NULL,
+  ruv = NULL,
   groups = NULL,
   weights = NULL,
   prior_weight = 1,
@@ -28,13 +28,11 @@ run_eval_core(
 \item{omega}{between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects}
 
-\item{error}{residual error, specified as list with arguments `add` and/or 
-`prop` specifying the additive and proportional parts}
-
 \item{groups}{variable in dataset that groups observations together in
 iterative flow. By default each observation will be its own "group", but
 this can be used to group peaks and troughs together, or to group
-observations on the same day together.}
+observations on the same day together. Grouping will be done prior to
+running the analysis, so cannot be changed afterwards.}
 
 \item{weights}{vector of weights for error. Length of vector should be same 
 as length of observation vector. If NULL (default), all weights are equal. 

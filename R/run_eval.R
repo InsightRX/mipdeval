@@ -8,7 +8,8 @@
 #' @param groups variable in dataset that groups observations together in
 #' iterative flow. By default each observation will be its own "group", but
 #' this can be used to group peaks and troughs together, or to group
-#' observations on the same day together.
+#' observations on the same day together. Grouping will be done prior to
+#' running the analysis, so cannot be changed afterwards.
 #' @param leak_covariates with the `proseval` tool in PsN, there is “data
 #' leakage” (of the future covariates): since the NONMEM dataset in each step
 #' contains the covariates for the future, this technically data leakage,
@@ -31,10 +32,10 @@
 run_eval <- function(
   model,
   data,
-  dictionary = list(id = "ID", evid = "EVID", dv = "DV", mdv = "MDV"),
-  parameters = NULL,
-  omega = NULL,
-  error = NULL,
+  parameters,
+  omega,
+  ruv,
+  dictionary = list(),
   groups = NULL,
   weights = NULL,
   prior_weight = 1,
@@ -49,20 +50,45 @@ run_eval <- function(
       dictionary = dictionary
     )
 
-  ## 2. parse into separate, individual-level datasets, joined into a list object:
-  split_data <- split_input_data(
+  ## Select covariates
+  covariates <- attr(model, "covariates")
+
+  ## 2. parse into separate, individual-level datasets and parse into
+  ##    format convenient for PKPDsim/PKPDmap, joined into a list object:
+  data_parsed <- parse_input_data(
     data = input_data,
-    dictionary = dictionary
+    covariates = covariates
   )
 
   ## 3. run the core function on each individual-level dataset in the list
-  ##    Use purrr::map() functions and multi-core variant
+  res <- purrr::map(
+    .x = data_parsed,
+    .f = run_eval_core,
+    model = model,
+    parameters = parameters,
+    omega = omega,
+    ruv = ruv,
+    groups = groups
+  )
 
-  ## 4. Combine results into object that has:
-  ##    - a data.frame with all raw data
-  ##    - a data.frame of all parameter estimates (time-varying). Maybe in same df as 1?
-  ##    - a data.frame with computed metrics: RMSE, MPE, MAPE, etc...
+  ## 4. Combine results and basic stats into return object
+  res_df <- dplyr::bind_rows(res)
+  stats_summ <- res_df |>
+    tidyr::pivot_longer(cols = c(pred, map_ipred, iter_ipred), names_to = "type") |>
+    dplyr::group_by(type, apriori) |>
+    dplyr::summarise(
+      rmse = rmse(dv, value),
+      mpe = mpe(dv, value),
+      mape = mape(dv, value)
+    )
+  out <- list(
+    results = res_df,
+    parameters = list(),
+    stats = stats_summ
+  )
 
   ## 5. Return results
-
+  return(out)
 }
+
+
