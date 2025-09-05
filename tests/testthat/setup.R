@@ -14,11 +14,11 @@ if(regenerate) {
   par <- pkvancothomson::parameters()
   omega <- pkvancothomson::omega_matrix()
   n_ids <- 10
-  set.seed(12345)
+  set.seed(123456)
   covariates_df <- data.frame(
     ID = 1:n_ids,
     WT = 70 * exp(rnorm(n_ids, 0, .2)),
-    CRCL = 5 * exp(rnorm(n_ids, 0, .3)),
+    CRCL = 4.5 * exp(rnorm(n_ids, 0, .2)),
     CL_HEMO = 0
   )
   reg <- new_regimen(amt = 1500, interval = 12, t_inf = 2, type = 'infusion')
@@ -42,7 +42,10 @@ if(regenerate) {
     expand.grid(1:n_ids, reg$dose_times) |> setNames(c("ID", "TIME")) |> arrange(ID, TIME),
     PKPDsim::regimen_to_nm(reg) |> select(-ID)
   )
-  nm_vanco <- bind_rows(doses, tdm) |>
+  nm_vanco <- bind_rows(
+    doses,
+    tdm |> filter(DV > 0)
+  ) |>
     arrange(ID, TIME, EVID) |>
     tidyr::fill(c(WT, CRCL, CL_HEMO), .direction = "downup")
   write.csv(nm_vanco, "./inst/data/nm_vanco.csv", quote=F, row.names=F)

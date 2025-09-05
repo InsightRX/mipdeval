@@ -16,7 +16,7 @@ run_eval_core <- function(
   groups = NULL,
   weights = NULL,
   prior_weight = 1,
-  leak_covariates = FALSE,
+  censor_covariates = TRUE,
   incremental = FALSE,
   progress_function = function() {}
 ) {
@@ -29,6 +29,18 @@ run_eval_core <- function(
   for(i in 1:nrow(obs_data)) {
     weights <- rep(0, nrow(obs_data))
     weights[1:i] <- 1
+
+    ## Should covariate data be leaked? PsN::proseval does this,
+    ## but for use in MIPD they should be censored.
+    cov_data <- handle_covariate_censoring(
+      covariates = data$covariates,
+      t = obs_data$t[i],
+      censor = censor_covariates
+    )
+
+    ## Do a fit with PKPDmap, using only the points
+    ## with weight=1. The rest of the points will get a predicted value
+    ## in the output, but they were not weighted in the fit.
     fit <- PKPDmap::get_map_estimates(
       model = model,
       parameters = parameters,
@@ -36,10 +48,12 @@ run_eval_core <- function(
       error = ruv,
       fixed = c(attr(model, "fixed"), "TDM_INIT"),
       data = data$observations,
-      covariates = data$covariates,
+      covariates = cov_data,
       regimen = data$regimen,
       weights = weights
     )
+
+    ## Data frame with predictive data
     pred_data <- data.frame(
       id = obs_data$id,
       t = obs_data$t,
@@ -49,6 +63,7 @@ run_eval_core <- function(
       iter = i,
       group = 1:length(fit$dv) # simple grouping by sample for now, change!
     )
+
     ## Add parameter estimates
     fit_pars <- as.data.frame(fit$parameters) |>
       dplyr::mutate(id = obs_data$id[1])
@@ -88,4 +103,28 @@ run_eval_core <- function(
 
   out
 
+}
+
+#' @param covariates covariates data for single subject
+#' @param t timepoint cutoff at which covariate are to be censored
+#' (if `censor=FALSE`)
+#' @param censor censor covariate data?
+#'
+#' @returns list with similar shape as `covariates` object, just
+#' with potentially censored future data.
+#'
+handle_covariate_censoring <- function(
+  covariates,
+  t,
+  censor = TRUE
+) {
+  cov_data <- covariates
+  if(censor) {
+    for(key in names(cov_data)) {
+      idx <- cov_data[[key]]$times <= t
+      cov_data[[key]]$times <- cov_data[[key]]$times[idx]
+      cov_data[[key]]$value <- cov_data[[key]]$value[idx]
+    }
+  }
+  cov_data
 }

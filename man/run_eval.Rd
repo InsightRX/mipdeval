@@ -14,7 +14,7 @@ run_eval(
   groups = NULL,
   weights = NULL,
   prior_weight = 1,
-  leak_covariates = FALSE,
+  censor_covariates = TRUE,
   incremental = FALSE,
   threads = 1,
   progress = TRUE
@@ -44,13 +44,13 @@ as length of observation vector. If NULL (default), all weights are equal.
 Used in both MAP and NP methods. Note that `weights` argument will also 
 affect residuals (residuals will be scaled too).}
 
-\item{leak_covariates}{with the \code{proseval} tool in PsN, there is “data
-leakage” (of the future covariates): since the NONMEM dataset in each step
-contains the covariates for the future, this technically data leakage,
-and could result in a too optimistic estimate of predictive performance.
-In \code{mipdeval}, this is switched off by default (no data leakage), but it
-can be switched on if we want to match the behavior of \code{PsN::proseval}
-exactly.}
+\item{censor_covariates}{with the \code{proseval} tool in PsN, there is “data
+leakage” (of future covariates data): since the NONMEM dataset in each step
+contains the covariates for the future, this is technically data leakage,
+and could result in an over-optimistic estimate of predictive performance.
+In \code{mipdeval}, covariate censoring of future covariate data is switched on
+by default (so no data leakage), but it can be switched off if we want to
+match the behavior of \code{PsN::proseval} exactly.}
 
 \item{incremental}{should MAP Bayesian do incremental fits in the iterative
 loop. I.e. in this case it would use the first iterations MAP Bayesian

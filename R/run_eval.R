@@ -10,13 +10,13 @@
 #' this can be used to group peaks and troughs together, or to group
 #' observations on the same day together. Grouping will be done prior to
 #' running the analysis, so cannot be changed afterwards.
-#' @param leak_covariates with the `proseval` tool in PsN, there is “data
-#' leakage” (of the future covariates): since the NONMEM dataset in each step
-#' contains the covariates for the future, this technically data leakage,
-#' and could result in a too optimistic estimate of predictive performance.
-#' In `mipdeval`, this is switched off by default (no data leakage), but it
-#' can be switched on if we want to match the behavior of `PsN::proseval`
-#' exactly.
+#' @param censor_covariates with the `proseval` tool in PsN, there is “data
+#' leakage” (of future covariates data): since the NONMEM dataset in each step
+#' contains the covariates for the future, this is technically data leakage,
+#' and could result in an over-optimistic estimate of predictive performance.
+#' In `mipdeval`, covariate censoring of future covariate data is switched on
+#' by default (so no data leakage), but it can be switched off if we want to
+#' match the behavior of `PsN::proseval` exactly.
 #' @param incremental should MAP Bayesian do incremental fits in the iterative
 #' loop. I.e. in this case it would use the first iterations MAP Bayesian
 #' estimates as input for the second iteration, and so forth. The uncertainty
@@ -39,7 +39,7 @@ run_eval <- function(
   groups = NULL,
   weights = NULL,
   prior_weight = 1,
-  leak_covariates = FALSE,
+  censor_covariates = TRUE,
   incremental = FALSE,
   threads = 1,
   progress = TRUE
@@ -81,6 +81,7 @@ run_eval <- function(
     omega = omega,
     ruv = ruv,
     groups = groups,
+    censor_covariates = censor_covariates,
     progress_function = p
   )
 
