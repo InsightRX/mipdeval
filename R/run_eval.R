@@ -77,18 +77,34 @@ run_eval <- function(
   }
 
   ## 3. run the core function on each individual-level dataset in the list
-  res <- purrr::map(
-    .x = data_parsed,
-    .f = run_eval_core,
-    model = model,
-    parameters = parameters,
-    omega = omega,
-    ruv = ruv,
-    groups = groups,
-    censor_covariates = censor_covariates,
-    weight_prior = weight_prior,
-    progress_function = p
-  )
+  if(threads > 1) {
+    future::plan(future::multisession, workers = threads)
+    res <- purrr::map(
+      .x = data_parsed,
+      .f = run_eval_core,
+      model = model,
+      parameters = parameters,
+      omega = omega,
+      ruv = ruv,
+      groups = groups,
+      censor_covariates = censor_covariates,
+      weight_prior = weight_prior,
+      progress_function = p
+    )
+  } else {
+    res <- purrr::map(
+      .x = data_parsed,
+      .f = run_eval_core,
+      model = model,
+      parameters = parameters,
+      omega = omega,
+      ruv = ruv,
+      groups = groups,
+      censor_covariates = censor_covariates,
+      weight_prior = weight_prior,
+      progress_function = p
+    )
+  }
 
   ## 4. Combine results and basic stats into return object
   res_df <- dplyr::bind_rows(res)
