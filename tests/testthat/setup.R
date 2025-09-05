@@ -5,7 +5,7 @@ regenerate <- FALSE
 
 ## Vancomycin test data:
 if(!requireNamespace("pkvancothomson", quietly = TRUE)) {
-  PKPDsim::install_default_literature_model("pk_vanco_thomson")
+  PKPDsim::install_default_literature_model("pk_vanco_thomson", force = TRUE)
   loadNamespace("pkvancothomson")
 }
 if(regenerate) {
@@ -48,9 +48,9 @@ if(regenerate) {
   ) |>
     arrange(ID, TIME, EVID) |>
     tidyr::fill(c(WT, CRCL, CL_HEMO), .direction = "downup")
-  write.csv(nm_vanco, "./inst/data/nm_vanco.csv", quote=F, row.names=F)
+  write.csv(nm_vanco, "./inst/datasets/nm_vanco.csv", quote=F, row.names=F)
 }
-nm_vanco <- read.csv(file = system.file(package = "mipdeval", "data/nm_vanco.csv"))
+nm_vanco <- read.csv(file = system.file(package = "mipdeval", "datasets/nm_vanco.csv"))
 
 ## Busulfan test data
 if(!requireNamespace("pkvbusulfanshukla", quietly = TRUE)) {
@@ -94,6 +94,6 @@ if(regenerate) {
   )
   nm_busulfan <- bind_rows(doses, tdm) |>
     arrange(ID, TIME, EVID)
-  write.csv(nm_busulfan, "./inst/data/nm_busulfan.csv", quote=F, row.names=F)
+  write.csv(nm_busulfan, "./inst/datasets/nm_busulfan.csv", quote=F, row.names=F)
 }
-nm_busulfan <- read.csv(file = system.file(package = "mipdeval", "data/nm_busulfan.csv"))
+nm_busulfan <- read.csv(file = system.file(package = "mipdeval", "datasets/nm_busulfan.csv"))

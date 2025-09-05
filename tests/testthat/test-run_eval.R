@@ -3,8 +3,6 @@ library(dplyr)
 
 test_that("Basic run with vanco data + model works", {
   mod <- pkvancothomson::model()
-  nm_vanco <- read.csv(file = system.file(package = "mipdeval", "data/nm_vanco.csv"))
-
   res <- run_eval(
     model = mod,
     data = nm_vanco,
@@ -14,7 +12,6 @@ test_that("Basic run with vanco data + model works", {
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
     progress = FALSE
   )
-
   expect_equal(names(res), c("results", "stats"))
 
   ## Check that it matches proseval results in NONMEM / PsN

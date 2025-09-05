@@ -13,7 +13,7 @@ run_eval(
   dictionary = list(),
   groups = NULL,
   weights = NULL,
-  prior_weight = 1,
+  weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
   threads = 1,
@@ -30,6 +30,8 @@ run_eval(
 \item{omega}{between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects}
 
+\item{ruv}{residual error variability magnitude, specified as list.}
+
 \item{dictionary}{data dictionary. Optional, a list that specifies the
 column names to be used from the dataset.}
 
@@ -43,6 +45,9 @@ running the analysis, so cannot be changed afterwards.}
 as length of observation vector. If NULL (default), all weights are equal. 
 Used in both MAP and NP methods. Note that `weights` argument will also 
 affect residuals (residuals will be scaled too).}
+
+\item{weight_prior}{weighting of priors in relationship to observed data, 
+default = 1}
 
 \item{censor_covariates}{with the \code{proseval} tool in PsN, there is “data
 leakage” (of future covariates data): since the NONMEM dataset in each step
@@ -62,6 +67,10 @@ approach has been called "model predictive control (MPC)"
 
 \item{threads}{number of threads to divide computations on. Default is 1,
 i.e. no parallel execution}
+
+\item{progress}{should a progress bar be shown? Default is \code{TRUE}, but when
+debugging the package it is useful to have it off, since progress bar
+handlers obscure R output.}
 }
 \description{
 Run iterative predictive analysis, looping over each individual's data

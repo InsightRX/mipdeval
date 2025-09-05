@@ -2,6 +2,7 @@
 #' an individual's dataset
 #'
 #' @inheritParams run_eval
+#' @param progress_function function to increment progress bar
 #'
 #' @returns a `data.frame` with individual predictions
 #'
@@ -15,7 +16,7 @@ run_eval_core <- function(
   ruv = NULL,
   groups = NULL,
   weights = NULL,
-  prior_weight = 1,
+  weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
   progress_function = function() {}
@@ -46,10 +47,11 @@ run_eval_core <- function(
       parameters = parameters,
       omega = omega,
       error = ruv,
-      fixed = c(attr(model, "fixed"), "TDM_INIT"),
+      fixed = attr(model, "fixed"),
       data = data$observations,
       covariates = cov_data,
       regimen = data$regimen,
+      weight_prior = weight_prior,
       weights = weights
     )
 
@@ -105,6 +107,10 @@ run_eval_core <- function(
 
 }
 
+#' Handle covariate censoring
+#'
+#' This removes new covariate information after a certain time cutoff
+#'
 #' @param covariates covariates data for single subject
 #' @param t timepoint cutoff at which covariate are to be censored
 #' (if `censor=FALSE`)

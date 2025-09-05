@@ -7,6 +7,11 @@ rows}
 \usage{
 is_timevarying(.data, .cols)
 }
+\arguments{
+\item{.data}{data.frame}
+
+\item{.cols}{vector of column names}
+}
 \description{
 For requested columns in a dataset, check if values vary or not across
 rows

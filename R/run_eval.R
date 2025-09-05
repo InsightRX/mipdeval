@@ -26,6 +26,10 @@
 #' "regular" MAP in some scenarios. Default is `FALSE`.
 #' @param threads number of threads to divide computations on. Default is 1,
 #' i.e. no parallel execution
+#' @param ruv residual error variability magnitude, specified as list.
+#' @param progress should a progress bar be shown? Default is `TRUE`, but when
+#' debugging the package it is useful to have it off, since progress bar
+#' handlers obscure R output.
 #'
 #' @export
 #'
@@ -38,7 +42,7 @@ run_eval <- function(
   dictionary = list(),
   groups = NULL,
   weights = NULL,
-  prior_weight = 1,
+  weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
   threads = 1,
@@ -82,6 +86,7 @@ run_eval <- function(
     ruv = ruv,
     groups = groups,
     censor_covariates = censor_covariates,
+    weight_prior = weight_prior,
     progress_function = p
   )
 

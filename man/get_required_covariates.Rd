@@ -4,7 +4,10 @@
 \alias{get_required_covariates}
 \title{Get required covariates from a PKPDsim model object}
 \usage{
-get_required_covariates(model_object)
+get_required_covariates(model)
+}
+\arguments{
+\item{model}{PKPDsim model object}
 }
 \description{
 Get required covariates from a PKPDsim model object

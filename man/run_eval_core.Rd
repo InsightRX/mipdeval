@@ -13,7 +13,7 @@ run_eval_core(
   ruv = NULL,
   groups = NULL,
   weights = NULL,
-  prior_weight = 1,
+  weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
   progress_function = function() {
@@ -30,6 +30,8 @@ run_eval_core(
 \item{omega}{between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects}
 
+\item{ruv}{residual error variability magnitude, specified as list.}
+
 \item{groups}{variable in dataset that groups observations together in
 iterative flow. By default each observation will be its own "group", but
 this can be used to group peaks and troughs together, or to group
@@ -40,6 +42,9 @@ running the analysis, so cannot be changed afterwards.}
 as length of observation vector. If NULL (default), all weights are equal. 
 Used in both MAP and NP methods. Note that `weights` argument will also 
 affect residuals (residuals will be scaled too).}
+
+\item{weight_prior}{weighting of priors in relationship to observed data, 
+default = 1}
 
 \item{censor_covariates}{with the \code{proseval} tool in PsN, there is “data
 leakage” (of future covariates data): since the NONMEM dataset in each step
@@ -56,6 +61,8 @@ around the MAP estimates would be used as the new \code{omega} matrix. This
 approach has been called "model predictive control (MPC)"
 (www.page-meeting.org/?abstract=9076) and may be more predictive than
 "regular" MAP in some scenarios. Default is \code{FALSE}.}
+
+\item{progress_function}{function to increment progress bar}
 }
 \value{
 a \code{data.frame} with individual predictions
