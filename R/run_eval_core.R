@@ -27,6 +27,7 @@ run_eval_core <- function(
   obs_data <- data$observations
   comb <- data.frame()
   fit_pars <- data.frame()
+
   for(i in 1:nrow(obs_data)) {
     weights <- rep(0, nrow(obs_data))
     weights[1:i] <- 1

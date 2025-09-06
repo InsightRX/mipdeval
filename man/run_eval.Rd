@@ -7,9 +7,10 @@
 run_eval(
   model,
   data,
-  parameters,
-  omega,
-  ruv,
+  parameters = NULL,
+  omega = NULL,
+  iov_bins = NULL,
+  ruv = NULL,
   dictionary = list(),
   groups = NULL,
   weights = NULL,
@@ -21,7 +22,8 @@ run_eval(
 )
 }
 \arguments{
-\item{model}{model, created using `PKPDsim::new_ode_model()`}
+\item{model}{either a PKPDsim model object, or a string pointing to a
+PKPDsim-generated model library, e.g. \code{pkvancothomson}}
 
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
@@ -29,6 +31,9 @@ run_eval(
 
 \item{omega}{between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects}
+
+\item{iov_bins}{bins for inter-occasion variability. Passed unchanged to 
+PKPDsim.}
 
 \item{ruv}{residual error variability magnitude, specified as list.}
 

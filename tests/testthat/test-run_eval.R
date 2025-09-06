@@ -38,3 +38,13 @@ test_that("Basic run with vanco data + model works", {
     arrange(rel_diff)
   expect_true(all(abs(comp$rel_diff) < 0.10))
 })
+
+test_that("Run also works when `model` argument just references the package", {
+  res <- run_eval(
+    model = "pkvancothomson",
+    data = nm_vanco,
+    parameters = list(CL = 5, V = 50, TH_CRCL = 1, Q = 3, V2 = 40),
+    progress = F
+  )
+  expect_equal(names(res), c("results", "stats"))
+})

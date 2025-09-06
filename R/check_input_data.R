@@ -16,7 +16,7 @@ check_input_data <- function(data, dictionary) {
     new_data <- data %>%
       rename(!!!setNames(unlist(dictionary), names(dictionary)))
   } else {
-    cli::cli_alert_info("No dictionary provided, assuming common NONMEM column names.")
+    cli::cli_alert_info("No data `dictionary` provided, assuming common NONMEM column names.")
   }
   data
 }

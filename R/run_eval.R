@@ -2,6 +2,8 @@
 #'
 #' @inheritParams PKPDmap::get_map_estimates
 #'
+#' @param model either a PKPDsim model object, or a string pointing to a
+#' PKPDsim-generated model library, e.g. `pkvancothomson`
 #' @param data NONMEM-style data.frame, or path to CSV file with NONMEM data
 #' @param dictionary data dictionary. Optional, a list that specifies the
 #' column names to be used from the dataset.
@@ -36,9 +38,10 @@
 run_eval <- function(
   model,
   data,
-  parameters,
-  omega,
-  ruv,
+  parameters = NULL,
+  omega = NULL,
+  iov_bins = NULL,
+  ruv = NULL,
   dictionary = list(),
   groups = NULL,
   weights = NULL,
@@ -49,6 +52,15 @@ run_eval <- function(
   progress = TRUE
 ) {
 
+  ## 0. Gather model information in an object
+  mod_obj <- parse_model_info(
+    model,
+    parameters,
+    omega,
+    ruv,
+    iov_bins
+  )
+
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
   input_data <- read_input_data(data) |>
     check_input_data(
@@ -56,7 +68,7 @@ run_eval <- function(
     )
 
   ## Select covariates
-  covariates <- attr(model, "covariates")
+  covariates <- attr(mod_obj$model, "covariates")
 
   ## 2. parse into separate, individual-level datasets and parse into
   ##    format convenient for PKPDsim/PKPDmap, joined into a list object:
@@ -82,10 +94,10 @@ run_eval <- function(
     res <- purrr::map(
       .x = data_parsed,
       .f = run_eval_core,
-      model = model,
-      parameters = parameters,
-      omega = omega,
-      ruv = ruv,
+      model = mod_obj$model,
+      parameters = mod_obj$parameters,
+      omega = mod_obj$omega_matrix,
+      ruv = mod_obj$ruv,
       groups = groups,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,
@@ -95,10 +107,10 @@ run_eval <- function(
     res <- purrr::map(
       .x = data_parsed,
       .f = run_eval_core,
-      model = model,
-      parameters = parameters,
-      omega = omega,
-      ruv = ruv,
+      model = mod_obj$model,
+      parameters = mod_obj$parameters,
+      omega = mod_obj$omega_matrix,
+      ruv = mod_obj$ruv,
       groups = groups,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,

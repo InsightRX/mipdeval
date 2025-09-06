@@ -21,7 +21,8 @@ run_eval_core(
 )
 }
 \arguments{
-\item{model}{model, created using `PKPDsim::new_ode_model()`}
+\item{model}{either a PKPDsim model object, or a string pointing to a
+PKPDsim-generated model library, e.g. \code{pkvancothomson}}
 
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
