@@ -80,10 +80,10 @@ run_eval_core <- function(
   ## pre-pend population predictions for the first observation
   out <- dplyr::bind_rows(
     comb |>
-      dplyr::filter(iter == 1) |>
+      dplyr::filter(.data$iter == 1) |>
       dplyr::mutate(
         iter = 0,
-        ipred = pred
+        ipred = .data$pred
       ) |> # set to population parameters, not individual estimates
         dplyr::select(-!!names(parameters)) |>
         dplyr::left_join(
@@ -93,14 +93,14 @@ run_eval_core <- function(
         ),
     comb
   ) |> # and filter only the next grouped prediction for each iteration
-    dplyr::filter(iter == (group - 1)) |>
+    dplyr::filter(.data$iter == (.data$group - 1)) |>
     dplyr::mutate(
-      iter_ipred = ipred,
+      iter_ipred = .data$ipred,
       map_ipred = pred_data$ipred, # ipred from last fit (full MAP)
-      apriori = (iter == 0)
+      apriori = .data$iter == 0
     ) |>
     dplyr::select(
-      id, iter, group, t, dv, pred, map_ipred, iter_ipred, apriori,
+      "id", "iter", "group", "t", "dv", "pred", "map_ipred", "iter_ipred", "apriori",
       !!names(parameters)
     )
 

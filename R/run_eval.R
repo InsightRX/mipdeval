@@ -94,8 +94,9 @@ run_eval <- function(
 
   ## 3. run the core function on each individual-level dataset in the list
   if(threads > 1) {
+    # TODO: consider using purrr::in_parallel() in the future when it's stable.
     future::plan(future::multisession, workers = threads)
-    res <- purrr::map(
+    res <- furrr::future_map(
       .x = data_parsed,
       .f = run_eval_core,
       model = mod_obj$model,
@@ -125,12 +126,14 @@ run_eval <- function(
   ## 4. Combine results and basic stats into return object
   res_df <- dplyr::bind_rows(res)
   stats_summ <- res_df |>
-    tidyr::pivot_longer(cols = c(pred, map_ipred, iter_ipred), names_to = "type") |>
-    dplyr::group_by(type, apriori) |>
+    tidyr::pivot_longer(
+      cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
+    ) |>
+    dplyr::group_by(.data$type, .data$apriori) |>
     dplyr::summarise(
-      rmse = rmse(dv, value),
-      mpe = mpe(dv, value),
-      mape = mape(dv, value)
+      rmse = rmse(.data$dv, .data$value),
+      mpe = mpe(.data$dv, .data$value),
+      mape = mape(.data$dv, .data$value)
     )
   out <- list(
     results = res_df,

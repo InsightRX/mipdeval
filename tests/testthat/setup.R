@@ -39,7 +39,7 @@ if(regenerate) {
     mutate(DV = round(DV, 1)) |>
     select(-comp, -obs_type)
   doses <- left_join(
-    expand.grid(1:n_ids, reg$dose_times) |> setNames(c("ID", "TIME")) |> arrange(ID, TIME),
+    expand.grid(1:n_ids, reg$dose_times) |> rlang::set_names(c("ID", "TIME")) |> arrange(ID, TIME),
     PKPDsim::regimen_to_nm(reg) |> select(-ID)
   )
   nm_vanco <- bind_rows(
@@ -89,7 +89,7 @@ if(regenerate) {
     mutate(CMT = 1, EVID = 0, MDV = 0, AMT = 0, RATE = 0) |>
     select(-comp, -obs_type)
   doses <- left_join(
-    expand.grid(1:n_ids, reg$dose_times) |> setNames(c("ID", "TIME")) |> arrange(ID, TIME),
+    expand.grid(1:n_ids, reg$dose_times) |> rlang::set_names(c("ID", "TIME")) |> arrange(ID, TIME),
     PKPDsim::regimen_to_nm(reg) |> select(-ID)
   )
   nm_busulfan <- bind_rows(doses, tdm) |>

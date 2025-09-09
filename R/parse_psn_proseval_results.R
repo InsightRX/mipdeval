@@ -11,12 +11,12 @@ parse_psn_proseval_results <- function(data) {
   } else {
     res <- data
   }
-  res %>%
-    dplyr::group_by(ID) %>%
-    dplyr::filter(EVID == 2 & DV > 0) %>%
-    dplyr::filter(!duplicated(OBS)) %>%
-    dplyr::mutate(n = 1:length(OBS)) %>%
-    dplyr::mutate(res = DV - IPRED) %>%
-    dplyr::select(TIME, obs = DV, pred = IPRED, pop = PRED, res, n) %>%
+  res |>
+    dplyr::group_by(.data$ID) |>
+    dplyr::filter(.data$EVID == 2 & .data$DV > 0) |>
+    dplyr::filter(!duplicated(.data$OBS)) |>
+    dplyr::mutate(n = 1:length(.data$OBS)) |>
+    dplyr::mutate(res = .data$DV - .data$IPRED) |>
+    dplyr::select("TIME", obs = "DV", pred = "IPRED", pop = "PRED", "res", "n") |>
     dplyr::ungroup()
 }
