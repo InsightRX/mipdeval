@@ -26,7 +26,7 @@ parse_model_info <- function(
       }
     }
   } else if (inherits(model, "PKPDsim")) {
-    if(!is.null(parameters) || is.null(omega) || is.null(ruv)) {
+    if(is.null(parameters) || is.null(omega) || is.null(ruv)) {
       cli::cli_abort("When specify a PKPDsim model as the `model` argument, also need at least the arguments `parameters`, `omega`, and `ruv`.")
     }
     mod_obj <- list(
