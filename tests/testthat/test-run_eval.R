@@ -1,6 +1,15 @@
 require("pkvancothomson")
 library(dplyr)
 
+## Reference results from PsN proseval:
+proseval <- read.csv(
+  file = system.file(
+    package = "mipdeval",
+    "proseval_reference/vanco_thomson.csv"
+  )
+) |>
+  parse_psn_proseval_results()
+
 test_that("Basic run with vanco data + model works", {
   mod <- pkvancothomson::model()
   res <- run_eval(
@@ -15,13 +24,6 @@ test_that("Basic run with vanco data + model works", {
   expect_equal(names(res), c("results", "stats"))
 
   ## Check that it matches proseval results in NONMEM / PsN
-  proseval <- read.csv(
-    file = system.file(
-      package = "mipdeval",
-      "proseval_reference/vanco_thomson.csv"
-    )
-  ) |>
-    parse_psn_proseval_results()
   ## Same number of rows
   expect_equal(
     nrow(proseval),
@@ -44,7 +46,37 @@ test_that("Run also works when `model` argument just references the package", {
     model = "pkvancothomson",
     data = nm_vanco,
     parameters = list(CL = 5, V = 50, TH_CRCL = 1, Q = 3, V2 = 40),
-    progress = F
+    progress = F,
+    ids = c(1:3)
   )
   expect_equal(names(res), c("results", "stats"))
+})
+
+test_that("Flattening of prior results in different predictions", {
+  res <- run_eval(
+    model = "pkvancothomson",
+    data = nm_vanco,
+    progress = F,
+    ids = c(1:3)
+  )
+  res_flat <- run_eval(
+    model = "pkvancothomson",
+    data = nm_vanco,
+    weight_prior = 0.8,
+    progress = F,
+    ids = c(1:3)
+  )
+  expect_equal(names(res_flat), c("results", "stats"))
+  expect_true(
+    all(
+      res$results |>
+        dplyr::filter(id == 1 & iter > 0) |>
+        dplyr::pull(iter_ipred) |>
+        round(2) !=
+      res_flat$results |>
+        dplyr::filter(id == 1 & iter > 0) |>
+        dplyr::pull(iter_ipred) |>
+        round(2)
+    )
+  )
 })

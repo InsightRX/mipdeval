@@ -5,6 +5,8 @@
 #' @param model either a PKPDsim model object, or a string pointing to a
 #' PKPDsim-generated model library, e.g. `pkvancothomson`
 #' @param data NONMEM-style data.frame, or path to CSV file with NONMEM data
+#' @param ids optional, vector of subject IDs to run analysis on (by default
+#' runs analysis on all subjects in dataset)
 #' @param dictionary data dictionary. Optional, a list that specifies the
 #' column names to be used from the dataset.
 #' @param groups variable in dataset that groups observations together in
@@ -38,6 +40,7 @@
 run_eval <- function(
   model,
   data,
+  ids = NULL,
   parameters = NULL,
   omega = NULL,
   iov_bins = NULL,
@@ -74,7 +77,8 @@ run_eval <- function(
   ##    format convenient for PKPDsim/PKPDmap, joined into a list object:
   data_parsed <- parse_input_data(
     data = input_data,
-    covariates = covariates
+    covariates = covariates,
+    ids = ids
   )
 
   ## Set up progress bars

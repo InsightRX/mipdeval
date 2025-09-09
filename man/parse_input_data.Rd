@@ -4,12 +4,15 @@
 \alias{parse_input_data}
 \title{Parse NONMEM-style input data, prepare for main eval loop}
 \usage{
-parse_input_data(data, covariates)
+parse_input_data(data, covariates, ids)
 }
 \arguments{
-\item{data}{NONMEM-style input datataset, as data.frame}
+\item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
 \item{covariates}{vector of covariate names}
+
+\item{ids}{optional, vector of subject IDs to run analysis on (by default
+runs analysis on all subjects in dataset)}
 }
 \value{
 list of lists, within each list regimen, observations, and

@@ -7,6 +7,7 @@
 run_eval(
   model,
   data,
+  ids = NULL,
   parameters = NULL,
   omega = NULL,
   iov_bins = NULL,
@@ -26,6 +27,9 @@ run_eval(
 PKPDsim-generated model library, e.g. \code{pkvancothomson}}
 
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
+
+\item{ids}{optional, vector of subject IDs to run analysis on (by default
+runs analysis on all subjects in dataset)}
 
 \item{parameters}{list of parameters}
 

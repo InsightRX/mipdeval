@@ -1,6 +1,6 @@
 #' Parse NONMEM-style input data, prepare for main eval loop
 #'
-#' @param data NONMEM-style input datataset, as data.frame
+#' @inheritParams run_eval
 #' @param covariates vector of covariate names
 #'
 #' @returns list of lists, within each list regimen, observations, and
@@ -8,8 +8,16 @@
 #'
 parse_input_data <- function(
     data,
-    covariates
+    covariates,
+    ids
 ) {
+
+  ## Filter IDs, if needed
+  if(!is.null(ids)) {
+    cli::cli_alert_info("Running analysis on subset of data (n = {length(ids)})")
+    data <- data |>
+      dplyr::filter(ID %in% ids)
+  }
 
   ## Split data into individual data.frames by ID
   new_data <- data |>
