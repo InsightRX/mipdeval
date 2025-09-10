@@ -1,15 +1,6 @@
 require("pkvancothomson")
 library(dplyr)
 
-## Reference results from PsN proseval:
-proseval <- read.csv(
-  file = system.file(
-    package = "mipdeval",
-    "proseval_reference/vanco_thomson.csv"
-  )
-) |>
-  parse_psn_proseval_results()
-
 test_that("Basic run with vanco data + model works", {
   local_mipdeval_options()
   mod <- pkvancothomson::model()
@@ -23,6 +14,14 @@ test_that("Basic run with vanco data + model works", {
     progress = FALSE
   )
   expect_equal(names(res), c("results", "stats"))
+
+  ## Reference results from PsN proseval:
+  proseval <- parse_psn_proseval_results(read.csv(
+    file = system.file(
+      package = "mipdeval",
+      "proseval_reference/vanco_thomson.csv"
+    )
+  ))
 
   ## Check that it matches proseval results in NONMEM / PsN
   ## Same number of rows
