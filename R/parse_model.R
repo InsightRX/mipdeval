@@ -67,7 +67,8 @@ parse_model.PKPDsim <- function(
     parameters = parameters,
     ruv = ruv,
     omega_matrix = omega,
-    iov_bins = iov_bins
+    iov_bins = iov_bins,
+    fixed = attr(model, "fixed")
   )
 }
 
