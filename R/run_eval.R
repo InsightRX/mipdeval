@@ -35,8 +35,8 @@
 #' debugging the package it is useful to have it off, since progress bar
 #' handlers obscure R output.
 #'
+#' @returns A named list of data frames.
 #' @export
-#'
 run_eval <- function(
   model,
   data,
@@ -58,10 +58,10 @@ run_eval <- function(
   ## 0. Gather model information in an object
   mod_obj <- parse_model_info(
     model,
-    parameters,
-    omega,
-    ruv,
-    iov_bins
+    parameters = parameters,
+    ruv = ruv,
+    omega = omega,
+    iov_bins = iov_bins
   )
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
