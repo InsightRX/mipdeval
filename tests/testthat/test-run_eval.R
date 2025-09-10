@@ -1,15 +1,13 @@
-require("pkvancothomson")
-library(dplyr)
-
 test_that("Basic run with vanco data + model works", {
   local_mipdeval_options()
-  mod <- pkvancothomson::model()
+
+  mod_obj <- parse_model("pkvancothomson")
   res <- run_eval(
-    model = mod,
+    model = mod_obj$model,
     data = nm_vanco,
-    parameters = pkvancothomson::parameters(),
-    omega = pkvancothomson::omega_matrix(),
-    ruv = pkvancothomson::ruv(),
+    parameters = mod_obj$parameters,
+    omega = mod_obj$omega_matrix,
+    ruv = mod_obj$ruv,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
     progress = FALSE
   )
@@ -27,17 +25,17 @@ test_that("Basic run with vanco data + model works", {
   ## Same number of rows
   expect_equal(
     nrow(proseval),
-    nrow(res$results |> filter(!apriori))
+    nrow(res$results |> dplyr::filter(!apriori))
   )
   ## comparable iterative predictions
   comp <- res$results |>
-    filter(!apriori) |>
-    mutate(proseval = proseval$pred) |>
-    mutate(
+    dplyr::filter(!apriori) |>
+    dplyr::mutate(proseval = proseval$pred) |>
+    dplyr::mutate(
       df = iter_ipred - proseval,
       rel_diff = df / proseval
     ) |>
-    arrange(rel_diff)
+    dplyr::arrange(rel_diff)
   expect_true(all(abs(comp$rel_diff) < 0.10))
 })
 
