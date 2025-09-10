@@ -56,7 +56,7 @@ run_eval <- function(
 ) {
 
   ## 0. Gather model information in an object
-  mod_obj <- parse_model_info(
+  mod_obj <- parse_model(
     model,
     parameters = parameters,
     ruv = ruv,

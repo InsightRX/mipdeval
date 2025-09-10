@@ -26,7 +26,8 @@ Imports:
     progressr,
     purrr,
     rlang,
-    tidyr
+    tidyr,
+    withr
 Suggests: 
     knitr,
     rmarkdown,
