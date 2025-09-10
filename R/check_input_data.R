@@ -12,9 +12,7 @@ check_input_data <- function(data, dictionary) {
       cli::cli_abort("Not all columns listed in dictionary were found in input data.")
     }
     cli::cli_alert_info("Renaming dataset columns based on dictionary.")
-    new_data <- dplyr::rename(
-      data, !!!rlang::set_names(unlist(dictionary), names(dictionary))
-    )
+    new_data <- dplyr::rename(data, dplyr::all_of(dictionary))
   } else {
     cli::cli_alert_info("No data `dictionary` provided, assuming common NONMEM column names.")
   }

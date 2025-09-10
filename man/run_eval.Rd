@@ -41,7 +41,7 @@ PKPDsim.}
 
 \item{ruv}{residual error variability magnitude, specified as list.}
 
-\item{dictionary}{data dictionary. Optional, a list that specifies the column
+\item{dictionary}{data dictionary. Optional, a named character vector that specifies the column
 names to be used from the dataset.}
 
 \item{groups}{variable in dataset that groups observations together in
