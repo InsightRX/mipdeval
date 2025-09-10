@@ -11,6 +11,9 @@ mpe(obs, pred)
 
 \item{pred}{predictions vector}
 }
+\value{
+A numeric vector
+}
 \description{
 Mean prediction error
 }

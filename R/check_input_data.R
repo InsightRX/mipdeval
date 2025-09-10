@@ -6,7 +6,6 @@
 #' @inheritParams run_eval
 #'
 #' @returns a data.frame
-#'
 check_input_data <- function(data, dictionary) {
   if(!is.null(dictionary) && length(dictionary) > 0) {
     if(!all(unlist(dictionary) %in% names(data))) {

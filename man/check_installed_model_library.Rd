@@ -24,8 +24,8 @@ respectively not display any call or hard-code a code to display.
 For more information about error calls, see \ifelse{html}{\link[rlang:topic-error-call]{Including function calls in error messages}}{\link[rlang:topic-error-call]{Including function calls in error messages}}.}
 }
 \value{
-This function is called for its side effects and returns \code{NULL} if the
-PKPDsim model library is installed or returns an error otherwise.
+This function is called for its side effects and returns \code{NULL} if
+the PKPDsim model library is installed or returns an error otherwise.
 }
 \description{
 Check if PKPDsim model library is installed

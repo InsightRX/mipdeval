@@ -5,7 +5,6 @@
 #'
 #' @returns list of lists, within each list regimen, observations, and
 #' covariates
-#'
 parse_input_data <- function(
     data,
     covariates,
@@ -15,8 +14,7 @@ parse_input_data <- function(
   ## Filter IDs, if needed
   if(!is.null(ids)) {
     cli::cli_alert_info("Running analysis on subset of data (n = {length(ids)})")
-    data <- data |>
-      dplyr::filter(.data$ID %in% ids)
+    data <- dplyr::filter(data, .data$ID %in% ids)
   }
 
   ## Split data into individual data.frames by ID

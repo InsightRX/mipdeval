@@ -5,9 +5,7 @@
 #' @param progress_function function to increment progress bar
 #'
 #' @returns a `data.frame` with individual predictions
-#'
 #' @export
-#'
 run_eval_core <- function(
   model,
   data,

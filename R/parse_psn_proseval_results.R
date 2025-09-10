@@ -3,8 +3,8 @@
 #'
 #' @param data results data.frame or path to csv file
 #'
+#' @returns A data.frame
 #' @export
-#'
 parse_psn_proseval_results <- function(data) {
   if(inherits(data, "character")) {
     res <- read.csv(file = data)
