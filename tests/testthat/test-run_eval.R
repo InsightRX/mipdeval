@@ -11,6 +11,7 @@ proseval <- read.csv(
   parse_psn_proseval_results()
 
 test_that("Basic run with vanco data + model works", {
+  local_mipdeval_options()
   mod <- pkvancothomson::model()
   res <- run_eval(
     model = mod,
@@ -42,6 +43,7 @@ test_that("Basic run with vanco data + model works", {
 })
 
 test_that("Run also works when `model` argument just references the package", {
+  local_mipdeval_options()
   res <- run_eval(
     model = "pkvancothomson",
     data = nm_vanco,
@@ -53,6 +55,7 @@ test_that("Run also works when `model` argument just references the package", {
 })
 
 test_that("Flattening of prior results in different predictions", {
+  local_mipdeval_options()
   res <- run_eval(
     model = "pkvancothomson",
     data = nm_vanco,
