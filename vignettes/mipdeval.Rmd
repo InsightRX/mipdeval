@@ -30,7 +30,7 @@ library(mipdeval)
 Here we will evaluate the predictive performance of the `"pkvancothomson"` model, which is packaged within PKPDsim and can be installed as a model library with:
 
 ```{r, eval=FALSE}
-PKPDsim::install_default_literature_model("pk_vanco_thomson", force = TRUE)
+install_default_literature_model("pk_vanco_thomson", force = TRUE)
 ```
 
 <!-- TODO: Turn `nm_vanco` into a proper package data set -->
@@ -73,8 +73,7 @@ When evaluating in-memory PKPDsim model objects, `run_eval()` requires several a
 Here we will replicate the model from the previous example by hand:
 
 ```{r}
-# TODO: we should reexport some functions from PKPDsim like this one:
-mod <- PKPDsim::new_ode_model(
+mod <- new_ode_model(
   code = ("
     dAdt[0] = -(CLtot/Vi)*A[0] - (Q/Vi)*A[0] + (Q/V2i)*A[1]
     dAdt[1] = +(Q/Vi)*A[0] - (Q/V2i)*A[1]
