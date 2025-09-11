@@ -1,6 +1,7 @@
 test_that("Basic run with vanco data + model works", {
   local_mipdeval_options()
 
+  # Using PKPDsim model object:
   mod_obj <- parse_model("pkvancothomson")
   res <- run_eval(
     model = mod_obj$model,
@@ -16,6 +17,18 @@ test_that("Basic run with vanco data + model works", {
   expect_equal(names(res), c("results", "stats"))
   expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
   expect_s3_class(res$stats, c("tbl_df", "tbl", "data.frame"))
+
+  # Using PKPDsim model library:
+  res_2 <- run_eval(
+    model = "pkvancothomson",
+    data = nm_vanco,
+    censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
+    progress = FALSE
+  )
+
+  ## Results should be identical between PKPDsim model object and model library
+  ## runs if all inputs are the same:
+  expect_identical(res, res_2)
 
   ## Reference results from PsN proseval:
   proseval <- parse_psn_proseval_results(read.csv(
@@ -45,6 +58,7 @@ test_that("Run also works when `model` argument just references the package", {
     ids = c(1:3)
   )
   expect_equal(names(res), c("results", "stats"))
+  # TODO: test outputs
 })
 
 test_that("Flattening of prior results in different predictions", {

@@ -35,6 +35,31 @@ test_that("parse_model() works for installed PKPDsim model libraries", {
   expect_equal(out, mod_obj)
 })
 
+test_that("parse_model() supports overrides for installed PKPDsim model libraries", {
+  parameters <- list(CL = 5, V = 50, TH_CRCL = 1, Q = 3, V2 = 40)
+  ruv <- list(prop = 2, add = 1)
+  omega <- c(0.07, 0.0090, 0.02, 0, 0, 0.2, 0, 0, 0, 1.6)
+  iov_bins = list(n_bins = 2)
+  mod_obj <- withr::with_package("pkvancothomson", quietly = TRUE, {
+    list(
+      model = model(),
+      parameters = parameters,
+      ruv = ruv,
+      omega_matrix = omega,
+      iov_bins = iov_bins,
+      fixed = fixed()
+    )
+  })
+  out <- parse_model(
+    "pkvancothomson",
+    parameters = parameters,
+    ruv = ruv,
+    omega = omega,
+    iov_bins = iov_bins
+  )
+  expect_equal(out, mod_obj)
+})
+
 test_that("parse_model() output is identical across methods given same inputs", {
   mod_obj <- withr::with_package("pkvancothomson", quietly = TRUE, {
     list(
