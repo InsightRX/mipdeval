@@ -32,17 +32,7 @@ test_that("Basic run with vanco data + model works", {
     nrow(res$results |> dplyr::filter(!apriori))
   )
   ## comparable iterative predictions
-  comp <- res$results |>
-    dplyr::filter(!apriori) |>
-    dplyr::mutate(proseval = proseval$pred) |>
-    dplyr::mutate(
-      df = iter_ipred - proseval,
-      rel_diff = df / proseval
-    ) |>
-    dplyr::arrange(rel_diff)
-  expect_true(all(abs(comp$rel_diff) < 0.10))
-
-
+  expect_true(compare_psn_proseval_results(res, proseval, tol = 0.1)$within_tol)
 })
 
 test_that("Run also works when `model` argument just references the package", {
