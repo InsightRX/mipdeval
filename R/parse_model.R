@@ -60,7 +60,7 @@ parse_model.PKPDsim <- function(
   parameters,
   ruv,
   omega,
-  iov_bins
+  iov_bins = NULL
 ) {
   list(
     model = model,
