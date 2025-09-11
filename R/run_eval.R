@@ -136,8 +136,8 @@ run_eval <- function(
       mape = mape(.data$dv, .data$value)
     )
   out <- list(
-    results = res_df,
-    stats = stats_summ
+    results = tibble::as_tibble(res_df),
+    stats = tibble::as_tibble(stats_summ)
   )
 
   ## 5. Return results

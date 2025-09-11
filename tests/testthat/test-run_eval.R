@@ -11,7 +11,11 @@ test_that("Basic run with vanco data + model works", {
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
     progress = FALSE
   )
+
+  ## Expected structure:
   expect_equal(names(res), c("results", "stats"))
+  expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
+  expect_s3_class(res$stats, c("tbl_df", "tbl", "data.frame"))
 
   ## Reference results from PsN proseval:
   proseval <- parse_psn_proseval_results(read.csv(
@@ -37,6 +41,8 @@ test_that("Basic run with vanco data + model works", {
     ) |>
     dplyr::arrange(rel_diff)
   expect_true(all(abs(comp$rel_diff) < 0.10))
+
+
 })
 
 test_that("Run also works when `model` argument just references the package", {
