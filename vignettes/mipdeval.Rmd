@@ -33,8 +33,6 @@ Here we will evaluate the predictive performance of the `"pkvancothomson"` model
 install_default_literature_model("pk_vanco_thomson", force = TRUE)
 ```
 
-<!-- TODO: Turn `nm_vanco` into a proper package data set -->
-
 For this example we use the `nm_vanco` data set, a NONMEM-style data frame with 80 rows and 11 columns:
 
 - `ID`: Patient ID.
@@ -50,10 +48,7 @@ For this example we use the `nm_vanco` data set, a NONMEM-style data frame with 
 - `CL_HEMO`: Additional clearance attributable to hemodialysis.
 
 ```{r}
-nm_vanco <- read.csv(
-  file = system.file(package = "mipdeval", "datasets/nm_vanco.csv")
-)
-head(nm_vanco)
+nm_vanco
 ```
 
 The predictive performance of the model can then be evaluated using `run_eval()`. When using an installed PKPDsim model library, the `model` argument simply requires the name of the library.
