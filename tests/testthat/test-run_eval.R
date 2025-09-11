@@ -34,7 +34,7 @@ test_that("Basic run with vanco data + model works", {
   proseval <- parse_psn_proseval_results(read.csv(
     file = system.file(
       package = "mipdeval",
-      "proseval_reference/vanco_thomson.csv"
+      "extdata/vanco_thomson.csv"
     )
   ))
 
