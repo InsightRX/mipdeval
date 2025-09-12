@@ -12,6 +12,9 @@ is_timevarying(.data, .cols)
 
 \item{.cols}{vector of column names}
 }
+\value{
+A data.frame
+}
 \description{
 For requested columns in a dataset, check if values vary or not across
 rows

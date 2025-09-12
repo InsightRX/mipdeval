@@ -10,6 +10,9 @@ parse_psn_proseval_results(data)
 \arguments{
 \item{data}{results data.frame or path to csv file}
 }
+\value{
+A data.frame
+}
 \description{
 Parse PsN::proseval results.csv to filter out only the rows
 that we need (for prediction of next level)

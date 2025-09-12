@@ -3,7 +3,6 @@
 #' @inheritParams run_eval
 #'
 #' @returns data.frame
-#'
 read_input_data <- function(data) {
   if(inherits(data, "character")) {
     if(!file.exists(data)) {

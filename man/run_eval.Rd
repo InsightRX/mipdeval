@@ -41,8 +41,8 @@ PKPDsim.}
 
 \item{ruv}{residual error variability magnitude, specified as list.}
 
-\item{dictionary}{data dictionary. Optional, a list that specifies the
-column names to be used from the dataset.}
+\item{dictionary}{data dictionary. Optional, a named character vector that specifies the column
+names to be used from the dataset.}
 
 \item{groups}{variable in dataset that groups observations together in
 iterative flow. By default each observation will be its own "group", but
@@ -80,6 +80,9 @@ i.e. no parallel execution}
 \item{progress}{should a progress bar be shown? Default is \code{TRUE}, but when
 debugging the package it is useful to have it off, since progress bar
 handlers obscure R output.}
+}
+\value{
+A named list of data frames.
 }
 \description{
 Run iterative predictive analysis, looping over each individual's data

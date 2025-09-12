@@ -9,6 +9,9 @@ get_required_covariates(model)
 \arguments{
 \item{model}{PKPDsim model object}
 }
+\value{
+A character vector of covariate names.
+}
 \description{
 Get required covariates from a PKPDsim model object
 }
