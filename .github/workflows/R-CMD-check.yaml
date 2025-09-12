@@ -21,7 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
 
     env:

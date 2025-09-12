@@ -1,0 +1,129 @@
+---
+title: "mipdeval"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mipdeval}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# Preview vignette with: devtools::build_rmd("vignettes/mipdeval.Rmd")
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The goal of **mipdeval** is to make it easy to evaluate predictive performance of PK/PD models in historical datasets in the context of model-informed precision dosing (MIPD).
+
+```{r setup}
+library(mipdeval)
+```
+
+## Evaluate iterative predictive performance of an installed model
+
+`run_eval()` is a nice way to evaluate iterative predictive performance of a **PKPDsim** model using a NONMEM-style dataset, performing MAP Bayesian updating and forecasting at each step. `run_eval()` can evaluate both in-memory PKPDsim model objects and installed PKPDsim model libraries (see `vignette("PKPDsim", package = "PKPDsim")` for an overview of these different model formats). 
+
+<!-- Q: Is there a CRAN-friendly way to do this in a vignette? -->
+
+Here we will evaluate the predictive performance of the `"pkvancothomson"` model, which is packaged within PKPDsim and can be installed as a model library with:
+
+```{r, eval=FALSE}
+install_default_literature_model("pk_vanco_thomson", force = TRUE)
+```
+
+For this example we use the `nm_vanco` data set, a NONMEM-style data frame with 80 rows and 11 columns:
+
+- `ID`: Patient ID.
+- `TIME`: The recorded times of dosing events and/or observations
+- `CMT`: Dose compartment.
+- `DV`: The dependent variable or observed concentration.
+- `AMT`: Dose administered for dosing record.
+- `EVID`: Event ID (0 = observation, 1 = dose, 2 = other, 3 = reset, 4 = reset + dose).
+- `MDV`: Missing DV (0 = not missing, 1 = missing).
+- `RATE`: Rate of drug infusion. 
+- `WT`: Patient weight at TIME of measurement.
+- `CRCL`: Patient creatinine clearance at TIME of measurement.
+- `CL_HEMO`: Additional clearance attributable to hemodialysis.
+
+```{r}
+nm_vanco
+```
+
+The predictive performance of the model can then be evaluated using `run_eval()`. When using an installed PKPDsim model library, the `model` argument simply requires the name of the library.
+
+```{r, eval=FALSE}
+run_eval(model = "pkvancothomson", data = nm_vanco)
+```
+
+## Evaluate iterative predictive performance of an in-memory model
+
+When evaluating in-memory PKPDsim model objects, `run_eval()` requires several additional arguments in addition to the model object:
+
+- `parameters`: Named list of model parameters.
+- `ruv`: Named list specifying proportional and/or additive residual error variability magnitude.
+- `omega`: Between-subject variability, supplied as vector specifying the lower triangle of the covariance matrix of random effects.
+
+Here we will replicate the model from the previous example by hand:
+
+```{r}
+mod <- new_ode_model(
+  code = ("
+    dAdt[0] = -(CLtot/Vi)*A[0] - (Q/Vi)*A[0] + (Q/V2i)*A[1]
+    dAdt[1] = +(Q/Vi)*A[0] - (Q/V2i)*A[1]
+    dAdt[2] = A[0]/Vi
+  "),
+  pk_code = ("
+    CLi = CL * (1 + TH_CRCL * (CRCL*16.66667 - 66))
+    CLtot = CLi + CL_HEMO
+    Qi = Q
+    Vi = V * WT
+    V2i = V2 * WT
+  "),
+  covariates = c("WT", "CRCL", "CL_HEMO"),
+  declare_variables = c("CLi", "Qi", "Vi", "V2i", "CLtot"),
+  fixed = "TH_CRCL",
+  obs = list(scale = "V * WT")
+)
+parameters <- list(CL = 2.99, V = 0.675, TH_CRCL = 0.0154, Q = 2.28, V2 = 0.732)
+ruv <- list(prop = 0.15, add = 1.6)
+omega <- c(0.0729, 0.0100, 0.0225, 0, 0, 0.2401, 0, 0, 0, 1.6900)
+```
+
+The predictive performance of the model can then be evaluated using `run_eval()`:
+
+```{r, eval=FALSE}
+run_eval(
+  model = mod,
+  data = nm_vanco,
+  parameters = parameters,
+  omega = omega,
+  ruv = ruv
+)
+```
+
+## Comparison with Perl-speaks-NONMEM
+
+`run_eval()` performs similarly to the `execute` and `proseval` tools in [Perl-speaks-NONMEM](https://uupharmacometrics.github.io/PsN/) (PsN), while offering the following advantages:
+
+- **Ease of use:** Evaluates a priori and a posteriori predictive performance in one call.
+- **Tailored for MIPD:** More MIPD-focused analysis options such as flattening priors, time-based weighting, sample grouping, etc.
+
+Our goal is to provide comparable (iterative) predictions between mipdeval and PsN. The `compare_psn_*_results()` family of functions can be used to calculate the relative difference in predictions between `run_eval()` and the PsN `execute` and `proseval` tools.
+
+To compare `execute` results, use `compare_psn_execute_results()`:
+
+```{r, eval=FALSE}
+# TODO: create function
+compare_psn_execute_results(run_eval_results, execute_results, tol = 0.1)
+```
+
+To compare `proseval` results, use `compare_psn_proseval_results()`:
+
+```{r, eval=FALSE}
+# TODO: create function
+compare_psn_proseval_results(run_eval_results, proseval_results)
+```
+
+The underlying relative difference for each (iterative) prediction can also be returned with `reldiff_psn_execute_results()` and `reldiff_psn_proseval_results()`.

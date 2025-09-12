@@ -24,16 +24,27 @@ of model-informed precision dosing (specifically Bayesian updating)
 
 ## Installation
 
-You can install the development version of mipdtrial from [GitHub](https://github.com/) with:
+Install the development version from [GitHub](https://github.com/InsightRX/mipdeval) with:
 
 ```r
-# install.packages("remotes")
-remotes::install_github("InsightRX/mipdeval")
+# install.packages("pak")
+pak::pak("InsightRX/mipdeval")
 ```
 
 ## Usage
 
-TBD
+```
+run_eval(
+  model,
+  data
+)
+```
+
+<!--
+## Documentation
+
+See at <pkgdown URL> and also in the installed package: `help(package = "mipdeval")`.
+-->
 
 ## Roadmap
 
