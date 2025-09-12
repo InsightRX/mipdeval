@@ -6,12 +6,11 @@
 an individual's dataset}
 \usage{
 run_eval_core(
-  model,
+  mod_obj,
   data,
   parameters = NULL,
   omega = NULL,
   ruv = NULL,
-  groups = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
@@ -21,9 +20,6 @@ run_eval_core(
 )
 }
 \arguments{
-\item{model}{either a PKPDsim model object, or a string pointing to a
-PKPDsim-generated model library, e.g. \code{pkvancothomson}}
-
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
 \item{parameters}{list of parameters}
@@ -32,12 +28,6 @@ PKPDsim-generated model library, e.g. \code{pkvancothomson}}
 lower triangle of the covariance matrix of random effects}
 
 \item{ruv}{residual error variability magnitude, specified as list.}
-
-\item{groups}{variable in dataset that groups observations together in
-iterative flow. By default each observation will be its own "group", but
-this can be used to group peaks and troughs together, or to group
-observations on the same day together. Grouping will be done prior to
-running the analysis, so cannot be changed afterwards.}
 
 \item{weights}{vector of weights for error. Length of vector should be same 
 as length of observation vector. If NULL (default), all weights are equal. 

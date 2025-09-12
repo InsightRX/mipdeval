@@ -25,6 +25,21 @@ parse_model_info <- function(
         mod_obj[[key]] <- get(key, asNamespace(model))()
       }
     }
+    if(!is.null(mod_obj$iov)) {
+      iov_obj <- PKPDmap::create_iov_object(
+        cv = mod_obj$iov$cv,
+        omega = mod_obj$omega_matrix,
+        bins = mod_obj$iov$bins,
+        parameters = mod_obj$parameters,
+        fixed = mod_obj$fixed,
+        ruv = mod_obj$ruv,
+        verbose = FALSE
+      )
+      ## Update model object wit IOV updates
+      mod_obj[c("parameters", "omega_matrix", "kappa", "fixed", "bins")] <- iov_obj[
+        c("parameters", "omega", "kappa", "fixed", "bins")
+      ]
+    }
   } else if (inherits(model, "PKPDsim")) {
     if(is.null(parameters) || is.null(omega) || is.null(ruv)) {
       cli::cli_abort("When specify a PKPDsim model as the `model` argument, also need at least the arguments `parameters`, `omega`, and `ruv`.")
@@ -33,11 +48,13 @@ parse_model_info <- function(
       model = model,
       parameters = parameters,
       omega_matrix = omega,
+      fixed = attr(model, "fixed"),
       ruv = ruv,
       iov_bins = iov_bins
     )
   } else {
     cli::cli_abort("`model` argument needs to be either a PKPDsim model, or a string pointing to a PKPDsim model library.")
   }
+
   mod_obj
 }

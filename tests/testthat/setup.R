@@ -66,10 +66,10 @@ if(regenerate) {
   set.seed(54321)
   covariates_df <- data.frame(
     ID = 1:n_ids,
-    AGE = 5 * exp(rnorm(n_ids, 0, .3)),
-    WT = 20 * exp(rnorm(n_ids, 0, .2)),
-    HT = 100 * exp(rnorm(n_ids, 0, .3)),
-    SEX = runif(n_ids, 0.5),
+    AGE = round(5 * exp(rnorm(n_ids, 0, .3))),
+    WT = round(20 * exp(rnorm(n_ids, 0, .2))),
+    HT = round(100 * exp(rnorm(n_ids, 0, .3))),
+    SEX = rbinom(n_ids, 1, 0.5),
     REGI = 0
   )
   reg <- new_regimen(amt = 50, interval = 24, t_inf = 3, n = 4, type = 'infusion')
@@ -82,7 +82,8 @@ if(regenerate) {
     res_var = pkbusulfanshukla::ruv(),
     t_obs = c(3.5, 5, 6, 8, 12) + rep(c(0, 24, 48, 72), each = 5),
     iov_bins = c(0, 24, 48, 72, 96, 9999),
-    only_obs = TRUE
+    only_obs = TRUE,
+    output_include = list(covariates = TRUE)
   )
   tdm <- res |>
     rename(ID = id, TIME = t, DV = y) |>

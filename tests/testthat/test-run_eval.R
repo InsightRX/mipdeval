@@ -70,11 +70,11 @@ test_that("Flattening of prior results in different predictions", {
   expect_true(
     all(
       res$results |>
-        dplyr::filter(id == 1 & iter > 0) |>
+        dplyr::filter(id == 1 & `_iteration` > 0) |>
         dplyr::pull(iter_ipred) |>
         round(2) !=
       res_flat$results |>
-        dplyr::filter(id == 1 & iter > 0) |>
+        dplyr::filter(id == 1 & `_iteration` > 0) |>
         dplyr::pull(iter_ipred) |>
         round(2)
     )

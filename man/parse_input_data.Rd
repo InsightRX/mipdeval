@@ -4,7 +4,7 @@
 \alias{parse_input_data}
 \title{Parse NONMEM-style input data, prepare for main eval loop}
 \usage{
-parse_input_data(data, covariates, ids)
+parse_input_data(data, covariates, ids, group = NULL)
 }
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
@@ -13,6 +13,12 @@ parse_input_data(data, covariates, ids)
 
 \item{ids}{optional, vector of subject IDs to run analysis on (by default
 runs analysis on all subjects in dataset)}
+
+\item{group}{name of variable in dataset that groups observations together in
+iterative flow. By default each observation will be its own "group", but
+this can be used to group peaks and troughs together, or to group
+observations on the same day together. Grouping will be done prior to
+running the analysis, so cannot be changed afterwards.}
 }
 \value{
 list of lists, within each list regimen, observations, and

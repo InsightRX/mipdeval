@@ -9,7 +9,7 @@
 #' runs analysis on all subjects in dataset)
 #' @param dictionary data dictionary. Optional, a list that specifies the
 #' column names to be used from the dataset.
-#' @param groups variable in dataset that groups observations together in
+#' @param group name of variable in dataset that groups observations together in
 #' iterative flow. By default each observation will be its own "group", but
 #' this can be used to group peaks and troughs together, or to group
 #' observations on the same day together. Grouping will be done prior to
@@ -46,7 +46,7 @@ run_eval <- function(
   iov_bins = NULL,
   ruv = NULL,
   dictionary = list(),
-  groups = NULL,
+  group = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
@@ -78,7 +78,8 @@ run_eval <- function(
   data_parsed <- parse_input_data(
     data = input_data,
     covariates = covariates,
-    ids = ids
+    ids = ids,
+    group = group
   )
 
   ## Set up progress bars
@@ -98,11 +99,7 @@ run_eval <- function(
     res <- purrr::map(
       .x = data_parsed,
       .f = run_eval_core,
-      model = mod_obj$model,
-      parameters = mod_obj$parameters,
-      omega = mod_obj$omega_matrix,
-      ruv = mod_obj$ruv,
-      groups = groups,
+      mod_obj = mod_obj,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,
       progress_function = p
@@ -111,11 +108,7 @@ run_eval <- function(
     res <- purrr::map(
       .x = data_parsed,
       .f = run_eval_core,
-      model = mod_obj$model,
-      parameters = mod_obj$parameters,
-      omega = mod_obj$omega_matrix,
-      ruv = mod_obj$ruv,
-      groups = groups,
+      mod_obj = mod_obj,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,
       progress_function = p

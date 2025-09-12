@@ -13,7 +13,7 @@ run_eval(
   iov_bins = NULL,
   ruv = NULL,
   dictionary = list(),
-  groups = NULL,
+  group = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
@@ -44,7 +44,7 @@ PKPDsim.}
 \item{dictionary}{data dictionary. Optional, a list that specifies the
 column names to be used from the dataset.}
 
-\item{groups}{variable in dataset that groups observations together in
+\item{group}{name of variable in dataset that groups observations together in
 iterative flow. By default each observation will be its own "group", but
 this can be used to group peaks and troughs together, or to group
 observations on the same day together. Grouping will be done prior to
