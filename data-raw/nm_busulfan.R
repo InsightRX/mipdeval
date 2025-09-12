@@ -12,10 +12,10 @@ set.seed(54321)
 n_ids <- 10
 covariates_df <- data.frame(
   ID = 1:n_ids,
-  AGE = 5 * exp(rnorm(n_ids, 0, .3)),
-  WT = 20 * exp(rnorm(n_ids, 0, .2)),
-  HT = 100 * exp(rnorm(n_ids, 0, .3)),
-  SEX = runif(n_ids, 0.5),
+  AGE = 5 * round(exp(rnorm(n_ids, 0, .3))),
+  WT = 20 * round(exp(rnorm(n_ids, 0, .2))),
+  HT = 100 * round(exp(rnorm(n_ids, 0, .3))),
+  SEX = round(runif(n_ids, 0.5)),
   REGI = 0
 )
 reg <- new_regimen(amt = 50, interval = 24, t_inf = 3, n = 4, type = 'infusion')
@@ -46,7 +46,9 @@ doses <- expand.grid(1:n_ids, reg$dose_times) |>
   left_join(select(regimen_to_nm(reg), -ID))
 
 nm_busulfan <- bind_rows(doses, tdm) |>
-  arrange(ID, TIME, EVID)
+  arrange(ID, TIME, EVID) |>
+  group_by(ID) |>
+  tidyr::fill(AGE, WT, HT, SEX, REGI, .direction = "downup")
 
 # Save a .csv so this data can be used with PsN:
 readr::write_csv(nm_busulfan, "inst/extdata/nm_busulfan.csv")

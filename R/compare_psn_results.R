@@ -48,6 +48,8 @@ compare_psn_results <- function(mipdeval, psn, tol = 0.1, .apriori) {
   # rel diff, whether all observations were within tolerance
   dplyr::summarise(
     reldiff_psn_results(mipdeval, psn, .apriori),
+    min_rel_diff = min(.data$rel_diff),
+    max_rel_diff = max(.data$rel_diff),
     within_tol = all(abs(.data$rel_diff) < tol)
   )
 }
