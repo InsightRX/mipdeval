@@ -1,22 +1,12 @@
 require("pkbusulfanshukla")
 library(dplyr)
 
-## Reference results from PsN proseval:
-# proseval <- read.csv(
-#   file = system.file(
-#     package = "mipdeval",
-#     "proseval_reference/busulfan_shukla.csv"
-#   )
-# ) |>
-#   parse_psn_proseval_results()
-
 test_that("Grouped run for busulfan/shukla works", {
   nm_busulfan <- add_grouping_bins(
     nm_busulfan,
     label = "group",
     bins = c(0, 24, 48, 72, 120)
   )
-  mod <- pkbusulfanshukla::model()
   res <- run_eval(
     model = "pkbusulfanshukla",
     data = nm_busulfan,

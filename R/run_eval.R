@@ -31,6 +31,10 @@
 #' @param threads number of threads to divide computations on. Default is 1,
 #'   i.e. no parallel execution
 #' @param ruv residual error variability magnitude, specified as list.
+#' @param iov a list specifying the required metadata for implementation of IOV,
+#'   specifically the CV of the IOV for each parameter and a vector of bin
+#'   separators. For example,
+#'   `list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))`
 #' @param progress should a progress bar be shown? Default is `TRUE`, but when
 #'   debugging the package it is useful to have it off, since progress bar
 #'   handlers obscure R output.
@@ -44,8 +48,9 @@ run_eval <- function(
   data,
   ids = NULL,
   parameters = NULL,
+  fixed = NULL,
   omega = NULL,
-  iov_bins = NULL,
+  iov = NULL,
   ruv = NULL,
   dictionary = list(),
   group = NULL,
@@ -63,7 +68,8 @@ run_eval <- function(
     parameters = parameters,
     ruv = ruv,
     omega = omega,
-    iov_bins = iov_bins
+    fixed = fixed,
+    iov = iov
   )
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks

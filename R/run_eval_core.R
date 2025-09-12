@@ -48,7 +48,7 @@ run_eval_core <- function(
     fit <- PKPDmap::get_map_estimates(
       model = mod_obj$model,
       parameters = mod_obj$parameters,
-      omega = mod_obj$omega_matrix,
+      omega = mod_obj$omega,
       error = mod_obj$ruv,
       fixed = mod_obj$fixed,
       data = data$observations,
@@ -84,10 +84,10 @@ run_eval_core <- function(
   ## pre-pend population predictions for the first observation
   out <- dplyr::bind_rows(
     comb |>
-      dplyr::filter(`_iteration` == 1) |>
+      dplyr::filter(.data$`_iteration` == 1) |>
       dplyr::mutate(
         `_iteration` = 0,
-        ipred = pred
+        ipred = .data$pred
       ) |> # set to population parameters, not individual estimates
         dplyr::select(-!!names(parameters)) |>
         dplyr::left_join(

@@ -7,8 +7,9 @@ test_that("Basic run with vanco data + model works", {
     model = mod_obj$model,
     data = nm_vanco,
     parameters = mod_obj$parameters,
-    omega = mod_obj$omega_matrix,
+    omega = mod_obj$omega,
     ruv = mod_obj$ruv,
+    fixed = mod_obj$fixed,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
     progress = FALSE
   )

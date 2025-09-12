@@ -39,13 +39,13 @@ parse_nm_data <- function(data, covariates, group = NULL) {
   out$covariates <- make_covariates_object(data, covariates)
   out$regimen <- PKPDsim::nm_to_regimen(data)
   obs <- data |>
-    dplyr::filter(EVID == 0)
+    dplyr::filter(.data$EVID == 0)
   if(!is.null(group)) {
     obs[["_grouper"]] <- obs[[group]]
   } else { # if no grouping, add a grouper that iterates over all observations
     obs <- obs |>
-      dplyr::group_by(ID) |>
-      dplyr::mutate("_grouper" = 1:length(ID)) |>
+      dplyr::group_by(.data$ID) |>
+      dplyr::mutate("_grouper" = 1:length(.data$ID)) |>
       dplyr::ungroup()
   }
   out$observations <- obs |>

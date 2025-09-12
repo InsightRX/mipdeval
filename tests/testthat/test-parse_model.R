@@ -5,17 +5,17 @@ test_that("parse_model() works for PKPDsim model objects", {
       model = model(),
       parameters = parameters(),
       ruv = ruv(),
-      omega_matrix = omega_matrix(),
-      iov_bins = iov(),
-      fixed = fixed()
+      omega = omega_matrix(),
+      fixed = fixed(),
+      bins = numeric(0)
     )
   })
   out <- parse_model(
     model = mod_obj$model,
     parameters = mod_obj$parameters,
     ruv = mod_obj$ruv,
-    omega = mod_obj$omega_matrix,
-    iov_bins = mod_obj$iov_bins
+    omega = mod_obj$omega,
+    fixed = mod_obj$fixed
   )
   expect_equal(out, mod_obj)
 })
@@ -26,9 +26,9 @@ test_that("parse_model() works for installed PKPDsim model libraries", {
       model = model(),
       parameters = parameters(),
       ruv = ruv(),
-      omega_matrix = omega_matrix(),
-      iov_bins = iov(),
-      fixed = fixed()
+      omega = omega_matrix(),
+      fixed = fixed(),
+      bins = numeric(0)
     )
   })
   out <- parse_model("pkvancothomson")
@@ -45,17 +45,16 @@ test_that("parse_model() supports overrides for installed PKPDsim model librarie
       model = model(),
       parameters = parameters,
       ruv = ruv,
-      omega_matrix = omega,
-      iov_bins = iov_bins,
-      fixed = fixed()
+      omega = omega,
+      fixed = fixed(),
+      bins = numeric(0)
     )
   })
   out <- parse_model(
     "pkvancothomson",
     parameters = parameters,
     ruv = ruv,
-    omega = omega,
-    iov_bins = iov_bins
+    omega = omega
   )
   expect_equal(out, mod_obj)
 })
@@ -66,8 +65,7 @@ test_that("parse_model() output is identical across methods given same inputs", 
       model = model(),
       parameters = parameters(),
       ruv = ruv(),
-      omega_matrix = omega_matrix(),
-      iov_bins = iov()
+      omega_matrix = omega_matrix()
     )
   })
   out_model_object <- parse_model(
@@ -75,9 +73,35 @@ test_that("parse_model() output is identical across methods given same inputs", 
     parameters = mod_obj$parameters,
     ruv = mod_obj$ruv,
     omega = mod_obj$omega_matrix,
-    iov_bins = mod_obj$iov_bins
+    fixed = attr(mod_obj$model, "fixed")
   )
   out_model_library <- parse_model("pkvancothomson")
+  expect_identical(out_model_object, out_model_library)
+})
+
+test_that("parse_model() output is identical across methods given same inputs for model with IOV", {
+  mod_obj <- withr::with_package("pkbusulfanshukla", quietly = TRUE, {
+    list(
+      model = model(),
+      parameters = parameters(),
+      ruv = ruv(),
+      omega_matrix = omega_matrix(),
+      bins = iov()$bins
+    )
+  })
+  out_model_object <- parse_model(
+    model = mod_obj$model,
+    parameters = mod_obj$parameters,
+    ruv = mod_obj$ruv,
+    omega = mod_obj$omega_matrix,
+    fixed = attr(mod_obj$model, "fixed"),
+    iov = list(
+      cv = list(CL = 0.1288, V = 0.1334),
+      n_bins = 5,
+      bins = c(0, 24, 48, 72, 96, 9999)
+    )
+  )
+  out_model_library <- parse_model("pkbusulfanshukla")
   expect_identical(out_model_object, out_model_library)
 })
 
@@ -103,3 +127,4 @@ test_that("check_installed_model_library() returns error if model not installed"
     'The package "pkvanconotinstalled" is required.'
   )
 })
+

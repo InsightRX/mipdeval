@@ -31,25 +31,42 @@ parse_model.character <- function(
   parameters = NULL,
   ruv = NULL,
   omega = NULL,
-  iov_bins = NULL
+  fixed = NULL,
+  iov = NULL
 ) {
   check_installed_model_library(model)
+
   withr::with_package(model, quietly = TRUE, {
     # Use model defaults if user has not supplied overrides:
     if (is.null(parameters)) parameters <- parameters()
     if (is.null(ruv)) ruv <- ruv()
     if (is.null(omega)) omega <- omega_matrix()
-    if (is.null(iov_bins)) iov_bins <- iov()
-    list(
+    if (is.null(fixed)) fixed <- fixed()
+    if (is.null(iov)) iov <- iov()
+    bins <- as.numeric(iov$bins)
+    out <- list(
       model = model(),
       parameters = parameters,
-      # covariates = PKPDsim::get_model_covariates(model()),
       ruv = ruv,
-      omega_matrix = omega,
-      iov_bins = iov_bins,
-      fixed = fixed()
+      omega = omega,
+      fixed = fixed(),
+      bins = bins
     )
+    if(!is.null(iov)) {
+      iov_obj <- PKPDmap::create_iov_object(
+        cv = iov$cv,
+        omega = omega,
+        bins = bins,
+        parameters = parameters,
+        fixed = fixed,
+        ruv = ruv,
+        verbose = FALSE
+      )
+      iov_updates <- c("parameters", "omega", "fixed", "bins")
+      out[iov_updates] <- iov_obj[iov_updates]
+    }
   })
+  out
 }
 
 #' @export
@@ -60,16 +77,31 @@ parse_model.PKPDsim <- function(
   parameters,
   ruv,
   omega,
-  iov_bins = NULL
+  fixed = NULL,
+  iov = NULL
 ) {
-  list(
+  out <- list(
     model = model,
     parameters = parameters,
     ruv = ruv,
-    omega_matrix = omega,
-    iov_bins = iov_bins,
-    fixed = attr(model, "fixed")
+    omega = omega,
+    fixed = fixed,
+    bins = numeric(0)
   )
+  if(!is.null(iov)) {
+    iov_obj <- PKPDmap::create_iov_object(
+      cv = iov$cv,
+      omega = omega,
+      bins = as.numeric(iov$bins),
+      parameters = parameters,
+      fixed = fixed,
+      ruv = ruv,
+      verbose = FALSE
+    )
+    iov_updates <- c("parameters", "omega", "fixed", "bins")
+    out[iov_updates] <- iov_obj[iov_updates]
+  }
+  out
 }
 
 #' Check if PKPDsim model library is installed

@@ -14,10 +14,11 @@ parse_model(model, ...)
   parameters = NULL,
   ruv = NULL,
   omega = NULL,
-  iov_bins = NULL
+  fixed = NULL,
+  iov = NULL
 )
 
-\method{parse_model}{PKPDsim}(model, ..., parameters, ruv, omega, iov_bins = NULL)
+\method{parse_model}{PKPDsim}(model, ..., parameters, ruv, omega, fixed = NULL, iov = NULL)
 }
 \arguments{
 \item{model}{either a PKPDsim model object, or a string pointing to a
@@ -32,8 +33,12 @@ PKPDsim-generated model library, e.g. \code{pkvancothomson}}
 \item{omega}{between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects}
 
-\item{iov_bins}{bins for inter-occasion variability. Passed unchanged to 
-PKPDsim.}
+\item{fixed}{fix a specific parameters, supplied as vector of strings}
+
+\item{iov}{a list specifying the required metadata for implementation of IOV,
+specifically the CV of the IOV for each parameter and a vector of bin
+separators. For example,
+\code{list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))}}
 }
 \value{
 A named list.

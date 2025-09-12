@@ -9,8 +9,9 @@ run_eval(
   data,
   ids = NULL,
   parameters = NULL,
+  fixed = NULL,
   omega = NULL,
-  iov_bins = NULL,
+  iov = NULL,
   ruv = NULL,
   dictionary = list(),
   group = NULL,
@@ -33,11 +34,15 @@ runs analysis on all subjects in dataset)}
 
 \item{parameters}{list of parameters}
 
+\item{fixed}{fix a specific parameters, supplied as vector of strings}
+
 \item{omega}{between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects}
 
-\item{iov_bins}{bins for inter-occasion variability. Passed unchanged to 
-PKPDsim.}
+\item{iov}{a list specifying the required metadata for implementation of IOV,
+specifically the CV of the IOV for each parameter and a vector of bin
+separators. For example,
+\code{list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))}}
 
 \item{ruv}{residual error variability magnitude, specified as list.}
 
