@@ -11,6 +11,9 @@ mape(obs, pred)
 
 \item{pred}{predictions vector}
 }
+\value{
+A numeric vector
+}
 \description{
 Mean absolute prediction error
 }

@@ -2,11 +2,10 @@
 #' an individual's dataset
 #'
 #' @inheritParams run_eval
+#' @param mod_obj list object with model information
 #' @param progress_function function to increment progress bar
 #'
 #' @returns a `data.frame` with individual predictions
-#'
-#' @export
 #'
 run_eval_core <- function(
   mod_obj,
@@ -98,14 +97,14 @@ run_eval_core <- function(
         ),
     comb
   ) |> # and filter only the next grouped prediction for each iteration
-    dplyr::filter(`_iteration` == (`_grouper` - 1)) |>
+    dplyr::filter(.data$`_iteration` == (.data$`_grouper` - 1)) |>
     dplyr::mutate(
-      iter_ipred = ipred,
+      iter_ipred = .data$ipred,
       map_ipred = pred_data$ipred, # ipred from last fit (full MAP)
-      apriori = (`_iteration` == 0)
+      apriori = (.data$`_iteration` == 0)
     ) |>
     dplyr::select(
-      id, `_iteration`, `_grouper`, t, dv, pred, map_ipred, iter_ipred, apriori,
+      "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred", "iter_ipred", "apriori",
       !!names(parameters)
     )
 

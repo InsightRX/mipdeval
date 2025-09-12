@@ -11,6 +11,9 @@ rmse(obs, pred)
 
 \item{pred}{predictions vector}
 }
+\value{
+A numeric vector
+}
 \description{
 Root-mean-squared error
 }

@@ -20,6 +20,8 @@ run_eval_core(
 )
 }
 \arguments{
+\item{mod_obj}{list object with model information}
+
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
 \item{parameters}{list of parameters}
