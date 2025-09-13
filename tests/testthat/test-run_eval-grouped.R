@@ -2,17 +2,19 @@ require("pkbusulfanshukla")
 library(dplyr)
 
 test_that("Grouped run for busulfan/shukla works", {
+  n_ids <- 5
+  ## TODO: update busulfan dataset to have sampled covariates
   nm_busulfan <- add_grouping_bins(
     nm_busulfan,
     label = "group",
     bins = c(0, 24, 48, 72, 120)
   )
   res <- run_eval(
-    model = "pkbusulfanshukla",
+    model = "pkbusulfanucsf",
     data = nm_busulfan,
     group = "group",
     progress = FALSE,
-    ids = c(1:3)
+    ids = c(1:n_ids)
   )
   expect_equal(names(res), c("results", "stats"))
 
@@ -29,7 +31,7 @@ test_that("Grouped run for busulfan/shukla works", {
     )
   proseval <- parse_psn_proseval_results(
     raw_proseval |>
-      filter(ID <= 3),
+      filter(ID <= n_ids),
     group = "group"
   )
 
@@ -45,8 +47,7 @@ test_that("Grouped run for busulfan/shukla works", {
     compare_psn_proseval_results(
       res,
       proseval,
-      tol = 0.25
+      tol = 0.01
     )$within_tol
   )
-
 })

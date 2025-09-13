@@ -62,7 +62,7 @@ parse_model.character <- function(
         ruv = ruv,
         verbose = FALSE
       )
-      iov_updates <- c("parameters", "omega", "fixed", "bins")
+      iov_updates <- c("parameters", "omega", "fixed", "bins", "kappa")
       out[iov_updates] <- iov_obj[iov_updates]
     }
   })

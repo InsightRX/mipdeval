@@ -46,6 +46,8 @@ test_that("Basic run with vanco data + model works", {
     nrow(res$results |> dplyr::filter(!apriori))
   )
   ## comparable iterative predictions
+  ## Note: difference with PsN is fairly high (max 8%), but this is due to the
+  ##   Thomson model having very high IIV on some parameters
   expect_true(compare_psn_proseval_results(res, proseval, tol = 0.1)$within_tol)
 })
 

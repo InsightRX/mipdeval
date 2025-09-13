@@ -51,11 +51,14 @@ run_eval_core <- function(
       omega = mod_obj$omega,
       error = mod_obj$ruv,
       fixed = mod_obj$fixed,
+      as_eta = mod_obj$kappa,
       data = data$observations,
       covariates = cov_data,
       regimen = data$regimen,
-      weight_prior = weight_prior,
-      weights = weights
+      weight_prior = 1,
+      weights = weights,
+      iov_bins = mod_obj$bins,
+      verbose = FALSE
     )
 
     ## Data frame with predictive data

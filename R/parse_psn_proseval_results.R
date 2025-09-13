@@ -22,10 +22,22 @@ parse_psn_proseval_results <- function(data, group = NULL) {
       dplyr::mutate(group = seq(.data$OBS[1] + 1, .data$OBS[1] + dplyr::n(), 1)) |>
       dplyr::ungroup()
   }
-  res <- res |>
-    dplyr::filter(.data$group == .data$OBS + 1) |>
-    dplyr::mutate(n = 1:length(.data$OBS)) |>
+  ## create a data.frame on which OBS iterations to take from proseval results
+  idx_tab <- res |>
+    dplyr::filter(OBS == 1) |>
+    dplyr::group_by(.data$ID,) |>
+    dplyr::mutate(idx = 1:dplyr::n()) |>
+    dplyr::filter(!duplicated(group)) |>
+    dplyr::ungroup() |>
+    dplyr::filter(group > 1) |>
+    dplyr::select(ID, idx) |>
+    dplyr::group_by(ID) |>
+    dplyr::summarise(idx = list(idx))
+  dplyr::left_join(res, idx_tab) |>
+    dplyr::filter(purrr::map2_lgl(idx, OBS, ~ .y %in% .x)) |>  # filter rows that match the index table
+    dplyr::group_by(ID, OBS) |>
+    dplyr::filter(group == group[1]) |>
     dplyr::mutate(res = .data$DV - .data$IPRED) |>
-    dplyr::select("TIME", obs = "DV", pred = "IPRED", pop = "PRED", "res", "n", !!group) |>
+    dplyr::select("TIME", obs = "DV", pred = "IPRED", pop = "PRED", "res", !!group) |>
     dplyr::ungroup()
 }
