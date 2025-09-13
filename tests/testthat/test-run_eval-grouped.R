@@ -1,6 +1,3 @@
-require("pkbusulfanshukla")
-library(dplyr)
-
 test_that("Grouped run for busulfan/shukla works", {
   n_ids <- 5
   ## TODO: update busulfan dataset to have sampled covariates
@@ -25,13 +22,13 @@ test_that("Grouped run for busulfan/shukla works", {
       "extdata/busulfan_shukla.csv"
     )
   ) |>
-    left_join(
+    dplyr::left_join(
       nm_busulfan |>
-        select(ID, TIME, group), by = c("ID", "TIME")
+        dplyr::select(ID, TIME, group), by = c("ID", "TIME")
     )
   proseval <- parse_psn_proseval_results(
     raw_proseval |>
-      filter(ID <= n_ids),
+      dplyr::filter(ID <= n_ids),
     group = "group"
   )
 
@@ -39,7 +36,7 @@ test_that("Grouped run for busulfan/shukla works", {
   ## Same number of rows
   expect_equal(
     nrow(proseval),
-    nrow(res$results |> filter(!apriori))
+    nrow(res$results |> dplyr::filter(!apriori))
   )
 
   ## comparable iterative predictions

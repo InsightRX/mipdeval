@@ -12,11 +12,11 @@ set.seed(54321)
 n_ids <- 10
 covariates_df <- data.frame(
   ID = 1:n_ids,
-  AGE = 5 * round(exp(rnorm(n_ids, 0, .3))),
-  WT = 20 * round(exp(rnorm(n_ids, 0, .2))),
-  HT = 100 * round(exp(rnorm(n_ids, 0, .3))),
-  SEX = round(runif(n_ids, 0.5)),
-  REGI = 0
+  AGE = round(5 * exp(rnorm(n_ids, 0, .3))),
+  WT = round(20 * exp(rnorm(n_ids, 0, .2))),
+  HT = round(100 * exp(rnorm(n_ids, 0, .3))),
+  SEX = round(runif(n_ids, 0, 1)),
+  REGI = round(runif(n_ids, 0, 1))
 )
 reg <- new_regimen(amt = 50, interval = 24, t_inf = 3, n = 4, type = 'infusion')
 
