@@ -1,8 +1,9 @@
 #' Parse PsN::proseval results.csv to filter out only the rows
-#' that we need (for prediction of next level)
+#' that we need (for prediction of next sample or group of samples)
 #'
 #' @param data results data.frame or path to csv file
-#' @param group group samples using the column name specified in `group`
+#' @param group optional. Group samples using the column name specified in
+#'   `group`
 #'
 #' @returns A data.frame
 #' @export

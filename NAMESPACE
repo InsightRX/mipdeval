@@ -3,7 +3,7 @@
 S3method(parse_model,PKPDsim)
 S3method(parse_model,character)
 S3method(parse_model,default)
-export(add_grouping_bins)
+export(add_grouping_column)
 export(compare_psn_execute_results)
 export(compare_psn_proseval_results)
 export(install_default_literature_model)
