@@ -1,5 +1,3 @@
-nm_busulfan <- read.csv(file = "./inst/datasets/nm_busulfan.csv")
-
 ## Grouping by dose
 test_that("grouping by dose works properly on 4 dose intervals", {
   dat <- add_grouping_column(

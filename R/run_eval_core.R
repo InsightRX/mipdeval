@@ -55,7 +55,7 @@ run_eval_core <- function(
       data = data$observations,
       covariates = cov_data,
       regimen = data$regimen,
-      weight_prior = 1,
+      weight_prior = weight_prior,
       weights = weights,
       iov_bins = mod_obj$bins,
       verbose = FALSE

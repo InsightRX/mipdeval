@@ -4,16 +4,18 @@
 \alias{group_by_time}
 \title{Group data by time using bin separators}
 \usage{
-group_by_time(data, bins = c(0, 24, 48, 72, 96, Inf), dictionary, ...)
+group_by_time(
+  data,
+  bins = c(0, 24, 48, 72, 96, Inf),
+  dictionary = list(TIME = "TIME"),
+  ...
+)
 }
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
 \item{bins}{vector of bin separators. Suggestion to keep the last bin
 separator \code{Inf}, to ensure all points are included in a group.}
-
-\item{dictionary}{data dictionary. Optional, a named character vector that specifies the column
-names to be used from the dataset.}
 
 \item{...}{passed onto the chosen grouper function, see the respective
 grouping functions for more details. E.g. for \code{group_by_time}, need a \code{bins}

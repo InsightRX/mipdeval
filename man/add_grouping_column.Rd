@@ -4,13 +4,7 @@
 \alias{add_grouping_column}
 \title{Add grouping based on time bins}
 \usage{
-add_grouping_column(
-  data,
-  fun = group_by_time,
-  label = "group",
-  dictionary = list(id = "ID", evid = "EVID", time = "TIME"),
-  ...
-)
+add_grouping_column(data, fun = group_by_time, label = "group", ...)
 }
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
@@ -22,9 +16,6 @@ function, input to the function needs to take at least the arguments \code{.data
 rows as the input (and of course a new column providing the grouping).}
 
 \item{label}{column name of grouper column in dataset}
-
-\item{dictionary}{data dictionary. Optional, a named character vector that specifies the column
-names to be used from the dataset.}
 
 \item{...}{passed onto the chosen grouper function, see the respective
 grouping functions for more details. E.g. for \code{group_by_time}, need a \code{bins}

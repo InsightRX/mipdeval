@@ -46,8 +46,8 @@ separators. For example,
 
 \item{ruv}{residual error variability magnitude, specified as list.}
 
-\item{dictionary}{data dictionary. Optional, a named character vector that specifies the column
-names to be used from the dataset.}
+\item{dictionary}{data dictionary. Optional, a named character vector that
+specifies the column names to be used from the dataset.}
 
 \item{group}{name of variable in dataset that groups observations together in
 iterative flow. By default each observation will be its own "group", but
