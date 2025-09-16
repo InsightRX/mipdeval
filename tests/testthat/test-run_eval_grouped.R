@@ -6,7 +6,7 @@ test_that("Grouped run for busulfan/shukla works", {
     label = "group"
   )
   res <- run_eval(
-    model = "pkbusulfanucsf",
+    model = "pkbusulfanshukla",
     data = nm_busulfan,
     group = "group",
     progress = FALSE,

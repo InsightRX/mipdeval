@@ -34,8 +34,9 @@ add_grouping_column <- function(
 #' Group data by time using bin separators
 #'
 #' @inheritParams add_grouping_column
+#' @inheritParams run_eval
 #' @param bins vector of bin separators. Suggestion to keep the last bin
-#' separator `Inf`, to ensure all points are included in a group.
+#'   separator `Inf`, to ensure all points are included in a group.
 #'
 #' @returns a vector of the same length as the number of rows in `.data`
 group_by_time <- function(
@@ -58,6 +59,7 @@ group_by_time <- function(
 #' one sample
 #'
 #' @inheritParams add_grouping_column
+#' @inheritParams run_eval
 #'
 #' @returns a vector of the same length as the number of rows in `.data`
 group_by_dose <- function(
@@ -76,5 +78,5 @@ group_by_dose <- function(
     dplyr::mutate(`_has_sample` = any(.data[[dictionary$EVID]] == 0)) |>
     dplyr::group_by_at(dictionary$ID) |>
     dplyr::mutate(`_group` = cumsum(.data[[dictionary$EVID]] == 1 & .data$`_has_sample`)) |>
-    dplyr::pull(`_group`)
+    dplyr::pull(.data$`_group`)
 }

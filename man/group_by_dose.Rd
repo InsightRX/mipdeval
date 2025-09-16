@@ -14,6 +14,9 @@ group_by_dose(
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
+\item{dictionary}{data dictionary. Optional, a named character vector that
+specifies the column names to be used from the dataset.}
+
 \item{...}{passed onto the chosen grouper function, see the respective
 grouping functions for more details. E.g. for \code{group_by_time}, need a \code{bins}
 argument.}

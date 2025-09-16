@@ -49,9 +49,9 @@ compare_psn_results <- function(mipdeval, psn, tol = 0.1, .apriori) {
   dplyr::summarise(
     reldiff_psn_results(mipdeval, psn, .apriori),
     mean_rel_diff = mean(.data$rel_diff),
-    sd_rel_diff = sd(.data$rel_diff),
+    sd_rel_diff = stats::sd(.data$rel_diff),
     max_rel_diff = max(abs(.data$rel_diff)),
-    within_tol = all(max_rel_diff < tol)
+    within_tol = all(.data$max_rel_diff < tol)
   )
 }
 

@@ -17,6 +17,9 @@ group_by_time(
 \item{bins}{vector of bin separators. Suggestion to keep the last bin
 separator \code{Inf}, to ensure all points are included in a group.}
 
+\item{dictionary}{data dictionary. Optional, a named character vector that
+specifies the column names to be used from the dataset.}
+
 \item{...}{passed onto the chosen grouper function, see the respective
 grouping functions for more details. E.g. for \code{group_by_time}, need a \code{bins}
 argument.}
