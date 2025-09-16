@@ -50,7 +50,8 @@ parse_model.character <- function(
       ruv = ruv,
       omega = omega,
       fixed = fixed(),
-      bins = bins
+      bins = bins,
+      kappa = NULL
     )
     if(!is.null(iov)) {
       iov_obj <- PKPDmap::create_iov_object(
@@ -86,7 +87,8 @@ parse_model.PKPDsim <- function(
     ruv = ruv,
     omega = omega,
     fixed = fixed,
-    bins = numeric(0)
+    bins = numeric(0),
+    kappa = NULL
   )
   if(!is.null(iov)) {
     iov_obj <- PKPDmap::create_iov_object(
@@ -98,7 +100,7 @@ parse_model.PKPDsim <- function(
       ruv = ruv,
       verbose = FALSE
     )
-    iov_updates <- c("parameters", "omega", "fixed", "bins")
+    iov_updates <- c("parameters", "omega", "fixed", "bins", "kappa")
     out[iov_updates] <- iov_obj[iov_updates]
   }
   out

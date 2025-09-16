@@ -7,8 +7,8 @@
 #' @param data NONMEM-style data.frame, or path to CSV file with NONMEM data
 #' @param ids optional, vector of subject IDs to run analysis on (by default
 #'   runs analysis on all subjects in dataset)
-#' @param dictionary data dictionary. Optional, a named character vector that specifies the column
-#'   names to be used from the dataset.
+#' @param dictionary data dictionary. Optional, a named character vector that
+#'   specifies the column names to be used from the dataset.
 #' @param group name of variable in dataset that groups observations together in
 #' iterative flow. By default each observation will be its own "group", but
 #' this can be used to group peaks and troughs together, or to group

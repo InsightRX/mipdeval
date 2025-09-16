@@ -7,7 +7,8 @@ test_that("parse_model() works for PKPDsim model objects", {
       ruv = ruv(),
       omega = omega_matrix(),
       fixed = fixed(),
-      bins = numeric(0)
+      bins = numeric(0),
+      kappa = NULL
     )
   })
   out <- parse_model(
@@ -28,7 +29,8 @@ test_that("parse_model() works for installed PKPDsim model libraries", {
       ruv = ruv(),
       omega = omega_matrix(),
       fixed = fixed(),
-      bins = numeric(0)
+      bins = numeric(0),
+      kappa = NULL
     )
   })
   out <- parse_model("pkvancothomson")
@@ -47,7 +49,8 @@ test_that("parse_model() supports overrides for installed PKPDsim model librarie
       ruv = ruv,
       omega = omega,
       fixed = fixed(),
-      bins = numeric(0)
+      bins = numeric(0),
+      kappa = NULL
     )
   })
   out <- parse_model(
@@ -65,7 +68,8 @@ test_that("parse_model() output is identical across methods given same inputs", 
       model = model(),
       parameters = parameters(),
       ruv = ruv(),
-      omega_matrix = omega_matrix()
+      omega_matrix = omega_matrix(),
+      kappa = NULL
     )
   })
   out_model_object <- parse_model(
@@ -86,7 +90,7 @@ test_that("parse_model() output is identical across methods given same inputs fo
       parameters = parameters(),
       ruv = ruv(),
       omega_matrix = omega_matrix(),
-      bins = iov()$bins
+      iov = iov()
     )
   })
   out_model_object <- parse_model(
@@ -95,11 +99,7 @@ test_that("parse_model() output is identical across methods given same inputs fo
     ruv = mod_obj$ruv,
     omega = mod_obj$omega_matrix,
     fixed = attr(mod_obj$model, "fixed"),
-    iov = list(
-      cv = list(CL = 0.1288, V = 0.1334),
-      n_bins = 5,
-      bins = c(0, 24, 48, 72, 96, 9999)
-    )
+    iov = mod_obj$iov
   )
   out_model_library <- parse_model("pkbusulfanshukla")
   expect_identical(out_model_object, out_model_library)

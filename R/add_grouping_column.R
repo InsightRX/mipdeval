@@ -27,8 +27,7 @@ add_grouping_column <- function(
   if(inherits(fun, "character")) {
     fun <- get(fun)
   }
-  data <- data |>
-    dplyr::mutate(!!label := fun(data, ...))
+  data[[label]] <- fun(data, ...)
   data
 }
 
@@ -43,12 +42,12 @@ group_by_time <- function(
     data,
     bins = c(0, 24, 48, 72, 96, Inf),
     dictionary = list(
-      "time" = "TIME"
+      "TIME" = "TIME"
     ),
     ...
 ) {
   cut(
-    data[[dictionary$time]],
+    data[[dictionary$TIME]],
     breaks = bins,
     include.lowest = TRUE
   ) |>
@@ -64,18 +63,18 @@ group_by_time <- function(
 group_by_dose <- function(
     data,
     dictionary = list(
-      "id" = "ID",
-      "evid" = "EVID",
-      "time" = "TIME"
+      "ID" = "ID",
+      "EVID" = "EVID",
+      "TIME" = "TIME"
     ),
     ...
 ) {
   data |>
-    dplyr::group_by_at(dictionary$id) |>
-    dplyr::mutate(`_dose_idx` = cumsum(.data[[dictionary$evid]])) |>
-    dplyr::group_by(ID, `_dose_idx`) |>
-    dplyr::mutate(`_has_sample` = any(.data[[dictionary$evid]] == 0)) |>
-    dplyr::group_by_at(dictionary$id) |>
-    dplyr::mutate(`_group` = cumsum(.data[[dictionary$evid]] == 1 & .data$`_has_sample`)) |>
+    dplyr::group_by_at(dictionary$ID) |>
+    dplyr::mutate(`_dose_idx` = cumsum(.data[[dictionary$EVID]])) |>
+    dplyr::group_by_at(c(dictionary$ID, "_dose_idx")) |>
+    dplyr::mutate(`_has_sample` = any(.data[[dictionary$EVID]] == 0)) |>
+    dplyr::group_by_at(dictionary$ID) |>
+    dplyr::mutate(`_group` = cumsum(.data[[dictionary$EVID]] == 1 & .data$`_has_sample`)) |>
     dplyr::pull(`_group`)
 }

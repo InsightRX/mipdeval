@@ -93,3 +93,18 @@ test_that("Flattening of prior results in different predictions", {
     )
   )
 })
+
+test_that("Run also works when `dictionary` is used", {
+  local_mipdeval_options()
+  nm_vanco2 <- nm_vanco |>
+    dplyr::rename(id2 = "ID", time2 = "TIME", evid2 = "EVID")
+  res <- run_eval(
+    model = "pkvancothomson",
+    data = nm_vanco2,
+    dictionary = c(ID = "id2", TIME = "time2", EVID = "evid2"),
+    progress = F,
+    ids = 1
+  )
+  expect_equal(names(res), c("results", "stats"))
+})
+
