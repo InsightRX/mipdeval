@@ -1,7 +1,5 @@
 test_that("Grouped run for busulfan/shukla works", {
   n_ids <- 5
-  ## TODO: update busulfan dataset to have sampled covariates
-  nm_busulfan <- read.csv(file = "./inst/datasets/nm_busulfan.csv")
   nm_busulfan <- add_grouping_column(
     nm_busulfan,
     fun = "group_by_dose",

@@ -19,11 +19,6 @@ add_grouping_column <- function(
     data,
     fun = group_by_time,
     label = "group",
-    dictionary = list(
-      "id" = "ID",
-      "evid" = "EVID",
-      "time" = "TIME"
-    ),
     ...
 ) {
   if(label %in% names(data)) {
@@ -33,7 +28,7 @@ add_grouping_column <- function(
     fun <- get(fun)
   }
   data <- data |>
-    dplyr::mutate(!!label := fun(data, dictionary, ...))
+    dplyr::mutate(!!label := fun(data, ...))
   data
 }
 
@@ -47,7 +42,9 @@ add_grouping_column <- function(
 group_by_time <- function(
     data,
     bins = c(0, 24, 48, 72, 96, Inf),
-    dictionary,
+    dictionary = list(
+      "time" = "TIME"
+    ),
     ...
 ) {
   cut(
@@ -66,7 +63,11 @@ group_by_time <- function(
 #' @returns a vector of the same length as the number of rows in `.data`
 group_by_dose <- function(
     data,
-    dictionary,
+    dictionary = list(
+      "id" = "ID",
+      "evid" = "EVID",
+      "time" = "TIME"
+    ),
     ...
 ) {
   data |>
