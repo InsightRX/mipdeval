@@ -26,7 +26,7 @@ parse_psn_proseval_results <- function(data, group = NULL) {
   ## create a data.frame on which OBS iterations to take from proseval results
   idx_tab <- res |>
     dplyr::filter(.data$OBS == 1) |>
-    dplyr::group_by(.data$ID,) |>
+    dplyr::group_by(.data$ID) |>
     dplyr::mutate(idx = 1:dplyr::n()) |>
     dplyr::filter(!duplicated(group)) |>
     dplyr::ungroup() |>

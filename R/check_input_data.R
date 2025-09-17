@@ -15,7 +15,6 @@ check_input_data <- function(data, dictionary) {
     valid_dict <- c("ID", "TIME", "EVID", "DV")
     idx <- names(dictionary) %in% valid_dict
     if(any(! idx)) {
-      names(dictionary)[!idx]
       cli::cli_abort("Dictionary entries not recognized: {names(dictionary)[!idx]}. Valid data dictionary entries are: {valid_dict}")
     }
     data <- data |>
