@@ -60,6 +60,8 @@ run_eval <- function(
   threads = 1,
   progress = TRUE
 ) {
+  # TODO: Refactor to S3 method like in parse_model() to make required and
+  # optional arguments clearer for the different types of `model` inputs.
 
   ## 0. Gather model information in an object
   mod_obj <- parse_model(
@@ -139,6 +141,8 @@ run_eval <- function(
     results = tibble::as_tibble(res_df),
     stats = tibble::as_tibble(stats_summ)
   )
+
+  # TODO: Turn out into an S3 class, so we can give it methods like print(), etc.
 
   ## 5. Return results
   out
