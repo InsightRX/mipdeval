@@ -20,13 +20,17 @@ separator \code{Inf}, to ensure all points are included in a group.}
 \item{dictionary}{data dictionary. Optional, a named character vector that
 specifies the column names to be used from the dataset.}
 
-\item{...}{passed onto the chosen grouper function, see the respective
-grouping functions for more details. E.g. for \code{group_by_time}, need a \code{bins}
-argument.}
+\item{...}{Additional arguments passed onto \code{fun}. See the respective
+grouping functions for more details. E.g. for \code{group_by_time}, need a
+\code{bins} argument.}
 }
 \value{
-a vector of the same length as the number of rows in \code{.data}
+a numeric vector of the same length as the number of rows in \code{data}.
 }
 \description{
 Group data by time using bin separators
+}
+\examples{
+group_by_time(nm_busulfan)
+
 }
