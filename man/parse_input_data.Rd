@@ -14,7 +14,7 @@ parse_input_data(data, covariates, ids, group = NULL)
 \item{ids}{optional, vector of subject IDs to run analysis on (by default
 runs analysis on all subjects in dataset)}
 
-\item{group}{name of variable in dataset that groups observations together in
+\item{group}{name of column in \code{data} that groups observations together in
 iterative flow. By default each observation will be its own "group", but
 this can be used to group peaks and troughs together, or to group
 observations on the same day together. Grouping will be done prior to
