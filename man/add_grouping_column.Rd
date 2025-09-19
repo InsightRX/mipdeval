@@ -2,28 +2,54 @@
 % Please edit documentation in R/add_grouping_column.R
 \name{add_grouping_column}
 \alias{add_grouping_column}
-\title{Add grouping based on time bins}
+\title{Add grouping column using a function}
 \usage{
 add_grouping_column(data, fun = group_by_time, label = "group", ...)
 }
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
-\item{fun}{grouping function to use. Can be custom function, or one of the
-built-in grouping functions: group_by_time, group_by_dose. If a custom
-function, input to the function needs to take at least the arguments \code{.data}
-, \code{dictionary} and \code{...}, and return a data.frame with the same number of
-rows as the input (and of course a new column providing the grouping).}
+\item{fun}{Function used to define groups. Either (1) a quoted or character
+name referencing a function (e.g., \code{\link[=group_by_time]{group_by_time()}}, \code{\link[=group_by_dose]{group_by_dose()}}, or a
+custom function), or (2) an anonymous function; see examples.}
 
 \item{label}{column name of grouper column in dataset}
 
-\item{...}{passed onto the chosen grouper function, see the respective
-grouping functions for more details. E.g. for \code{group_by_time}, need a \code{bins}
-argument.}
+\item{...}{Additional arguments passed onto \code{fun}. See the respective
+grouping functions for more details. E.g. for \code{group_by_time}, need a
+\code{bins} argument.}
 }
 \value{
 data.frame
 }
 \description{
-Add grouping based on time bins
+Add grouping column using a function
+}
+\details{
+All functions supplied to \code{add_grouping_column()} must take at least the
+argument \code{data}, and return a numeric vector (or a vector that can be cast to
+numeric) of the same length as the number of rows in \code{data}, which will be
+used as the grouping column.
+}
+\examples{
+# group_by_dose:
+add_grouping_column(nm_busulfan, fun = group_by_dose, label = "group")
+
+# group_by_time:
+add_grouping_column(nm_busulfan, fun = "group_by_time", label = "group")
+
+# Anonymous function:
+add_grouping_column(
+  nm_busulfan,
+  fun = function(data) {
+    as.numeric(cut(
+      data$TIME, breaks = c(0, 24, 48, 72, 96, Inf), include.lowest = TRUE
+    ))
+  },
+  label = "group"
+)
+
+}
+\seealso{
+\code{\link[=group_by_time]{group_by_time()}}, \code{\link[=group_by_dose]{group_by_dose()}}
 }

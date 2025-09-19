@@ -9,11 +9,11 @@
 #'   runs analysis on all subjects in dataset)
 #' @param dictionary data dictionary. Optional, a named character vector that
 #'   specifies the column names to be used from the dataset.
-#' @param group name of variable in dataset that groups observations together in
-#' iterative flow. By default each observation will be its own "group", but
-#' this can be used to group peaks and troughs together, or to group
-#' observations on the same day together. Grouping will be done prior to
-#' running the analysis, so cannot be changed afterwards.
+#' @param group name of column in `data` that groups observations together in
+#'   iterative flow. By default each observation will be its own "group", but
+#'   this can be used to group peaks and troughs together, or to group
+#'   observations on the same day together. Grouping will be done prior to
+#'   running the analysis, so cannot be changed afterwards.
 #' @param censor_covariates with the `proseval` tool in PsN, there is “data
 #'   leakage” (of future covariates data): since the NONMEM dataset in each step
 #'   contains the covariates for the future, this is technically data leakage,
@@ -42,7 +42,6 @@
 #' @returns A named list of data frames.
 #'
 #' @export
-#'
 run_eval <- function(
   model,
   data,
@@ -61,6 +60,8 @@ run_eval <- function(
   threads = 1,
   progress = TRUE
 ) {
+  # TODO: Refactor to S3 method like in parse_model() to make required and
+  # optional arguments clearer for the different types of `model` inputs.
 
   ## 0. Gather model information in an object
   mod_obj <- parse_model(
@@ -140,6 +141,8 @@ run_eval <- function(
     results = tibble::as_tibble(res_df),
     stats = tibble::as_tibble(stats_summ)
   )
+
+  # TODO: Turn out into an S3 class, so we can give it methods like print(), etc.
 
   ## 5. Return results
   out

@@ -1,4 +1,5 @@
 # Simulate busulfan data for use in examples and tests:
+library(tibble)
 library(dplyr)
 library(tidyr)
 library(PKPDsim)
@@ -48,7 +49,10 @@ doses <- expand.grid(1:n_ids, reg$dose_times) |>
 nm_busulfan <- bind_rows(doses, tdm) |>
   arrange(ID, TIME, EVID) |>
   group_by(ID) |>
-  tidyr::fill(AGE, WT, HT, SEX, REGI, .direction = "downup")
+  fill(AGE, WT, HT, SEX, REGI, .direction = "downup")
+
+# Make sure output is an ungrouped tibble:
+nm_busulfan <- as_tibble(ungroup(nm_busulfan))
 
 # Save a .csv so this data can be used with PsN:
 readr::write_csv(nm_busulfan, "inst/extdata/nm_busulfan.csv")

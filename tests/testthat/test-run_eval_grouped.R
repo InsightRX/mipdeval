@@ -1,4 +1,5 @@
 test_that("Grouped run for busulfan/shukla works", {
+  local_mipdeval_options()
   n_ids <- 5
   nm_busulfan <- add_grouping_column(
     nm_busulfan,
@@ -20,30 +21,18 @@ test_that("Grouped run for busulfan/shukla works", {
       package = "mipdeval",
       "extdata/busulfan_shukla.csv"
     )
-  ) |>
-    dplyr::left_join(
-      nm_busulfan |>
-        dplyr::select(ID, TIME, group), by = c("ID", "TIME")
-    )
-  proseval <- parse_psn_proseval_results(
-    raw_proseval |>
-      dplyr::filter(ID <= n_ids),
-    group = "group"
   )
+  proseval <- raw_proseval |>
+    dplyr::left_join(
+      dplyr::select(nm_busulfan, ID, TIME, group), by = c("ID", "TIME")
+    ) |>
+    dplyr::filter(ID <= n_ids) |>
+    parse_psn_proseval_results(group = "group")
 
   ## Check that it matches proseval results in NONMEM / PsN
   ## Same number of rows
-  expect_equal(
-    nrow(proseval),
-    nrow(res$results |> dplyr::filter(!apriori))
-  )
+  expect_equal(nrow(proseval), nrow(dplyr::filter(res$results, !apriori)))
 
   ## comparable iterative predictions
-  expect_true(
-    compare_psn_proseval_results(
-      res,
-      proseval,
-      tol = 0.01
-    )$within_tol
-  )
+  expect_true(compare_psn_proseval_results(res, proseval, tol = 0.01)$within_tol)
 })

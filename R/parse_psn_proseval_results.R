@@ -31,7 +31,7 @@ parse_psn_proseval_results <- function(data, group = NULL) {
     dplyr::filter(!duplicated(group)) |>
     dplyr::ungroup() |>
     dplyr::filter(group > 1) |>
-    dplyr::select(.data$ID, .data$idx) |>
+    dplyr::select("ID", "idx") |>
     dplyr::group_by(.data$ID) |>
     dplyr::summarise(idx = list(.data$idx))
   dplyr::left_join(res, idx_tab) |>
