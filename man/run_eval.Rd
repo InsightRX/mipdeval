@@ -40,8 +40,8 @@ runs analysis on all subjects in dataset)}
 lower triangle of the covariance matrix of random effects}
 
 \item{iov}{a list specifying the required metadata for implementation of IOV,
-specifically the CV of the IOV for each parameter and a vector of bin
-separators. For example,
+specifically the coefficient of variation (CV \%) of the IOV for each
+parameter and a vector of bin separators. For example,
 \code{list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))}}
 
 \item{ruv}{residual error variability magnitude, specified as list.}

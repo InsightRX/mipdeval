@@ -32,8 +32,8 @@
 #'   i.e. no parallel execution
 #' @param ruv residual error variability magnitude, specified as list.
 #' @param iov a list specifying the required metadata for implementation of IOV,
-#'   specifically the CV of the IOV for each parameter and a vector of bin
-#'   separators. For example,
+#'   specifically the coefficient of variation (CV %) of the IOV for each
+#'   parameter and a vector of bin separators. For example,
 #'   `list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))`
 #' @param progress should a progress bar be shown? Default is `TRUE`, but when
 #'   debugging the package it is useful to have it off, since progress bar
