@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mipdeval</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -48,6 +48,10 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="add_grouping_column.html">add_grouping_column()</a></code> </p>
+        </td>
+        <td><p>Add grouping column using a function</p></td>
+      </tr><tr><td>
           <p><code><a href="check_input_data.html">check_input_data()</a></code> </p>
         </td>
         <td><p>Do some checks and minor manipulations on input dataset</p></td>
@@ -63,6 +67,14 @@
           <p><code><a href="get_required_covariates.html">get_required_covariates()</a></code> </p>
         </td>
         <td><p>Get required covariates from a PKPDsim model object</p></td>
+      </tr><tr><td>
+          <p><code><a href="group_by_dose.html">group_by_dose()</a></code> </p>
+        </td>
+        <td><p>Will create a separate group for each dose intervals that contains at least one sample</p></td>
+      </tr><tr><td>
+          <p><code><a href="group_by_time.html">group_by_time()</a></code> </p>
+        </td>
+        <td><p>Group data by time using bin separators</p></td>
       </tr><tr><td>
           <p><code><a href="handle_covariate_censoring.html">handle_covariate_censoring()</a></code> </p>
         </td>
@@ -98,7 +110,7 @@
       </tr><tr><td>
           <p><code><a href="parse_psn_proseval_results.html">parse_psn_proseval_results()</a></code> </p>
         </td>
-        <td><p>Parse PsN::proseval results.csv to filter out only the rows that we need (for prediction of next level)</p></td>
+        <td><p>Parse PsN::proseval results.csv to filter out only the rows that we need (for prediction of next sample or group of samples)</p></td>
       </tr><tr><td>
           <p><code><a href="read_input_data.html">read_input_data()</a></code> </p>
         </td>

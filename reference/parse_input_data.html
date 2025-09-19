@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mipdeval</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_input_data</span><span class="op">(</span><span class="va">data</span>, <span class="va">covariates</span>, <span class="va">ids</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_input_data</span><span class="op">(</span><span class="va">data</span>, <span class="va">covariates</span>, <span class="va">ids</span>, group <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -68,6 +68,14 @@
 <dt id="arg-ids">ids<a class="anchor" aria-label="anchor" href="#arg-ids"></a></dt>
 <dd><p>optional, vector of subject IDs to run analysis on (by default
 runs analysis on all subjects in dataset)</p></dd>
+
+
+<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
+<dd><p>name of column in <code>data</code> that groups observations together in
+iterative flow. By default each observation will be its own "group", but
+this can be used to group peaks and troughs together, or to group
+observations on the same day together. Grouping will be done prior to
+running the analysis, so cannot be changed afterwards.</p></dd>
 
 </dl></div>
     <div id="value">

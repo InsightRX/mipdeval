@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mipdeval</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -55,11 +55,12 @@
 <span>  <span class="va">data</span>,</span>
 <span>  ids <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  parameters <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fixed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  omega <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  iov_bins <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  iov <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ruv <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dictionary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weight_prior <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  censor_covariates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -91,14 +92,20 @@ runs analysis on all subjects in dataset)</p></dd>
 <dd><p>list of parameters</p></dd>
 
 
+<dt id="arg-fixed">fixed<a class="anchor" aria-label="anchor" href="#arg-fixed"></a></dt>
+<dd><p>fix a specific parameters, supplied as vector of strings</p></dd>
+
+
 <dt id="arg-omega">omega<a class="anchor" aria-label="anchor" href="#arg-omega"></a></dt>
 <dd><p>between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects</p></dd>
 
 
-<dt id="arg-iov-bins">iov_bins<a class="anchor" aria-label="anchor" href="#arg-iov-bins"></a></dt>
-<dd><p>bins for inter-occasion variability. Passed unchanged to
-PKPDsim.</p></dd>
+<dt id="arg-iov">iov<a class="anchor" aria-label="anchor" href="#arg-iov"></a></dt>
+<dd><p>a list specifying the required metadata for implementation of IOV,
+specifically the coefficient of variation (CV %) of the IOV for each
+parameter and a vector of bin separators. For example,
+<code>list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))</code></p></dd>
 
 
 <dt id="arg-ruv">ruv<a class="anchor" aria-label="anchor" href="#arg-ruv"></a></dt>
@@ -106,12 +113,12 @@ PKPDsim.</p></dd>
 
 
 <dt id="arg-dictionary">dictionary<a class="anchor" aria-label="anchor" href="#arg-dictionary"></a></dt>
-<dd><p>data dictionary. Optional, a named character vector that specifies the column
-names to be used from the dataset.</p></dd>
+<dd><p>data dictionary. Optional, a named character vector that
+specifies the column names to be used from the dataset.</p></dd>
 
 
-<dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
-<dd><p>variable in dataset that groups observations together in
+<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
+<dd><p>name of column in <code>data</code> that groups observations together in
 iterative flow. By default each observation will be its own "group", but
 this can be used to group peaks and troughs together, or to group
 observations on the same day together. Grouping will be done prior to

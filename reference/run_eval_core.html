@@ -18,7 +18,7 @@ an individual's dataset"><!-- mathjax --><script src="https://cdnjs.cloudflare.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mipdeval</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -53,12 +53,11 @@ an individual's dataset</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_eval_core</span><span class="op">(</span></span>
-<span>  <span class="va">model</span>,</span>
+<span>  <span class="va">mod_obj</span>,</span>
 <span>  <span class="va">data</span>,</span>
 <span>  parameters <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  omega <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ruv <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weight_prior <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  censor_covariates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -72,9 +71,8 @@ an individual's dataset</p>
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
-<dd><p>either a PKPDsim model object, or a string pointing to a
-PKPDsim-generated model library, e.g. <code>pkvancothomson</code></p></dd>
+<dl><dt id="arg-mod-obj">mod_obj<a class="anchor" aria-label="anchor" href="#arg-mod-obj"></a></dt>
+<dd><p>list object with model information</p></dd>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
@@ -92,14 +90,6 @@ lower triangle of the covariance matrix of random effects</p></dd>
 
 <dt id="arg-ruv">ruv<a class="anchor" aria-label="anchor" href="#arg-ruv"></a></dt>
 <dd><p>residual error variability magnitude, specified as list.</p></dd>
-
-
-<dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
-<dd><p>variable in dataset that groups observations together in
-iterative flow. By default each observation will be its own "group", but
-this can be used to group peaks and troughs together, or to group
-observations on the same day together. Grouping will be done prior to
-running the analysis, so cannot be changed afterwards.</p></dd>
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>

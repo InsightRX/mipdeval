@@ -7,10 +7,13 @@
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/news/index.html</loc></url>
+<url><loc>/reference/add_grouping_column.html</loc></url>
 <url><loc>/reference/check_input_data.html</loc></url>
 <url><loc>/reference/check_installed_model_library.html</loc></url>
 <url><loc>/reference/compare-psn-results.html</loc></url>
 <url><loc>/reference/get_required_covariates.html</loc></url>
+<url><loc>/reference/group_by_dose.html</loc></url>
+<url><loc>/reference/group_by_time.html</loc></url>
 <url><loc>/reference/handle_covariate_censoring.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/is_timevarying.html</loc></url>

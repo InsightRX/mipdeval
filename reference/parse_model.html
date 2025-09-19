@@ -18,7 +18,7 @@ model library."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/l
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mipdeval</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -61,11 +61,12 @@ model library.</p>
 <span>  parameters <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ruv <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  omega <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  iov_bins <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  fixed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  iov <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'PKPDsim'</span></span>
-<span><span class="fu">parse_model</span><span class="op">(</span><span class="va">model</span>, <span class="va">...</span>, <span class="va">parameters</span>, <span class="va">ruv</span>, <span class="va">omega</span>, iov_bins <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">parse_model</span><span class="op">(</span><span class="va">model</span>, <span class="va">...</span>, <span class="va">parameters</span>, <span class="va">ruv</span>, <span class="va">omega</span>, fixed <span class="op">=</span> <span class="cn">NULL</span>, iov <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -94,9 +95,15 @@ PKPDsim-generated model library, e.g. <code>pkvancothomson</code></p></dd>
 lower triangle of the covariance matrix of random effects</p></dd>
 
 
-<dt id="arg-iov-bins">iov_bins<a class="anchor" aria-label="anchor" href="#arg-iov-bins"></a></dt>
-<dd><p>bins for inter-occasion variability. Passed unchanged to
-PKPDsim.</p></dd>
+<dt id="arg-fixed">fixed<a class="anchor" aria-label="anchor" href="#arg-fixed"></a></dt>
+<dd><p>fix a specific parameters, supplied as vector of strings</p></dd>
+
+
+<dt id="arg-iov">iov<a class="anchor" aria-label="anchor" href="#arg-iov"></a></dt>
+<dd><p>a list specifying the required metadata for implementation of IOV,
+specifically the coefficient of variation (CV %) of the IOV for each
+parameter and a vector of bin separators. For example,
+<code>list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))</code></p></dd>
 
 </dl></div>
     <div id="value">
