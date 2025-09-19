@@ -62,29 +62,26 @@ run_eval_core <- function(
     )
 
     ## Data frame with predictive data
-    pred_data <- data.frame(
+    pred_data <- tibble::tibble(
       id = obs_data$id,
       t = obs_data$t,
       dv = fit$dv,
       ipred = fit$ipred,
-      pred = fit$pred
-    ) |>
-      dplyr::mutate(
-        `_iteration` = iterations[i],
-        `_grouper` = obs_data$`_grouper`
-      )
+      pred = fit$pred,
+      `_iteration` = iterations[i],
+      `_grouper` = obs_data$`_grouper`
+    )
 
     ## Add parameter estimates
-    fit_pars <- as.data.frame(fit$parameters) |>
-      dplyr::mutate(id = obs_data$id[1])
+    fit_pars <- dplyr::mutate(as.data.frame(fit$parameters), id = obs_data$id[1])
     comb <- dplyr::bind_rows(
-      comb,
-      pred_data |>
-        dplyr::left_join(fit_pars, by = "id")
+      comb, dplyr::left_join(pred_data, fit_pars, by = "id")
     )
   }
 
   ## pre-pend population predictions for the first observation
+  # TODO: Refactor this logic into a function or functions, e.g., the first
+  # argument to bind_rows() could be refactored into `get_apriori_data()`.
   out <- dplyr::bind_rows(
     comb |>
       dplyr::filter(.data$`_iteration` == 1) |>
@@ -94,8 +91,7 @@ run_eval_core <- function(
       ) |> # set to population parameters, not individual estimates
         dplyr::select(-!!names(parameters)) |>
         dplyr::left_join(
-          as.data.frame(parameters) |>
-            dplyr::mutate(id = obs_data$id[1]),
+          dplyr::mutate(as.data.frame(parameters), id = obs_data$id[1]),
           by = "id"
         ),
     comb
@@ -107,7 +103,8 @@ run_eval_core <- function(
       apriori = (.data$`_iteration` == 0)
     ) |>
     dplyr::select(
-      "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred", "iter_ipred", "apriori",
+      "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
+      "iter_ipred", "apriori",
       !!names(parameters)
     )
 
