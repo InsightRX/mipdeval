@@ -1,3 +1,5 @@
 # mipdeval (development version)
 
-* Initial CRAN submission.
+# mipdeval 0.1.0
+
+* Initial version.
