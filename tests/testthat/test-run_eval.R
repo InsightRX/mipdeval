@@ -7,8 +7,9 @@ test_that("Basic run with vanco data + model works", {
     model = mod_obj$model,
     data = nm_vanco,
     parameters = mod_obj$parameters,
-    omega = mod_obj$omega_matrix,
+    omega = mod_obj$omega,
     ruv = mod_obj$ruv,
+    fixed = mod_obj$fixed,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
     progress = FALSE
   )
@@ -45,6 +46,8 @@ test_that("Basic run with vanco data + model works", {
     nrow(res$results |> dplyr::filter(!apriori))
   )
   ## comparable iterative predictions
+  ## Note: difference with PsN is fairly high (max 8%), but this is due to the
+  ##   Thomson model having very high IIV on some parameters
   expect_true(compare_psn_proseval_results(res, proseval, tol = 0.1)$within_tol)
 })
 
@@ -80,13 +83,27 @@ test_that("Flattening of prior results in different predictions", {
   expect_true(
     all(
       res$results |>
-        dplyr::filter(id == 1 & iter > 0) |>
+        dplyr::filter(id == 1 & `_iteration` > 0) |>
         dplyr::pull(iter_ipred) |>
         round(2) !=
       res_flat$results |>
-        dplyr::filter(id == 1 & iter > 0) |>
+        dplyr::filter(id == 1 & `_iteration` > 0) |>
         dplyr::pull(iter_ipred) |>
         round(2)
     )
   )
 })
+
+test_that("Run also works when `dictionary` is used", {
+  local_mipdeval_options()
+  nm_vanco <- dplyr::rename(nm_vanco, id2 = "ID", time2 = "TIME", evid2 = "EVID")
+  res <- run_eval(
+    model = "pkvancothomson",
+    data = nm_vanco,
+    dictionary = c(ID = "id2", TIME = "time2", EVID = "evid2"),
+    progress = F,
+    ids = 1
+  )
+  expect_equal(names(res), c("results", "stats"))
+})
+

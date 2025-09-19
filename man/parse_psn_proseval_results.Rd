@@ -3,17 +3,20 @@
 \name{parse_psn_proseval_results}
 \alias{parse_psn_proseval_results}
 \title{Parse PsN::proseval results.csv to filter out only the rows
-that we need (for prediction of next level)}
+that we need (for prediction of next sample or group of samples)}
 \usage{
-parse_psn_proseval_results(data)
+parse_psn_proseval_results(data, group = NULL)
 }
 \arguments{
 \item{data}{results data.frame or path to csv file}
+
+\item{group}{optional. Group samples using the column name specified in
+\code{group}}
 }
 \value{
 A data.frame
 }
 \description{
 Parse PsN::proseval results.csv to filter out only the rows
-that we need (for prediction of next level)
+that we need (for prediction of next sample or group of samples)
 }

@@ -1,4 +1,5 @@
 # Simulate vancomycin data for use in examples and tests:
+library(tibble)
 library(dplyr)
 library(tidyr)
 library(PKPDsim)
@@ -47,6 +48,9 @@ doses <- expand.grid(1:n_ids, reg$dose_times) |>
 nm_vanco <- bind_rows(doses, tdm) |>
   arrange(ID, TIME, EVID) |>
   fill(c(WT, CRCL, CL_HEMO), .direction = "downup")
+
+# Make sure output is an ungrouped tibble:
+nm_vanco <- as_tibble(ungroup(nm_vanco))
 
 # Save a .csv so this data can be used with PsN:
 readr::write_csv(nm_vanco, "inst/extdata/nm_vanco.csv")

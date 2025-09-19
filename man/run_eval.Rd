@@ -9,11 +9,12 @@ run_eval(
   data,
   ids = NULL,
   parameters = NULL,
+  fixed = NULL,
   omega = NULL,
-  iov_bins = NULL,
+  iov = NULL,
   ruv = NULL,
   dictionary = list(),
-  groups = NULL,
+  group = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
@@ -33,18 +34,22 @@ runs analysis on all subjects in dataset)}
 
 \item{parameters}{list of parameters}
 
+\item{fixed}{fix a specific parameters, supplied as vector of strings}
+
 \item{omega}{between subject variability, supplied as vector specifiying the
 lower triangle of the covariance matrix of random effects}
 
-\item{iov_bins}{bins for inter-occasion variability. Passed unchanged to 
-PKPDsim.}
+\item{iov}{a list specifying the required metadata for implementation of IOV,
+specifically the coefficient of variation (CV \%) of the IOV for each
+parameter and a vector of bin separators. For example,
+\code{list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))}}
 
 \item{ruv}{residual error variability magnitude, specified as list.}
 
-\item{dictionary}{data dictionary. Optional, a named character vector that specifies the column
-names to be used from the dataset.}
+\item{dictionary}{data dictionary. Optional, a named character vector that
+specifies the column names to be used from the dataset.}
 
-\item{groups}{variable in dataset that groups observations together in
+\item{group}{name of column in \code{data} that groups observations together in
 iterative flow. By default each observation will be its own "group", but
 this can be used to group peaks and troughs together, or to group
 observations on the same day together. Grouping will be done prior to

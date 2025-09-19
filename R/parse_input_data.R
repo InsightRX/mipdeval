@@ -8,7 +8,8 @@
 parse_input_data <- function(
     data,
     covariates,
-    ids
+    ids,
+    group = NULL
 ) {
 
   ## Filter IDs, if needed
@@ -26,19 +27,30 @@ parse_input_data <- function(
   out <- purrr::map(
     new_data,
     parse_nm_data,
-    covariates = covariates
+    covariates = covariates,
+    group = group
   )
 
   out
 }
 
-parse_nm_data <- function(data, covariates) {
+parse_nm_data <- function(data, covariates, group = NULL) {
   out <- list()
   out$covariates <- make_covariates_object(data, covariates)
   out$regimen <- PKPDsim::nm_to_regimen(data)
-  out$observations <- data |>
+  obs <- data |>
+    dplyr::filter(.data$EVID == 0)
+  if(!is.null(group)) {
+    obs[["_grouper"]] <- obs[[group]]
+  } else { # if no grouping, add a grouper that iterates over all observations
+    obs <- obs |>
+      dplyr::group_by(.data$ID) |>
+      dplyr::mutate("_grouper" = 1:length(.data$ID)) |>
+      dplyr::ungroup()
+  }
+  out$observations <- obs |>
     dplyr::filter(.data$EVID == 0) |>
-    dplyr::select("ID", "TIME", "DV", "CMT") |>
+    dplyr::select("ID", "TIME", "DV", "CMT", "_grouper") |>
     dplyr::rename(id = "ID", t = "TIME", y = "DV", cmt = "CMT")
   out
 }

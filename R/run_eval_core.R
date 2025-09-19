@@ -2,17 +2,17 @@
 #' an individual's dataset
 #'
 #' @inheritParams run_eval
+#' @param mod_obj list object with model information
 #' @param progress_function function to increment progress bar
 #'
 #' @returns a `data.frame` with individual predictions
-#' @export
+#'
 run_eval_core <- function(
-  model,
+  mod_obj,
   data,
   parameters = NULL,
   omega = NULL,
   ruv = NULL,
-  groups = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
@@ -25,10 +25,14 @@ run_eval_core <- function(
   obs_data <- data$observations
   comb <- data.frame()
   fit_pars <- data.frame()
+  iterations <- unique(obs_data[["_grouper"]])
 
-  for(i in 1:nrow(obs_data)) {
+  for(i in seq_along(iterations)) {
+
+    ## TODO: this will change once we support sample-weighting strategies
+    ##       For now this is just simple full-weighting for all previous points
     weights <- rep(0, nrow(obs_data))
-    weights[1:i] <- 1
+    weights[obs_data[["_grouper"]] %in% iterations[1:i]] <- 1
 
     ## Should covariate data be leaked? PsN::proseval does this,
     ## but for use in MIPD they should be censored.
@@ -42,63 +46,65 @@ run_eval_core <- function(
     ## with weight=1. The rest of the points will get a predicted value
     ## in the output, but they were not weighted in the fit.
     fit <- PKPDmap::get_map_estimates(
-      model = model,
-      parameters = parameters,
-      omega = omega,
-      error = ruv,
-      fixed = attr(model, "fixed"),
+      model = mod_obj$model,
+      parameters = mod_obj$parameters,
+      omega = mod_obj$omega,
+      error = mod_obj$ruv,
+      fixed = mod_obj$fixed,
+      as_eta = mod_obj$kappa,
       data = data$observations,
       covariates = cov_data,
       regimen = data$regimen,
       weight_prior = weight_prior,
-      weights = weights
+      weights = weights,
+      iov_bins = mod_obj$bins,
+      verbose = FALSE
     )
 
     ## Data frame with predictive data
-    pred_data <- data.frame(
+    pred_data <- tibble::tibble(
       id = obs_data$id,
       t = obs_data$t,
       dv = fit$dv,
       ipred = fit$ipred,
       pred = fit$pred,
-      iter = i,
-      group = 1:length(fit$dv) # simple grouping by sample for now, change!
+      `_iteration` = iterations[i],
+      `_grouper` = obs_data$`_grouper`
     )
 
     ## Add parameter estimates
-    fit_pars <- as.data.frame(fit$parameters) |>
-      dplyr::mutate(id = obs_data$id[1])
+    fit_pars <- dplyr::mutate(as.data.frame(fit$parameters), id = obs_data$id[1])
     comb <- dplyr::bind_rows(
-      comb,
-      pred_data |>
-        dplyr::left_join(fit_pars, by = "id")
+      comb, dplyr::left_join(pred_data, fit_pars, by = "id")
     )
   }
 
   ## pre-pend population predictions for the first observation
+  # TODO: Refactor this logic into a function or functions, e.g., the first
+  # argument to bind_rows() could be refactored into `get_apriori_data()`.
   out <- dplyr::bind_rows(
     comb |>
-      dplyr::filter(.data$iter == 1) |>
+      dplyr::filter(.data$`_iteration` == 1) |>
       dplyr::mutate(
-        iter = 0,
+        `_iteration` = 0,
         ipred = .data$pred
       ) |> # set to population parameters, not individual estimates
         dplyr::select(-!!names(parameters)) |>
         dplyr::left_join(
-          as.data.frame(parameters) |>
-            dplyr::mutate(id = obs_data$id[1]),
+          dplyr::mutate(as.data.frame(parameters), id = obs_data$id[1]),
           by = "id"
         ),
     comb
   ) |> # and filter only the next grouped prediction for each iteration
-    dplyr::filter(.data$iter == (.data$group - 1)) |>
+    dplyr::filter(.data$`_iteration` == (.data$`_grouper` - 1)) |>
     dplyr::mutate(
       iter_ipred = .data$ipred,
       map_ipred = pred_data$ipred, # ipred from last fit (full MAP)
-      apriori = .data$iter == 0
+      apriori = (.data$`_iteration` == 0)
     ) |>
     dplyr::select(
-      "id", "iter", "group", "t", "dv", "pred", "map_ipred", "iter_ipred", "apriori",
+      "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
+      "iter_ipred", "apriori",
       !!names(parameters)
     )
 

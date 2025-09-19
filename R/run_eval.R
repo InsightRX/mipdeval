@@ -7,9 +7,9 @@
 #' @param data NONMEM-style data.frame, or path to CSV file with NONMEM data
 #' @param ids optional, vector of subject IDs to run analysis on (by default
 #'   runs analysis on all subjects in dataset)
-#' @param dictionary data dictionary. Optional, a named character vector that specifies the column
-#'   names to be used from the dataset.
-#' @param groups variable in dataset that groups observations together in
+#' @param dictionary data dictionary. Optional, a named character vector that
+#'   specifies the column names to be used from the dataset.
+#' @param group name of column in `data` that groups observations together in
 #'   iterative flow. By default each observation will be its own "group", but
 #'   this can be used to group peaks and troughs together, or to group
 #'   observations on the same day together. Grouping will be done prior to
@@ -31,22 +31,28 @@
 #' @param threads number of threads to divide computations on. Default is 1,
 #'   i.e. no parallel execution
 #' @param ruv residual error variability magnitude, specified as list.
+#' @param iov a list specifying the required metadata for implementation of IOV,
+#'   specifically the coefficient of variation (CV %) of the IOV for each
+#'   parameter and a vector of bin separators. For example,
+#'   `list(cv = list(CL = 0.1, V = 0.2), bins = c(0, 24, 48, 9999))`
 #' @param progress should a progress bar be shown? Default is `TRUE`, but when
 #'   debugging the package it is useful to have it off, since progress bar
 #'   handlers obscure R output.
 #'
 #' @returns A named list of data frames.
+#'
 #' @export
 run_eval <- function(
   model,
   data,
   ids = NULL,
   parameters = NULL,
+  fixed = NULL,
   omega = NULL,
-  iov_bins = NULL,
+  iov = NULL,
   ruv = NULL,
   dictionary = list(),
-  groups = NULL,
+  group = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
@@ -54,6 +60,8 @@ run_eval <- function(
   threads = 1,
   progress = TRUE
 ) {
+  # TODO: Refactor to S3 method like in parse_model() to make required and
+  # optional arguments clearer for the different types of `model` inputs.
 
   ## 0. Gather model information in an object
   mod_obj <- parse_model(
@@ -61,7 +69,8 @@ run_eval <- function(
     parameters = parameters,
     ruv = ruv,
     omega = omega,
-    iov_bins = iov_bins
+    fixed = fixed,
+    iov = iov
   )
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
@@ -78,7 +87,8 @@ run_eval <- function(
   data_parsed <- parse_input_data(
     data = input_data,
     covariates = covariates,
-    ids = ids
+    ids = ids,
+    group = group
   )
 
   ## Set up progress bars
@@ -99,11 +109,7 @@ run_eval <- function(
     res <- furrr::future_map(
       .x = data_parsed,
       .f = run_eval_core,
-      model = mod_obj$model,
-      parameters = mod_obj$parameters,
-      omega = mod_obj$omega_matrix,
-      ruv = mod_obj$ruv,
-      groups = groups,
+      mod_obj = mod_obj,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,
       progress_function = p
@@ -112,11 +118,7 @@ run_eval <- function(
     res <- purrr::map(
       .x = data_parsed,
       .f = run_eval_core,
-      model = mod_obj$model,
-      parameters = mod_obj$parameters,
-      omega = mod_obj$omega_matrix,
-      ruv = mod_obj$ruv,
-      groups = groups,
+      mod_obj = mod_obj,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,
       progress_function = p
@@ -139,6 +141,8 @@ run_eval <- function(
     results = tibble::as_tibble(res_df),
     stats = tibble::as_tibble(stats_summ)
   )
+
+  # TODO: Turn out into an S3 class, so we can give it methods like print(), etc.
 
   ## 5. Return results
   out
