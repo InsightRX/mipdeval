@@ -6,6 +6,9 @@
 \usage{
 get_omega_for_parameters(mod_obj)
 }
+\arguments{
+\item{mod_obj}{list object with model information}
+}
 \value{
 list
 }

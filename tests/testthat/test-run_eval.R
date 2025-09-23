@@ -60,7 +60,7 @@ test_that("Run also works when `model` argument just references the package", {
     progress = F,
     ids = c(1:3)
   )
-  expect_equal(names(res), c("results", "stats"))
+  expect_equal(names(res), c("results", "stats", "shrinkage", "bayesian_impact"))
   # TODO: test outputs
 })
 
@@ -79,7 +79,7 @@ test_that("Flattening of prior results in different predictions", {
     progress = F,
     ids = c(1:3)
   )
-  expect_equal(names(res_flat), c("results", "stats"))
+  expect_equal(names(res_flat), c("results", "stats", "shrinkage", "bayesian_impact"))
   expect_true(
     all(
       res$results |>
