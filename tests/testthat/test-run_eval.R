@@ -11,7 +11,7 @@ test_that("Basic run with vanco data + model works", {
     ruv = mod_obj$ruv,
     fixed = mod_obj$fixed,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
-    progress = TRUE
+    progress = FALSE
   )
 
   ## Expected structure:
@@ -104,6 +104,6 @@ test_that("Run also works when `dictionary` is used", {
     progress = F,
     ids = 1
   )
-  expect_equal(names(res), c("results", "stats"))
+  expect_equal(names(res), c("results", "stats", "shrinkage", "bayesian_impact"))
 })
 

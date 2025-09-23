@@ -10,7 +10,7 @@ test_that("Grouped run for busulfan/shukla works", {
     model = "pkbusulfanshukla",
     data = nm_busulfan,
     group = "group",
-    progress = TRUE,
+    progress = FALSE,
     ids = c(1:n_ids)
   )
   expect_equal(names(res), c("results", "stats", "shrinkage", "bayesian_impact"))
