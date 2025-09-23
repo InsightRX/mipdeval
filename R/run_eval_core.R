@@ -89,9 +89,9 @@ run_eval_core <- function(
         `_iteration` = 0,
         ipred = .data$pred
       ) |> # set to population parameters, not individual estimates
-        dplyr::select(-!!names(parameters)) |>
+        dplyr::select(-!!names(mod_obj$parameters)) |>
         dplyr::left_join(
-          dplyr::mutate(as.data.frame(parameters), id = obs_data$id[1]),
+          dplyr::mutate(as.data.frame(mod_obj$parameters), id = obs_data$id[1]),
           by = "id"
         ),
     comb
@@ -105,7 +105,7 @@ run_eval_core <- function(
     dplyr::select(
       "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
       "iter_ipred", "apriori",
-      !!names(parameters)
+      !!names(mod_obj$parameters)
     )
 
   out

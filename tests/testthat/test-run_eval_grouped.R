@@ -10,10 +10,10 @@ test_that("Grouped run for busulfan/shukla works", {
     model = "pkbusulfanshukla",
     data = nm_busulfan,
     group = "group",
-    progress = FALSE,
+    progress = TRUE,
     ids = c(1:n_ids)
   )
-  expect_equal(names(res), c("results", "stats"))
+  expect_equal(names(res), c("results", "stats", "shrinkage", "bayesian_impact"))
 
   ## Reference results from PsN proseval:
   raw_proseval <- read.csv(

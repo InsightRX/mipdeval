@@ -11,11 +11,11 @@ test_that("Basic run with vanco data + model works", {
     ruv = mod_obj$ruv,
     fixed = mod_obj$fixed,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
-    progress = FALSE
+    progress = TRUE
   )
 
   ## Expected structure:
-  expect_equal(names(res), c("results", "stats"))
+  expect_equal(names(res), c("results", "stats", "shrinkage", "bayesian_impact"))
   expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
   expect_s3_class(res$stats, c("tbl_df", "tbl", "data.frame"))
 
