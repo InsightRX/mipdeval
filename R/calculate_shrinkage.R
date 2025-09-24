@@ -25,13 +25,13 @@ calculate_shrinkage <- function(
 ) {
   om <- get_omega_for_parameters(mod_obj)
   shr_df <- res_df |>
-    dplyr::mutate(across(
+    dplyr::mutate(dplyr::across(
       .cols = names(om),
       .fns  = ~ calc_eta(.x, dplyr::cur_column(), mod_obj$parameters),
       .names = "eta_{.col}"
     )) |>
-    dplyr::group_by(`_iteration`) |>
-    dplyr::summarise(across(
+    dplyr::group_by(.data$`_iteration`) |>
+    dplyr::summarise(dplyr::across(
       .cols = paste0("eta_", names(om)),
       .fns = ~ calc_shrinkage(.x, dplyr::cur_column(), om),
       .names = "shr_{.col}"
@@ -45,9 +45,13 @@ calculate_shrinkage <- function(
 #' additive shape for IOV (kappa's), i.e. `PAR = TV_PAR + ETA(n)` or when
 #' final parameter estimate is 0.
 #'
+#' @param ind individual parameter estimate
+#' @param par_name name of parameter in model
+#' @param parameters list of parameter values, should include entry for
+#'   `par_name`
 calc_eta <- function(ind, par_name, parameters) {
   pop <- parameters[[par_name]]
-  if(stringr::str_detect(par_name, "^kappa_") || pop == 0) { ## PAR = TV_PAR + ETA()
+  if(grepl("^kappa_", par_name) || pop == 0) { ## PAR = TV_PAR + ETA()
     return(ind - pop)
   } else {
     return(log(ind/pop)) ## PAR = TV_PAR + ETA()
@@ -55,13 +59,13 @@ calc_eta <- function(ind, par_name, parameters) {
 }
 
 calc_shrinkage <- function(eta, par_name, om) {
-  100 * (1 - (sd(eta) / sqrt(om[[gsub("^eta_", "", par_name)]])))
+  100 * (1 - (stats::sd(eta) / sqrt(om[[gsub("^eta_", "", par_name)]])))
 }
 
 #' Return all diagonal om^2 elements for each non-fixed parameter, as a list
 #'
 #' @inheritParams run_eval_core
-#' 
+#'
 #' @returns list
 get_omega_for_parameters <- function(mod_obj) {
   pars <- names(mod_obj$parameters)

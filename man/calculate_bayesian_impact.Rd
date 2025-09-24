@@ -7,6 +7,12 @@ to using population estimates}
 \usage{
 calculate_bayesian_impact(stats_summ)
 }
+\arguments{
+\item{stats_summ}{stats summary, a data.frame created in \code{run_eval()}}
+}
+\value{
+a tibble with bayesian impact values, based on RMSE and MAPE
+}
 \description{
 Bayesian impact (BI), as defined here, is the gain in accuracy that is
 obtained when using Bayesian updating, compared to using a priori

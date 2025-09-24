@@ -9,6 +9,14 @@ final parameter estimate is 0.}
 \usage{
 calc_eta(ind, par_name, parameters)
 }
+\arguments{
+\item{ind}{individual parameter estimate}
+
+\item{par_name}{name of parameter in model}
+
+\item{parameters}{list of parameter values, should include entry for
+\code{par_name}}
+}
 \description{
 Calculate the "eta"-value for a parameters, assuming an exponential
 shape for IIV, i.e. \code{PAR = TV_PAR * EXP(ETA(n))}, and
