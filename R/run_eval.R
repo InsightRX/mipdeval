@@ -142,9 +142,7 @@ run_eval <- function(
       mape = mape(.data$dv, .data$value)
     )
   shrinkage_summ <- calculate_shrinkage(res_df, mod_obj = mod_obj)
-  bayesian_impact <- calculate_bayesian_impact(
-    stats_summ
-  )
+  bayesian_impact <- calculate_bayesian_impact(stats_summ)
 
   out <- list(
     results = tibble::as_tibble(res_df),
