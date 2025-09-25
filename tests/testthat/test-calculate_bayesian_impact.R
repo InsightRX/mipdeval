@@ -88,12 +88,9 @@ test_that("calculate_bayesian_impact handles division by zero", {
     mape = c(0, 10)
   )
 
-  # This should handle division by zero gracefully
-  expect_warning({
-    result <- calculate_bayesian_impact(test_data)
-  }, NA) # No warning expected, but Inf values are possible
-
-  result <- calculate_bayesian_impact(test_data)
+  # This should handle division by zero gracefully. No warning expected, but Inf
+  # values are possible.
+  result <- expect_no_warning(calculate_bayesian_impact(test_data))
   expect_true(is.infinite(result$bi_rmse) || is.nan(result$bi_rmse))
   expect_true(is.infinite(result$bi_mape) || is.nan(result$bi_mape))
 })
