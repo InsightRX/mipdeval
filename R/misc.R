@@ -37,7 +37,20 @@ rmse <- function (obs, pred) {
   sqrt(mean(res_sq, na.rm = TRUE))
 }
 
-#' Mean absolute prediction error
+#' Normalized root-mean-squared error
+#'
+#' @param obs observations vector
+#' @param pred predictions vector
+#'
+#' @returns A numeric vector
+#'
+nrmse <- function (obs, pred) {
+  res_sq <- (pred - obs)^2
+  rmse <- sqrt(mean(res_sq, na.rm = T))
+  rmse/mean(obs, na.rm = T)
+}
+
+#' Mean absolute percentage error
 #'
 #' @inheritParams rmse
 #'
@@ -46,7 +59,7 @@ mape <- function (obs, pred) {
   sum(abs((obs - pred))/obs)/length(obs)
 }
 
-#' Mean prediction error
+#' Mean percentage error
 #'
 #' @inheritParams rmse
 #'

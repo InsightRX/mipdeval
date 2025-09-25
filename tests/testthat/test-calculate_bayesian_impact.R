@@ -7,7 +7,7 @@ test_that("calculate_bayesian_impact returns correct structure", {
     mape = c(20, 10, 25, 12)
   )
 
-  result <- calculate_bayesian_impact(test_data)
+  result <- calculate_bayesian_impact(list(stats_summ = test_data))
 
   expect_s3_class(result, "data.frame")
   expect_named(result, c("bi_rmse", "bi_mape"))
@@ -23,7 +23,7 @@ test_that("calculate_bayesian_impact calculates correct values", {
     mape = c(20, 10)  # iter_ipred is 50% better
   )
 
-  result <- calculate_bayesian_impact(test_data)
+  result <- calculate_bayesian_impact(list(stats_summ = test_data))
 
   # BI = 100 * (1 - (iter_ipred / pred))
   # For RMSE: 100 * (1 - (5/10)) = 50%
@@ -41,7 +41,7 @@ test_that("calculate_bayesian_impact handles negative impact correctly", {
     mape = c(10, 20)   # iter_ipred is worse
   )
 
-  result <- calculate_bayesian_impact(test_data)
+  result <- calculate_bayesian_impact(list(stats_summ = test_data))
 
   # BI = 100 * (1 - (10/5)) = -100%
   expect_equal(result$bi_rmse, -100)
@@ -57,7 +57,7 @@ test_that("calculate_bayesian_impact filters apriori correctly", {
     mape = c(200, 100, 20, 10)
   )
 
-  result <- calculate_bayesian_impact(test_data)
+  result <- calculate_bayesian_impact(list(stats_summ = test_data))
 
   # Should only use the apriori = FALSE rows (10, 5 and 20, 10)
   expect_equal(result$bi_rmse, 50)
@@ -73,7 +73,7 @@ test_that("calculate_bayesian_impact handles edge cases", {
     mape = c(20, 20)
   )
 
-  result <- calculate_bayesian_impact(test_data)
+  result <- calculate_bayesian_impact(list(stats_summ = test_data))
 
   expect_equal(result$bi_rmse, 0)
   expect_equal(result$bi_mape, 0)
@@ -88,12 +88,11 @@ test_that("calculate_bayesian_impact handles division by zero", {
     mape = c(0, 10)
   )
 
-  # This should handle division by zero gracefully
-  expect_warning({
-    result <- calculate_bayesian_impact(test_data)
-  }, NA) # No warning expected, but Inf values are possible
-
-  result <- calculate_bayesian_impact(test_data)
+  # This should handle division by zero gracefully. No warning expected, but Inf
+  # values are possible.
+  result <- expect_no_warning(
+    calculate_bayesian_impact(list(stats_summ = test_data))
+  )
   expect_true(is.infinite(result$bi_rmse) || is.nan(result$bi_rmse))
   expect_true(is.infinite(result$bi_mape) || is.nan(result$bi_mape))
 })
@@ -106,5 +105,7 @@ test_that("calculate_bayesian_impact requires correct column names", {
     # Missing apriori and mape columns
   )
 
-  expect_error(calculate_bayesian_impact(incomplete_data))
+  expect_error(
+    calculate_bayesian_impact(list(stats_summ = test_data))
+  )
 })

@@ -10,9 +10,6 @@
 run_eval_core <- function(
   mod_obj,
   data,
-  parameters = NULL,
-  omega = NULL,
-  ruv = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
