@@ -3,9 +3,7 @@
 #' Calculate eta-shrinkage, measure of how much information is available to
 #' update individual estimates away from the population value.
 #'
-#' @inheritParams run_eval_core
-#' @param res_df data.frame or tibble with raw results (including parameters)
-#' from a run with `mipdeval::run_eval()`.
+#' @inheritParams calculate_stats
 #'
 #' @details
 #' Shrinkage for population PK models was first defined in this paper by
@@ -22,16 +20,14 @@
 #' reduced with additional sampling.
 #'
 #' @returns tibble
+#'
 #' @export
-calculate_shrinkage <- function(
-  res_df,
-  mod_obj
-) {
-  om <- get_omega_for_parameters(mod_obj)
-  shr_df <- res_df |>
+calculate_shrinkage <- function(res) {
+  om <- get_omega_for_parameters(res$mod_obj)
+  out <- res$results |>
     dplyr::mutate(dplyr::across(
       .cols = names(om),
-      .fns  = ~ calc_eta(.x, dplyr::cur_column(), mod_obj$parameters),
+      .fns  = ~ calc_eta(.x, dplyr::cur_column(), res$mod_obj$parameters),
       .names = "eta_{.col}"
     )) |>
     dplyr::group_by(.data$`_iteration`) |>
@@ -40,8 +36,10 @@ calculate_shrinkage <- function(
       .fns = ~ calc_shrinkage(.x, dplyr::cur_column(), om),
       .names = "shr_{.col}"
     ))
-  names(shr_df) <- gsub("^shr_eta_", "", names(shr_df))
-  shr_df
+  out <- out |>
+    rlang::set_names(gsub("^shr_eta_", "", names(out)))
+  class(out) <- c("mipdeval_results_shrinkage", class(out))
+  out
 }
 
 #' Calculate the "eta"-value for a parameters, assuming an exponential
@@ -63,7 +61,10 @@ calc_eta <- function(ind, par_name, parameters) {
 }
 
 calc_shrinkage <- function(eta, par_name, om) {
-  100 * (1 - (stats::sd(eta) / sqrt(om[[gsub("^eta_", "", par_name)]])))
+  round(
+    100 * (1 - (stats::sd(eta) / sqrt(om[[gsub("^eta_", "", par_name)]]))),
+    1
+  )
 }
 
 #' Return all diagonal om^2 elements for each non-fixed parameter, as a list

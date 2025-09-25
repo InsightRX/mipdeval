@@ -130,28 +130,17 @@ run_eval <- function(
 
   ## 4. Combine results and basic stats into return object
   if(verbose) cli::cli_alert_info("Calculating forecasting statistics")
-  res_df <- dplyr::bind_rows(res)
-  stats_summ <- res_df |>
-    tidyr::pivot_longer(
-      cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
-    ) |>
-    dplyr::group_by(.data$type, .data$apriori) |>
-    dplyr::summarise(
-      rmse = rmse(.data$dv, .data$value),
-      mpe = mpe(.data$dv, .data$value),
-      mape = mape(.data$dv, .data$value)
-    )
-  shrinkage_summ <- calculate_shrinkage(res_df, mod_obj = mod_obj)
-  bayesian_impact <- calculate_bayesian_impact(stats_summ)
-
+  res_tbl <- dplyr::bind_rows(res) |>
+    tibble::as_tibble()
   out <- list(
-    results = tibble::as_tibble(res_df),
-    stats = tibble::as_tibble(stats_summ),
-    shrinkage = shrinkage_summ,
-    bayesian_impact = bayesian_impact
+    results = res_tbl,
+    mod_obj = mod_obj,
+    data = data
   )
-
-  # TODO: Turn out into an S3 class, so we can give it methods like print(), etc.
+  class(out) <- c("mipdeval_results", "list")
+  out$stats_summ <- calculate_stats(out)
+  out$shrinkage <- calculate_shrinkage(out)
+  out$bayesian_impact <- calculate_bayesian_impact(out)
 
   ## 5. Return results
   if(verbose) cli::cli_alert_info("Done")

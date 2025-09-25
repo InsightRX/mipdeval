@@ -2,20 +2,22 @@
 % Please edit documentation in R/calculate_shrinkage.R
 \name{calculate_shrinkage}
 \alias{calculate_shrinkage}
-\title{Function to calculate eta-shrinkage}
+\title{Calculate eta-shrinkage}
 \usage{
-calculate_shrinkage(res_df, mod_obj)
+calculate_shrinkage(res)
 }
 \arguments{
-\item{res_df}{data.frame or tibble with raw results (including parameters)
-from a run with \code{mipdeval::run_eval()}.}
-
-\item{mod_obj}{list object with model information}
+\item{res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
+\code{data.frame} with raw results.}
 }
 \value{
 tibble
 }
 \description{
+Calculate eta-shrinkage, measure of how much information is available to
+update individual estimates away from the population value.
+}
+\details{
 Shrinkage for population PK models was first defined in this paper by
 Savic and Karlsson: https://pmc.ncbi.nlm.nih.gov/articles/PMC2758126/.
 It is a measure of how much information is available to update individual

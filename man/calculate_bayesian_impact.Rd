@@ -2,13 +2,13 @@
 % Please edit documentation in R/calculate_bayesian_impact.R
 \name{calculate_bayesian_impact}
 \alias{calculate_bayesian_impact}
-\title{This function calculates the impact of using Bayesian updating, compared
-to using population estimates}
+\title{Calculate the impact of using Bayesian updating compared to population estimates}
 \usage{
-calculate_bayesian_impact(stats_summ)
+calculate_bayesian_impact(res)
 }
 \arguments{
-\item{stats_summ}{stats summary, a data.frame created in \code{run_eval()}}
+\item{res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
+\code{data.frame} with raw results.}
 }
 \value{
 a tibble with bayesian impact values, based on RMSE and MAPE
