@@ -52,6 +52,22 @@
         </td>
         <td><p>Add grouping column using a function</p></td>
       </tr><tr><td>
+          <p><code><a href="calc_eta.html">calc_eta()</a></code> </p>
+        </td>
+        <td><p>Calculate the "eta"-value for a parameters, assuming an exponential shape for IIV, i.e. <code>PAR = TV_PAR * EXP(ETA(n))</code>, and additive shape for IOV (kappa's), i.e. <code>PAR = TV_PAR + ETA(n)</code> or when final parameter estimate is 0.</p></td>
+      </tr><tr><td>
+          <p><code><a href="calculate_bayesian_impact.html">calculate_bayesian_impact()</a></code> </p>
+        </td>
+        <td><p>Calculate the impact of using Bayesian updating compared to population estimates</p></td>
+      </tr><tr><td>
+          <p><code><a href="calculate_shrinkage.html">calculate_shrinkage()</a></code> </p>
+        </td>
+        <td><p>Calculate eta-shrinkage</p></td>
+      </tr><tr><td>
+          <p><code><a href="calculate_stats.html">calculate_stats()</a></code> </p>
+        </td>
+        <td><p>Calculate basic statistics, like RMSE, MPE, MAPE for forecasted data</p></td>
+      </tr><tr><td>
           <p><code><a href="check_input_data.html">check_input_data()</a></code> </p>
         </td>
         <td><p>Do some checks and minor manipulations on input dataset</p></td>
@@ -63,6 +79,10 @@
           <p><code><a href="compare-psn-results.html">compare_psn_proseval_results()</a></code> <code><a href="compare-psn-results.html">reldiff_psn_proseval_results()</a></code> <code><a href="compare-psn-results.html">compare_psn_execute_results()</a></code> <code><a href="compare-psn-results.html">reldiff_psn_execute_results()</a></code> </p>
         </td>
         <td><p>Compare mipdeval results with PsN</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_omega_for_parameters.html">get_omega_for_parameters()</a></code> </p>
+        </td>
+        <td><p>Return all diagonal om^2 elements for each non-fixed parameter, as a list</p></td>
       </tr><tr><td>
           <p><code><a href="get_required_covariates.html">get_required_covariates()</a></code> </p>
         </td>
@@ -86,11 +106,11 @@
       </tr><tr><td>
           <p><code><a href="mape.html">mape()</a></code> </p>
         </td>
-        <td><p>Mean absolute prediction error</p></td>
+        <td><p>Mean absolute percentage error</p></td>
       </tr><tr><td>
           <p><code><a href="mpe.html">mpe()</a></code> </p>
         </td>
-        <td><p>Mean prediction error</p></td>
+        <td><p>Mean percentage error</p></td>
       </tr><tr><td>
           <p><code><a href="nm_busulfan.html">nm_busulfan</a></code> </p>
         </td>
@@ -99,6 +119,10 @@
           <p><code><a href="nm_vanco.html">nm_vanco</a></code> </p>
         </td>
         <td><p>Vancomycin data</p></td>
+      </tr><tr><td>
+          <p><code><a href="nrmse.html">nrmse()</a></code> </p>
+        </td>
+        <td><p>Normalized root-mean-squared error</p></td>
       </tr><tr><td>
           <p><code><a href="parse_input_data.html">parse_input_data()</a></code> </p>
         </td>
@@ -111,6 +135,22 @@
           <p><code><a href="parse_psn_proseval_results.html">parse_psn_proseval_results()</a></code> </p>
         </td>
         <td><p>Parse PsN::proseval results.csv to filter out only the rows that we need (for prediction of next sample or group of samples)</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.mipdeval_results.html">print(<i>&lt;mipdeval_results&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print results from run_eval()</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.mipdeval_results_bayesian_impact.html">print(<i>&lt;mipdeval_results_bayesian_impact&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print Bayesian impact results from run_eval()</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.mipdeval_results_shrinkage.html">print(<i>&lt;mipdeval_results_shrinkage&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print shrinkage results from run_eval()</p></td>
+      </tr><tr><td>
+          <p><code><a href="print.mipdeval_results_stats_summ.html">print(<i>&lt;mipdeval_results_stats_summ&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Print predictive performance statistics from run_eval()</p></td>
       </tr><tr><td>
           <p><code><a href="read_input_data.html">read_input_data()</a></code> </p>
         </td>

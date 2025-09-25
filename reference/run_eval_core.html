@@ -55,9 +55,6 @@ an individual's dataset</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_eval_core</span><span class="op">(</span></span>
 <span>  <span class="va">mod_obj</span>,</span>
 <span>  <span class="va">data</span>,</span>
-<span>  parameters <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  omega <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ruv <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weight_prior <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  censor_covariates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -77,19 +74,6 @@ an individual's dataset</p>
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>NONMEM-style data.frame, or path to CSV file with NONMEM data</p></dd>
-
-
-<dt id="arg-parameters">parameters<a class="anchor" aria-label="anchor" href="#arg-parameters"></a></dt>
-<dd><p>list of parameters</p></dd>
-
-
-<dt id="arg-omega">omega<a class="anchor" aria-label="anchor" href="#arg-omega"></a></dt>
-<dd><p>between subject variability, supplied as vector specifiying the
-lower triangle of the covariance matrix of random effects</p></dd>
-
-
-<dt id="arg-ruv">ruv<a class="anchor" aria-label="anchor" href="#arg-ruv"></a></dt>
-<dd><p>residual error variability magnitude, specified as list.</p></dd>
 
 
 <dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
