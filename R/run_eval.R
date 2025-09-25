@@ -141,10 +141,7 @@ run_eval <- function(
       mpe = mpe(.data$dv, .data$value),
       mape = mape(.data$dv, .data$value)
     )
-  shrinkage_summ <- calculate_shrinkage(
-    res_df,
-    mod_obj = mod_obj
-  )
+  shrinkage_summ <- calculate_shrinkage(res_df, mod_obj = mod_obj)
   bayesian_impact <- calculate_bayesian_impact(
     stats_summ
   )
