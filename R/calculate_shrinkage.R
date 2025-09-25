@@ -74,11 +74,7 @@ calc_shrinkage <- function(eta, par_name, om) {
 get_omega_for_parameters <- function(mod_obj) {
   pars <- names(mod_obj$parameters)
   pars <- pars[!(pars %in% mod_obj$fixed)]
-  om <- as.list(
-    diag(
-      PKPDsim::triangle_to_full(mod_obj$omega)
-    )[1:length(pars)]
-  )
+    om <- as.list(diag(PKPDsim::triangle_to_full(mod_obj$omega))[1:length(pars)])
   names(om) <- pars
   om
 }
