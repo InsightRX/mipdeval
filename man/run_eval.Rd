@@ -20,7 +20,8 @@ run_eval(
   censor_covariates = TRUE,
   incremental = FALSE,
   threads = 1,
-  progress = TRUE
+  progress = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -85,6 +86,8 @@ i.e. no parallel execution}
 \item{progress}{should a progress bar be shown? Default is \code{TRUE}, but when
 debugging the package it is useful to have it off, since progress bar
 handlers obscure R output.}
+
+\item{verbose}{show more output}
 }
 \value{
 A named list of data frames.

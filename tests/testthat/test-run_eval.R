@@ -15,9 +15,9 @@ test_that("Basic run with vanco data + model works", {
   )
 
   ## Expected structure:
-  expect_equal(names(res), c("results", "stats"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
   expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
-  expect_s3_class(res$stats, c("tbl_df", "tbl", "data.frame"))
+  expect_s3_class(res$stats_summ, c("tbl_df", "tbl", "data.frame"))
 
   # Using PKPDsim model library:
   res_2 <- run_eval(
@@ -60,7 +60,7 @@ test_that("Run also works when `model` argument just references the package", {
     progress = F,
     ids = c(1:3)
   )
-  expect_equal(names(res), c("results", "stats"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
   # TODO: test outputs
 })
 
@@ -79,7 +79,7 @@ test_that("Flattening of prior results in different predictions", {
     progress = F,
     ids = c(1:3)
   )
-  expect_equal(names(res_flat), c("results", "stats"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
   expect_true(
     all(
       res$results |>
@@ -104,6 +104,6 @@ test_that("Run also works when `dictionary` is used", {
     progress = F,
     ids = 1
   )
-  expect_equal(names(res), c("results", "stats"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
 })
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{mape}
 \alias{mape}
-\title{Mean absolute prediction error}
+\title{Mean absolute percentage error}
 \usage{
 mape(obs, pred)
 }
@@ -15,5 +15,5 @@ mape(obs, pred)
 A numeric vector
 }
 \description{
-Mean absolute prediction error
+Mean absolute percentage error
 }

@@ -8,9 +8,6 @@ an individual's dataset}
 run_eval_core(
   mod_obj,
   data,
-  parameters = NULL,
-  omega = NULL,
-  ruv = NULL,
   weights = NULL,
   weight_prior = 1,
   censor_covariates = TRUE,
@@ -23,13 +20,6 @@ run_eval_core(
 \item{mod_obj}{list object with model information}
 
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
-
-\item{parameters}{list of parameters}
-
-\item{omega}{between subject variability, supplied as vector specifiying the
-lower triangle of the covariance matrix of random effects}
-
-\item{ruv}{residual error variability magnitude, specified as list.}
 
 \item{weights}{vector of weights for error. Length of vector should be same 
 as length of observation vector. If NULL (default), all weights are equal. 

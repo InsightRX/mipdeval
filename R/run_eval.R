@@ -58,10 +58,9 @@ run_eval <- function(
   censor_covariates = TRUE,
   incremental = FALSE,
   threads = 1,
-  progress = TRUE
+  progress = TRUE,
+  verbose = TRUE
 ) {
-  # TODO: Refactor to S3 method like in parse_model() to make required and
-  # optional arguments clearer for the different types of `model` inputs.
 
   ## 0. Gather model information in an object
   mod_obj <- parse_model(
@@ -74,6 +73,7 @@ run_eval <- function(
   )
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
+  if(verbose) cli::cli_progress_step("Reading and parsing input data")
   input_data <- read_input_data(data) |>
     check_input_data(
       dictionary = dictionary
@@ -103,6 +103,7 @@ run_eval <- function(
   }
 
   ## 3. run the core function on each individual-level dataset in the list
+  if(verbose) cli::cli_progress_step("Running forecasts for subjects in dataset")
   if(threads > 1) {
     # TODO: consider using purrr::in_parallel() in the future when it's stable.
     future::plan(future::multisession, workers = threads)
@@ -126,23 +127,18 @@ run_eval <- function(
   }
 
   ## 4. Combine results and basic stats into return object
-  res_df <- dplyr::bind_rows(res)
-  stats_summ <- res_df |>
-    tidyr::pivot_longer(
-      cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
-    ) |>
-    dplyr::group_by(.data$type, .data$apriori) |>
-    dplyr::summarise(
-      rmse = rmse(.data$dv, .data$value),
-      mpe = mpe(.data$dv, .data$value),
-      mape = mape(.data$dv, .data$value)
-    )
+  if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
+  res_tbl <- dplyr::bind_rows(res) |>
+    tibble::as_tibble()
   out <- list(
-    results = tibble::as_tibble(res_df),
-    stats = tibble::as_tibble(stats_summ)
+    results = res_tbl,
+    mod_obj = mod_obj,
+    data = data
   )
-
-  # TODO: Turn out into an S3 class, so we can give it methods like print(), etc.
+  class(out) <- c("mipdeval_results", "list")
+  out$stats_summ <- calculate_stats(out)
+  out$shrinkage <- calculate_shrinkage(out)
+  out$bayesian_impact <- calculate_bayesian_impact(out)
 
   ## 5. Return results
   out
