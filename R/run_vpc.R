@@ -1,8 +1,27 @@
 #' Run iterative predictive analysis, looping over each individual's data
+#' to create observation and simulation datasets for creating visual predictive
+#' checks (VPCs).
 #'
 #' @inheritParams run_eval
+#' @param n_samples number of iterations to perform for VPC simulations.
 #'
 #' @returns A named list of data frames with `obs` and `sim` data.
+#'
+#' @exapmles
+#' \dontrun{
+#' library(mipdeval)
+#' library(vpc)
+#' vpc_vanc <- run_vpc(
+#'   model = "pkvancothomson",
+#'   data = nm_vanco,
+#'   n_samples = 100,
+#'   progress = FALSE
+#' )
+#' vpc(
+#'   sim = vpc_vanc$sim,
+#'   obs = vpc_vanc$obs
+#' )
+#' }
 #'
 #' @export
 run_vpc <- function(
@@ -83,12 +102,12 @@ run_vpc <- function(
     )
   }
   sim_data <- dplyr::bind_rows(res) |>
-    dplyr::select(ID = id, TIME = t, DV = y, ITER = iter) |>
-    dplyr::arrange(ITER, ID, TIME)
+    dplyr::select(ID = .data$id, TIME = .data$t, DV = .data$y, ITER = .data$iter) |>
+    dplyr::arrange(.data$ITER, .data$ID, .data$TIME)
 
   out <- list(
     obs = input_data |>
-      dplyr::filter(EVID == 0),
+      dplyr::filter(.data$EVID == 0),
     sim = sim_data
   )
 
@@ -96,6 +115,13 @@ run_vpc <- function(
 
 }
 
+#' Core function for `run_vpc`. Runs `n_samples` simulations for
+#' a single subject
+#'
+#' @inheritParams run_vpc
+#' @inheritParams run_eval_core
+#'
+#' @returns data.frame
 run_vpc_core <- function(
     data,
     mod_obj,
