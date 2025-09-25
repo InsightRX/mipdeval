@@ -1,4 +1,4 @@
-#' Function to calculate eta-shrinkage
+#' Calculate eta-shrinkage
 #'
 #' Shrinkage for population PK models was first defined in this paper by
 #' Savic and Karlsson: https://pmc.ncbi.nlm.nih.gov/articles/PMC2758126/.
