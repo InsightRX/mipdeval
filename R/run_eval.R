@@ -61,8 +61,6 @@ run_eval <- function(
   progress = TRUE,
   verbose = TRUE
 ) {
-  # TODO: Refactor to S3 method like in parse_model() to make required and
-  # optional arguments clearer for the different types of `model` inputs.
 
   ## 0. Gather model information in an object
   mod_obj <- parse_model(
@@ -75,7 +73,7 @@ run_eval <- function(
   )
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
-  if(verbose) cli::cli_alert_info("Reading and parsing input data")
+  if(verbose) cli::cli_progress_step("Reading and parsing input data")
   input_data <- read_input_data(data) |>
     check_input_data(
       dictionary = dictionary
@@ -105,7 +103,7 @@ run_eval <- function(
   }
 
   ## 3. run the core function on each individual-level dataset in the list
-  if(verbose) cli::cli_alert_info("Running forecasts for subjects in dataset")
+  if(verbose) cli::cli_progress_step("Running forecasts for subjects in dataset")
   if(threads > 1) {
     # TODO: consider using purrr::in_parallel() in the future when it's stable.
     future::plan(future::multisession, workers = threads)
@@ -129,7 +127,7 @@ run_eval <- function(
   }
 
   ## 4. Combine results and basic stats into return object
-  if(verbose) cli::cli_alert_info("Calculating forecasting statistics")
+  if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
   res_tbl <- dplyr::bind_rows(res) |>
     tibble::as_tibble()
   out <- list(
@@ -143,6 +141,5 @@ run_eval <- function(
   out$bayesian_impact <- calculate_bayesian_impact(out)
 
   ## 5. Return results
-  if(verbose) cli::cli_alert_info("Done")
   out
 }
