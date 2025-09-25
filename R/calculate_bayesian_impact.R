@@ -1,5 +1,4 @@
-#' This function calculates the impact of using Bayesian updating, compared
-#' to using population estimates
+#' Calculate the impact of using Bayesian updating compared to population estimates
 #'
 #' Bayesian impact (BI), as defined here, is the gain in accuracy that is
 #' obtained when using Bayesian updating, compared to using a priori
