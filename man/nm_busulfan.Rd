@@ -6,7 +6,7 @@
 \title{Busulfan data}
 \format{
 A NONMEM-style data frame with 240 rows and
-14 columns:
+13 columns:
 
 \describe{
 \item{\code{ID}}{Patient ID.}

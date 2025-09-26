@@ -113,6 +113,7 @@ run_eval <- function(
       mod_obj = mod_obj,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,
+      incremental = incremental,
       progress_function = p
     )
   } else {
@@ -122,6 +123,7 @@ run_eval <- function(
       mod_obj = mod_obj,
       censor_covariates = censor_covariates,
       weight_prior = weight_prior,
+      incremental = incremental,
       progress_function = p
     )
   }
