@@ -52,6 +52,7 @@ parse_nm_data <- function(data, covariates, group = NULL) {
     dplyr::filter(.data$EVID == 0) |>
     dplyr::select("ID", "TIME", "DV", "CMT", "_grouper") |>
     dplyr::rename(id = "ID", t = "TIME", y = "DV", cmt = "CMT")
+  out$id <- obs$ID[1]
   out
 }
 
