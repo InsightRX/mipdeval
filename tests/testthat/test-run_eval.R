@@ -114,7 +114,7 @@ test_that("Incremental Bayes method works", {
     data = nm_vanco,
     incremental = TRUE,
     progress = F,
-    ids = c(1:3)
+    ids = c(1:10)
   )
   expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
   # TODO: test outputs

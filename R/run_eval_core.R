@@ -26,10 +26,15 @@ run_eval_core <- function(
 
   for(i in seq_along(iterations)) {
 
-    ## TODO: this will change once we support sample-weighting strategies
-    ##       For now this is just simple full-weighting for all previous points
-    weights <- rep(0, nrow(obs_data))
-    weights[obs_data[["_grouper"]] %in% iterations[1:i]] <- 1
+    ## Select which samples should be used in fit, for regular iterative
+    ## forecasting and incremental.
+    ## TODO: handle weighting down of earlier samples
+    weights <- handle_sample_weighting(
+      obs_data,
+      iterations,
+      incremental,
+      i
+    )
 
     ## Should covariate data be leaked? PsN::proseval does this,
     ## but for use in MIPD they should be censored.
@@ -43,11 +48,9 @@ run_eval_core <- function(
     ## with weight=1. The rest of the points will get a predicted value
     ## in the output, but they were not weighted in the fit.
     mod_upd <- mod_obj
-    if(i > 1) {
-      if(incremental) {
-        mod_upd$parameters <- fit$parameters # take params from previous fit
-        mod_upd$omega <- fit$vcov
-      }
+    if(incremental & i > 1) {
+      mod_upd$parameters <- fit$parameters # take params from previous fit
+      mod_upd$omega <- fit$vcov
     }
     fit <- PKPDmap::get_map_estimates(
       model = mod_obj$model,
@@ -98,7 +101,7 @@ run_eval_core <- function(
       covariates = cov_data,
       regimen = data$regimen,
       weight_prior = weight_prior,
-      weights = weights,
+      weights = NULL, # no sample weighting, full MAP Bayesian on all samples
       iov_bins = mod_obj$bins,
       verbose = FALSE
     )
@@ -175,4 +178,31 @@ handle_covariate_censoring <- function(
     }
   }
   cov_data
+}
+
+#' Handle weighting of samples
+#'
+#' This function is used to select the samples used in the fit (1 or 0),
+#' but also to select their weight, if a sample weighting strategy is
+#' selected.
+#'
+#' @inheritParams run_eval_core
+#' @param iterations numeric vector of groups
+#' @param i index
+#'
+#' @returns vector of weights (numeric)
+#'
+handle_sample_weighting <- function(
+  obs_data,
+  iterations,
+  incremental,
+  i
+) {
+  weights <- rep(0, nrow(obs_data))
+  if(incremental) { # just fit current sample or group
+    weights[obs_data[["_grouper"]] %in% iterations[i]] <- 1
+  } else { # fit all samples up until current sample
+    weights[obs_data[["_grouper"]] %in% iterations[1:i]] <- 1
+  }
+  weights
 }
