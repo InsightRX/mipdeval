@@ -28,6 +28,8 @@
 #'   approach has been called "model predictive control (MPC)"
 #'   (www.page-meeting.org/?abstract=9076) and may be more predictive than
 #'   "regular" MAP in some scenarios. Default is `FALSE`.
+#' @param .vpc_options Options for VPC simulations. This must be the result from
+#'   a call to [vpc_options()].
 #' @param threads number of threads to divide computations on. Default is 1,
 #'   i.e. no parallel execution
 #' @param ruv residual error variability magnitude, specified as list.
@@ -57,6 +59,7 @@ run_eval <- function(
   weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
+  .vpc_options = vpc_options(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
@@ -104,41 +107,50 @@ run_eval <- function(
 
   ## 3. run the core function on each individual-level dataset in the list
   if(verbose) cli::cli_progress_step("Running forecasts for subjects in dataset")
-  if(threads > 1) {
-    # TODO: consider using purrr::in_parallel() in the future when it's stable.
-    future::plan(future::multisession, workers = threads)
-    res <- furrr::future_map(
-      .x = data_parsed,
-      .f = run_eval_core,
-      mod_obj = mod_obj,
-      censor_covariates = censor_covariates,
-      weight_prior = weight_prior,
-      progress_function = p
-    )
-  } else {
-    res <- purrr::map(
-      .x = data_parsed,
-      .f = run_eval_core,
-      mod_obj = mod_obj,
-      censor_covariates = censor_covariates,
-      weight_prior = weight_prior,
-      progress_function = p
-    )
+  res <- run(
+    .x = data_parsed,
+    .f = run_eval_core,
+    mod_obj = mod_obj,
+    censor_covariates = censor_covariates,
+    weight_prior = weight_prior,
+    progress_function = p,
+    .threads = threads,
+    .skip = .vpc_options$vpc_only
+  )
+  res_vpc <- run(
+    .x = data_parsed,
+    .f = run_vpc_core,
+    mod_obj = mod_obj,
+    n_samples = .vpc_options$n_samples,
+    seed = .vpc_options$seed,
+    progress_function = p,
+    .threads = threads,
+    .skip = .vpc_options$skip
+  )
+  # NULL is returned if VPC is skipped.
+  if (!is.null(res_vpc)) {
+    res_vpc <- dplyr::arrange(res_vpc, .data$ITER, .data$ID, .data$TIME)
   }
 
   ## 4. Combine results and basic stats into return object
-  if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
-  res_tbl <- dplyr::bind_rows(res) |>
-    tibble::as_tibble()
   out <- list(
-    results = res_tbl,
+    results = res,
     mod_obj = mod_obj,
-    data = data
+    data = input_data,
+    sim = res_vpc,
+    stats_summ = NULL,
+    shrinkage = NULL,
+    bayesian_impact = NULL
   )
   class(out) <- c("mipdeval_results", "list")
-  out$stats_summ <- calculate_stats(out)
-  out$shrinkage <- calculate_shrinkage(out)
-  out$bayesian_impact <- calculate_bayesian_impact(out)
+
+  # res is NULL when vpc_options(..., vpc_only = TRUE).
+  if (!is.null(res)) {
+    if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
+    out$stats_summ <- calculate_stats(out)
+    out$shrinkage <- calculate_shrinkage(out)
+    out$bayesian_impact <- calculate_bayesian_impact(out)
+  }
 
   ## 5. Return results
   out

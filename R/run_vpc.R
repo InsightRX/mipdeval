@@ -1,138 +1,20 @@
-#' Run iterative predictive analysis, looping over each individual's data
-#' to create observation and simulation datasets for creating visual predictive
-#' checks (VPCs).
+#' Core function for creating visual predictive checks (VPCs). Runs `n_samples`
+#' simulations for a single subject
 #'
 #' @inheritParams run_eval
-#' @param n_samples number of iterations to perform for VPC simulations.
-#'
-#' @returns A named list of data frames with `obs` and `sim` data.
-#'
-#' @exapmles
-#' \dontrun{
-#' library(mipdeval)
-#' library(vpc)
-#' vpc_vanc <- run_vpc(
-#'   model = "pkvancothomson",
-#'   data = nm_vanco,
-#'   n_samples = 100,
-#'   progress = FALSE
-#' )
-#' vpc(
-#'   sim = vpc_vanc$sim,
-#'   obs = vpc_vanc$obs
-#' )
-#' }
-#'
-#' @export
-run_vpc <- function(
-    model,
-    data,
-    ids = NULL,
-    n_samples = 250,
-    parameters = NULL,
-    fixed = NULL,
-    omega = NULL,
-    iov = NULL,
-    ruv = NULL,
-    dictionary = list(),
-    group = NULL,
-    progress = TRUE,
-    threads = 1,
-    verbose = TRUE
-) {
-
-  ## 0. Gather model information in an object
-  mod_obj <- parse_model(
-    model,
-    parameters = parameters,
-    ruv = ruv,
-    omega = omega,
-    fixed = fixed,
-    iov = iov
-  )
-
-  ## 1. read NONMEM data from file or data.frame. Do some simple checks
-  if(verbose) cli::cli_alert_info("Reading and parsing input data")
-  input_data <- read_input_data(data) |>
-    check_input_data(
-      dictionary = dictionary
-    )
-
-  ## Select covariates
-  covariates <- attr(mod_obj$model, "covariates")
-
-  ## 2. parse into separate, individual-level datasets and parse into
-  ##    format convenient for PKPDsim/PKPDmap, joined into a list object:
-  data_parsed <- parse_input_data(
-    data = input_data,
-    covariates = covariates,
-    ids = ids,
-    group = group
-  )
-
-  ## Set up progress bars
-  ## Need to loop this through the progressr package
-  ## because furrr currently doesn't support progressbars with cli.
-  if(progress) {
-    progressr::handlers(global = TRUE)
-    progressr::handlers("cli")
-    p <- progressr::progressor(along = data_parsed)
-  } else {
-    p <- function() { }
-  }
-
-  ## 3. run the core function on each individual-level dataset in the list
-  if(verbose) cli::cli_alert_info("Running forecasts for subjects in dataset")
-  if(threads > 1) {
-    future::plan(future::multisession, workers = threads)
-    res <- furrr::future_map(
-      .x = data_parsed,
-      .f = run_eval_core,
-      mod_obj = mod_obj,
-      n_samples = n_samples,
-      progress_function = p
-    )
-  } else {
-    res <- purrr::map(
-      .x = data_parsed,
-      .f = run_vpc_core,
-      mod_obj = mod_obj,
-      n_samples = n_samples,
-      progress_function = p
-    )
-  }
-  sim_data <- dplyr::bind_rows(res) |>
-    dplyr::select(ID = .data$id, TIME = .data$t, DV = .data$y, ITER = .data$iter) |>
-    dplyr::arrange(.data$ITER, .data$ID, .data$TIME)
-
-  out <- list(
-    obs = input_data |>
-      dplyr::filter(.data$EVID == 0),
-    sim = sim_data
-  )
-
-  out
-
-}
-
-#' Core function for `run_vpc`. Runs `n_samples` simulations for
-#' a single subject
-#'
-#' @inheritParams run_vpc
 #' @inheritParams run_eval_core
+#' @param n_samples Number of iterations to perform for VPC simulations.
+#' @param seed Seed for random number generation.
 #'
 #' @returns data.frame
 run_vpc_core <- function(
     data,
     mod_obj,
     progress_function,
-    n_samples = 250
+    n_samples = 250,
+    seed = 123
 ) {
-
   progress_function()
-
-  obs_data <- data$observations
-  comb <- data.frame()
 
   ## Simulate using PKPDsim
   bins <- NULL
@@ -149,13 +31,47 @@ run_vpc_core <- function(
     regimen = data$regimen,
     iov_bins = bins,
     n_ind = n_samples,
+    seed = seed,
     only_obs = TRUE,
     verbose = FALSE
-  ) |>
-    dplyr::mutate(
-      "iter" = .data$id,
-      "id" = data$id # data, not .data!
-    )
+  )
 
-  dat
+  dat |>
+    dplyr::mutate(
+      iter = .data$id,
+      id = data$id # data, not .data!
+    ) |>
+    dplyr::select(ID = "id", TIME = "t", DV = "y", ITER = "iter")
+}
+
+#' Options for VPC simulations
+#'
+#' @param ... These dots are reserved for future extensibility and must be empty.
+#' @inheritParams run_vpc_core
+#' @param skip Logical. Skip VPC simulations?
+#' @param vpc_only Logical. Only return VPC simulations?
+#'
+#' @returns A list.
+#' @export
+vpc_options <- function(
+  ...,
+  n_samples = 250,
+  seed = 123,
+  skip = FALSE,
+  vpc_only = FALSE
+) {
+  rlang::check_dots_empty()
+  out <- list(
+    n_samples = vctrs::vec_assert(
+      n_samples, ptype = numeric(), size = 1L, arg = "n_samples"
+    ),
+    seed = seed,
+    skip = vctrs::vec_assert(
+      skip, ptype = logical(), size = 1L, arg = "skip"
+    ),
+    vpc_only = vctrs::vec_assert(
+      vpc_only, ptype = logical(), size = 1L, arg = "vpc_only"
+    )
+  )
+  structure(out, class = "mipdeval_vpc_options")
 }

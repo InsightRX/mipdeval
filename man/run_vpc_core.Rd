@@ -2,10 +2,10 @@
 % Please edit documentation in R/run_vpc.R
 \name{run_vpc_core}
 \alias{run_vpc_core}
-\title{Core function for \code{run_vpc}. Runs \code{n_samples} simulations for
-a single subject}
+\title{Core function for creating visual predictive checks (VPCs). Runs \code{n_samples}
+simulations for a single subject}
 \usage{
-run_vpc_core(data, mod_obj, progress_function, n_samples = 250)
+run_vpc_core(data, mod_obj, progress_function, n_samples = 250, seed = 123)
 }
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
@@ -14,12 +14,14 @@ run_vpc_core(data, mod_obj, progress_function, n_samples = 250)
 
 \item{progress_function}{function to increment progress bar}
 
-\item{n_samples}{number of iterations to perform for VPC simulations.}
+\item{n_samples}{Number of iterations to perform for VPC simulations.}
+
+\item{seed}{Seed for random number generation.}
 }
 \value{
 data.frame
 }
 \description{
-Core function for \code{run_vpc}. Runs \code{n_samples} simulations for
-a single subject
+Core function for creating visual predictive checks (VPCs). Runs \code{n_samples}
+simulations for a single subject
 }
