@@ -7,7 +7,7 @@
 #'
 #' @returns A named list of data frames with `obs` and `sim` data.
 #'
-#' @exapmles
+#' @examples
 #' \dontrun{
 #' library(mipdeval)
 #' library(vpc)
