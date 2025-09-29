@@ -87,7 +87,7 @@ run_vpc <- function(
     future::plan(future::multisession, workers = threads)
     res <- furrr::future_map(
       .x = data_parsed,
-      .f = run_eval_core,
+      .f = run_vpc_core,
       mod_obj = mod_obj,
       n_samples = n_samples,
       progress_function = p
