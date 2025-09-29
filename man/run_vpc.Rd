@@ -74,3 +74,20 @@ Run iterative predictive analysis, looping over each individual's data
 to create observation and simulation datasets for creating visual predictive
 checks (VPCs).
 }
+\examples{
+\dontrun{
+library(mipdeval)
+library(vpc)
+vpc_vanc <- run_vpc(
+  model = "pkvancothomson",
+  data = nm_vanco,
+  n_samples = 100,
+  progress = FALSE
+)
+vpc(
+  sim = vpc_vanc$sim,
+  obs = vpc_vanc$obs
+)
+}
+
+}
