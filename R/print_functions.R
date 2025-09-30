@@ -5,6 +5,10 @@
 #'
 #' @export
 print.mipdeval_results <- function(x, ...) {
+  if(is.null(x$results)) {
+    cli::cli_alert_info("No forecasting info available, did you run with `vpc_only=TRUE`?")
+    return(invisible())
+  }
   print(x$stats_summ, ...)
   print(x$shrinkage, ...)
   print(x$bayesian_impact, ...)

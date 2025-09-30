@@ -22,7 +22,7 @@
 #'   by default (so no data leakage), but it can be switched off if we want to
 #'   match the behavior of `PsN::proseval` exactly.
 #' @param incremental should MAP Bayesian do incremental fits in the iterative
-#'   loop. I.e. in this case it would use the first iterations MAP Bayesian
+#'   loop? I.e. in this case it would use the first iterations MAP Bayesian
 #'   estimates as input for the second iteration, and so forth. The uncertainty
 #'   around the MAP estimates would be used as the new `omega` matrix. This
 #'   approach has been called "model predictive control (MPC)"
@@ -119,6 +119,7 @@ run_eval <- function(
     mod_obj = mod_obj,
     censor_covariates = censor_covariates,
     weight_prior = weight_prior,
+    incremental = incremental,
     progress_function = p,
     .threads = threads,
     .skip = .vpc_options$vpc_only

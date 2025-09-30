@@ -113,3 +113,15 @@ test_that("Run also works when `dictionary` is used", {
   expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
 })
 
+test_that("Incremental Bayes method works", {
+  local_mipdeval_options()
+  res <- run_eval(
+    model = "pkvancothomson",
+    data = nm_vanco,
+    incremental = TRUE,
+    progress = F,
+    ids = c(1:10)
+  )
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
+  # TODO: test outputs
+})
