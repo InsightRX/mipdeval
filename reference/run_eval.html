@@ -65,6 +65,7 @@
 <span>  weight_prior <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  censor_covariates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  incremental <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .vpc_options <span class="op">=</span> <span class="fu"><a href="vpc_options.html">vpc_options</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  threads <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -156,6 +157,11 @@ around the MAP estimates would be used as the new <code>omega</code> matrix. Thi
 approach has been called "model predictive control (MPC)"
 (www.page-meeting.org/?abstract=9076) and may be more predictive than
 "regular" MAP in some scenarios. Default is <code>FALSE</code>.</p></dd>
+
+
+<dt id="arg--vpc-options">.vpc_options<a class="anchor" aria-label="anchor" href="#arg--vpc-options"></a></dt>
+<dd><p>Options for VPC simulations. This must be the result from
+a call to <code><a href="vpc_options.html">vpc_options()</a></code>.</p></dd>
 
 
 <dt id="arg-threads">threads<a class="anchor" aria-label="anchor" href="#arg-threads"></a></dt>

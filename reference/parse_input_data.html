@@ -50,7 +50,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_input_data</span><span class="op">(</span><span class="va">data</span>, <span class="va">covariates</span>, <span class="va">ids</span>, group <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">parse_input_data</span><span class="op">(</span><span class="va">data</span>, <span class="va">covariates</span>, <span class="va">ids</span>, group <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -76,6 +76,10 @@ iterative flow. By default each observation will be its own "group", but
 this can be used to group peaks and troughs together, or to group
 observations on the same day together. Grouping will be done prior to
 running the analysis, so cannot be changed afterwards.</p></dd>
+
+
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
+<dd><p>show more output</p></dd>
 
 </dl></div>
     <div id="value">
