@@ -81,10 +81,10 @@ run_eval <- function(
   )
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
-  if(verbose) cli::cli_alert_info("Reading and parsing input data")
-  input_data <- read_input_data(data) |>
+  input_data <- read_input_data(data, verbose = verbose) |>
     check_input_data(
-      dictionary = dictionary
+      dictionary = dictionary,
+      verbose = verbose
     )
 
   ## Select covariates
@@ -96,7 +96,8 @@ run_eval <- function(
     data = input_data,
     covariates = covariates,
     ids = ids,
-    group = group
+    group = group,
+    verbose = verbose
   )
 
   ## Set up progress bars
@@ -166,10 +167,11 @@ run_eval <- function(
 
   # res is NULL when vpc_options(..., vpc_only = TRUE).
   if (!is.null(res)) {
-    if(verbose) cli::cli_alert_info("Calculating forecasting statistics")
+    if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
     out$stats_summ <- calculate_stats(out)
     out$shrinkage <- calculate_shrinkage(out)
     out$bayesian_impact <- calculate_bayesian_impact(out)
+    cli::cli_progress_done()
   }
 
   ## 5. Return results
