@@ -65,6 +65,11 @@ run_eval <- function(
   verbose = TRUE
 ) {
 
+  if(progress) { # configure progressbars
+    progressr::handlers(global = TRUE)
+    progressr::handlers("cli")
+  }
+
   ## 0. Gather model information in an object
   mod_obj <- parse_model(
     model,
@@ -97,13 +102,7 @@ run_eval <- function(
   ## Set up progress bars
   ## Need to loop this through the progressr package
   ## because furrr currently doesn't support progressbars with cli.
-  if(progress) {
-    progressr::handlers(global = TRUE)
-    progressr::handlers("cli")
-    p <- progressr::progressor(along = data_parsed)
-  } else {
-    p <- function() { }
-  }
+  p <- if(progress) { progressr::progressor(along = data_parsed) } else { \(x) {} }
 
   ## 3. run the core function on each individual-level dataset in the list
   if(verbose) cli::cli_progress_step("Running forecasts for subjects in dataset")
@@ -117,6 +116,15 @@ run_eval <- function(
     .threads = threads,
     .skip = .vpc_options$vpc_only
   )
+
+  if(verbose) {
+    if(.vpc_options$skip) {
+      cli::cli_progress_step("Not running simulations for VPC / NPDE")
+    } else {
+      cli::cli_progress_step("Running simulations for VPC / NPDE")
+    }
+  }
+  p <- if(progress) { progressr::progressor(along = data_parsed) } else { \(x) {} }
   res_vpc <- run(
     .x = data_parsed,
     .f = run_vpc_core,
