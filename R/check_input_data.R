@@ -6,7 +6,8 @@
 #' @inheritParams run_eval
 #'
 #' @returns a data.frame
-check_input_data <- function(data, dictionary) {
+check_input_data <- function(data, dictionary, verbose = TRUE) {
+  if(verbose) cli::cli_progress_step("Checking integrity of input data")
   if(!is.null(dictionary) && length(dictionary) > 0) {
     check_dictionary_columns(data, dictionary)
     check_valid_dictionary(dictionary)
@@ -21,9 +22,10 @@ check_input_data <- function(data, dictionary) {
         )
       )
   } else {
-    cli::cli_alert_info("No data `dictionary` provided, assuming common NONMEM column names.")
+    cli::cli_alert_info("No data `dictionary` provided, assuming common NONMEM column names in input dataset.")
   }
   check_required_cols(data)
+  if(verbose) cli::cli_progress_done()
   data
 }
 

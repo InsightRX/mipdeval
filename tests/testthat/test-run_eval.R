@@ -11,11 +11,12 @@ test_that("Basic run with vanco data + model works", {
     ruv = mod_obj$ruv,
     fixed = mod_obj$fixed,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
+    .vpc_options = vpc_options(skip = TRUE),
     progress = FALSE
   )
 
   ## Expected structure:
-  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
   expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
   expect_s3_class(res$stats_summ, c("tbl_df", "tbl", "data.frame"))
 
@@ -24,6 +25,7 @@ test_that("Basic run with vanco data + model works", {
     model = "pkvancothomson",
     data = nm_vanco,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
+    .vpc_options = vpc_options(skip = TRUE),
     progress = FALSE
   )
 
@@ -57,10 +59,11 @@ test_that("Run also works when `model` argument just references the package", {
     model = "pkvancothomson",
     data = nm_vanco,
     parameters = list(CL = 5, V = 50, TH_CRCL = 1, Q = 3, V2 = 40),
-    progress = F,
+    .vpc_options = vpc_options(skip = TRUE),
+    progress = FALSE,
     ids = c(1:3)
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
   # TODO: test outputs
 })
 
@@ -69,17 +72,19 @@ test_that("Flattening of prior results in different predictions", {
   res <- run_eval(
     model = "pkvancothomson",
     data = nm_vanco,
-    progress = F,
+    .vpc_options = vpc_options(skip = TRUE),
+    progress = FALSE,
     ids = c(1:3)
   )
   res_flat <- run_eval(
     model = "pkvancothomson",
     data = nm_vanco,
     weight_prior = 0.8,
-    progress = F,
+    .vpc_options = vpc_options(skip = TRUE),
+    progress = FALSE,
     ids = c(1:3)
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
   expect_true(
     all(
       res$results |>
@@ -101,10 +106,11 @@ test_that("Run also works when `dictionary` is used", {
     model = "pkvancothomson",
     data = nm_vanco,
     dictionary = c(ID = "id2", TIME = "time2", EVID = "evid2"),
-    progress = F,
+    .vpc_options = vpc_options(skip = TRUE),
+    progress = FALSE,
     ids = 1
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
 })
 
 test_that("Incremental Bayes method works", {

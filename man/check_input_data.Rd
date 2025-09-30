@@ -4,13 +4,15 @@
 \alias{check_input_data}
 \title{Do some checks and minor manipulations on input dataset}
 \usage{
-check_input_data(data, dictionary)
+check_input_data(data, dictionary, verbose = TRUE)
 }
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
 \item{dictionary}{data dictionary. Optional, a named character vector that
 specifies the column names to be used from the dataset.}
+
+\item{verbose}{show more output}
 }
 \value{
 a data.frame

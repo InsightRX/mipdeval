@@ -9,8 +9,11 @@ parse_input_data <- function(
     data,
     covariates,
     ids,
-    group = NULL
+    group = NULL,
+    verbose = TRUE
 ) {
+
+  if(verbose) cli::cli_progress_step("Parsing input data for analysis")
 
   ## Filter IDs, if needed
   if(!is.null(ids)) {
@@ -30,6 +33,8 @@ parse_input_data <- function(
     covariates = covariates,
     group = group
   )
+
+  if(verbose) cli::cli_progress_done()
 
   out
 }
@@ -52,6 +57,7 @@ parse_nm_data <- function(data, covariates, group = NULL) {
     dplyr::filter(.data$EVID == 0) |>
     dplyr::select("ID", "TIME", "DV", "CMT", "_grouper") |>
     dplyr::rename(id = "ID", t = "TIME", y = "DV", cmt = "CMT")
+  out$id <- obs$ID[1]
   out
 }
 

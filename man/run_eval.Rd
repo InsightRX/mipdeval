@@ -19,6 +19,7 @@ run_eval(
   weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
+  .vpc_options = vpc_options(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
@@ -73,12 +74,15 @@ by default (so no data leakage), but it can be switched off if we want to
 match the behavior of \code{PsN::proseval} exactly.}
 
 \item{incremental}{should MAP Bayesian do incremental fits in the iterative
-loop. I.e. in this case it would use the first iterations MAP Bayesian
+loop? I.e. in this case it would use the first iterations MAP Bayesian
 estimates as input for the second iteration, and so forth. The uncertainty
 around the MAP estimates would be used as the new \code{omega} matrix. This
 approach has been called "model predictive control (MPC)"
 (www.page-meeting.org/?abstract=9076) and may be more predictive than
 "regular" MAP in some scenarios. Default is \code{FALSE}.}
+
+\item{.vpc_options}{Options for VPC simulations. This must be the result from
+a call to \code{\link[=vpc_options]{vpc_options()}}.}
 
 \item{threads}{number of threads to divide computations on. Default is 1,
 i.e. no parallel execution}

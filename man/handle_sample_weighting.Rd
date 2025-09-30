@@ -10,7 +10,7 @@ handle_sample_weighting(obs_data, iterations, incremental, i)
 \item{iterations}{numeric vector of groups}
 
 \item{incremental}{should MAP Bayesian do incremental fits in the iterative
-loop. I.e. in this case it would use the first iterations MAP Bayesian
+loop? I.e. in this case it would use the first iterations MAP Bayesian
 estimates as input for the second iteration, and so forth. The uncertainty
 around the MAP estimates would be used as the new \code{omega} matrix. This
 approach has been called "model predictive control (MPC)"
