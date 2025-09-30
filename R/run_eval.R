@@ -126,7 +126,7 @@ run_eval <- function(
 
   if(verbose) {
     if(.vpc_options$skip) {
-      cli::cli_progress_step("Skipping simulations for VPC / NPDE")
+      cli::cli_alert_info("Skipping simulations for VPC / NPDE")
     } else {
       cli::cli_alert_info("Running simulations for VPC / NPDE")
       cli::cli_progress_step(
@@ -166,7 +166,7 @@ run_eval <- function(
 
   # res is NULL when vpc_options(..., vpc_only = TRUE).
   if (!is.null(res)) {
-    if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
+    if(verbose) cli::cli_alert_info("Calculating forecasting statistics")
     out$stats_summ <- calculate_stats(out)
     out$shrinkage <- calculate_shrinkage(out)
     out$bayesian_impact <- calculate_bayesian_impact(out)
