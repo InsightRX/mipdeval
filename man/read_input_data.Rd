@@ -4,10 +4,12 @@
 \alias{read_input_data}
 \title{Read input data}
 \usage{
-read_input_data(data)
+read_input_data(data, verbose = TRUE)
 }
 \arguments{
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
+
+\item{verbose}{show more output}
 }
 \value{
 data.frame

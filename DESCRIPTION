@@ -28,11 +28,14 @@ Imports:
     rlang,
     tibble,
     tidyr,
+    vctrs,
     withr
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.2.0),
+    vdiffr,
+    vpc
 Remotes: 
     InsightRX/PKPDmap,
     InsightRX/PKPDsim 
