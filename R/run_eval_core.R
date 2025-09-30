@@ -187,6 +187,7 @@ handle_covariate_censoring <- function(
 #' selected.
 #'
 #' @inheritParams run_eval_core
+#' @param obs_data tibble or data.frame with observed data for individual
 #' @param iterations numeric vector of groups
 #' @param i index
 #'

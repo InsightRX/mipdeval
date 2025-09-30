@@ -122,6 +122,6 @@ test_that("Incremental Bayes method works", {
     progress = F,
     ids = c(1:10)
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
   # TODO: test outputs
 })

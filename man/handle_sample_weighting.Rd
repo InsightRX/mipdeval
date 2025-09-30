@@ -7,6 +7,8 @@
 handle_sample_weighting(obs_data, iterations, incremental, i)
 }
 \arguments{
+\item{obs_data}{tibble or data.frame with observed data for individual}
+
 \item{iterations}{numeric vector of groups}
 
 \item{incremental}{should MAP Bayesian do incremental fits in the iterative
