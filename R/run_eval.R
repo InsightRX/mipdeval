@@ -81,7 +81,7 @@ run_eval <- function(
   )
 
   ## 1. read NONMEM data from file or data.frame. Do some simple checks
-  if(verbose) cli::cli_progress_step("Reading and parsing input data")
+  if(verbose) cli::cli_alert_info("Reading and parsing input data")
   input_data <- read_input_data(data) |>
     check_input_data(
       dictionary = dictionary
@@ -105,7 +105,13 @@ run_eval <- function(
   p <- if(progress) { progressr::progressor(along = data_parsed) } else { \(x) {} }
 
   ## 3. run the core function on each individual-level dataset in the list
-  if(verbose) cli::cli_progress_step("Running forecasts for subjects in dataset")
+  if(verbose) {
+    cli::cli_alert_info("Running forecasts for subjects in dataset")
+    cli::cli_progress_step(
+      msg = NULL,
+      msg_done = "Forecasting analysis done."
+    )
+  }
   res <- run(
     .x = data_parsed,
     .f = run_eval_core,
@@ -116,12 +122,17 @@ run_eval <- function(
     .threads = threads,
     .skip = .vpc_options$vpc_only
   )
+  cli::cli_progress_done()
 
   if(verbose) {
     if(.vpc_options$skip) {
-      cli::cli_progress_step("Not running simulations for VPC / NPDE")
+      cli::cli_progress_step("Skipping simulations for VPC / NPDE")
     } else {
-      cli::cli_progress_step("Running simulations for VPC / NPDE")
+      cli::cli_alert_info("Running simulations for VPC / NPDE")
+      cli::cli_progress_step(
+        msg = NULL,
+        msg_done = "Simulations for VPC / NPDE done"
+      )
     }
   }
   p <- if(progress) { progressr::progressor(along = data_parsed) } else { \(x) {} }
@@ -135,6 +146,7 @@ run_eval <- function(
     .threads = threads,
     .skip = .vpc_options$skip
   )
+  cli::cli_progress_done()
   # NULL is returned if VPC is skipped.
   if (!is.null(res_vpc)) {
     res_vpc <- dplyr::arrange(res_vpc, .data$ITER, .data$ID, .data$TIME)
