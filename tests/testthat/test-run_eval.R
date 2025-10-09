@@ -19,6 +19,10 @@ test_that("Basic run with vanco data + model works", {
   expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
   expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
   expect_s3_class(res$stats_summ, c("tbl_df", "tbl", "data.frame"))
+  expect_equal(
+    round(res$results$CL[1:5], 3),
+    c(2.99, 2.685, 2.462, 2.430, 2.439)
+  )
 
   # Using PKPDsim model library:
   res_2 <- run_eval(
@@ -120,8 +124,28 @@ test_that("Incremental Bayes method works", {
     data = nm_vanco,
     incremental = TRUE,
     progress = F,
-    ids = c(1:10)
+    ids = c(1:3)
   )
   expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
-  # TODO: test outputs
+  expect_equal(
+    res$stats_summ,
+    structure(list(
+      type = c("iter_ipred", "iter_ipred", "map_ipred",
+"map_ipred", "pred", "pred"),
+      apriori = c(0, 1, 0, 1, 0, 1),
+      rmse = c(4.051, 8.299, 1.96, 4.319, 4.789, 8.299),
+      nrmse = c(0.411,
+    0.232, 0.199, 0.121, 0.486, 0.232),
+      mpe = c(-0.339, -0.004,
+    -0.045, -0.002, -0.415, -0.004),
+      mape = c(0.445, 0.246, 0.166,
+    0.118, 0.558, 0.246)
+    ),
+    class = c("mipdeval_results_stats_summ","tbl_df", "tbl", "data.frame"),
+    row.names = c(NA, -6L))
+  )
+  expect_equal(
+    round(res$results$CL[1:5], 3),
+    c(2.99, 2.685, 2.529, 2.668, 2.666) # should be different CL progression (expect first 2 values) than from test above (non-incremental)
+  )
 })
