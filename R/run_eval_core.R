@@ -75,6 +75,8 @@ run_eval_core <- function(
       dv = fit$dv,
       ipred = fit$ipred,
       pred = fit$pred,
+      ofv = fit$fit$value,
+      ss_w = ss(fit$dv, fit$ipred, weights),
       `_iteration` = iterations[i],
       `_grouper` = obs_data$`_grouper`
     )
@@ -111,6 +113,8 @@ run_eval_core <- function(
       dv = fit_map$dv,
       ipred = fit_map$ipred,
       pred = fit_map$pred,
+      ofv = fit_map$fit$value,
+      ss_w = ss(fit_map$dv, fit_map$ipred, NULL),
       `_iteration` = iterations[i],
       `_grouper` = obs_data$`_grouper`
     )
@@ -127,7 +131,9 @@ run_eval_core <- function(
       dplyr::filter(.data$`_iteration` == 1) |>
       dplyr::mutate(
         `_iteration` = 0,
-        ipred = .data$pred
+        ipred = .data$pred,
+        ofv = NA,
+        ss_w = NA
       ) |> # set to population parameters, not individual estimates
         dplyr::select(-!!names(mod_obj$parameters)) |>
         dplyr::left_join(
@@ -144,12 +150,12 @@ run_eval_core <- function(
     ) |>
     dplyr::select(
       "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
+      "ofv", "ss_w",
       "iter_ipred", "apriori",
       !!names(mod_obj$parameters)
     )
 
   out
-
 }
 
 #' Handle covariate censoring

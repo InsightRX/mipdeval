@@ -67,3 +67,19 @@ mape <- function (obs, pred) {
 mpe <- function (obs, pred) {
   sum((obs - pred)/obs)/length(obs)
 }
+
+#' Weighted sum-of-squares of residuals
+#'
+#' @inheritParams rmse
+#' @param w weights
+#'
+ss <- function(obs, pred, w = NULL) {
+  if(is.null(w)) {
+    w <- rep(1, length(obs))
+  }
+  if (length(obs) != length(pred) || length(obs) != length(w)) {
+    cli::cli_abort("`obs`, `pred`, and `w` must have the same length")
+  }
+  if(sum(w) == 0) return(NA)
+  sum(w * (obs - pred)^2)
+}
