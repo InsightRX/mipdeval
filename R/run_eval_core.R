@@ -114,7 +114,7 @@ run_eval_core <- function(
       ipred = fit_map$ipred,
       pred = fit_map$pred,
       ofv = fit_map$fit$value,
-      ss_w = ss(fit_map$dv, fit_map$ipred, NULL),
+      ss_w = ss(fit_map$dv, fit_map$ipred, w = NULL),
       `_iteration` = iterations[i],
       `_grouper` = obs_data$`_grouper`
     )
