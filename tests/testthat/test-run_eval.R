@@ -20,8 +20,22 @@ test_that("Basic run with vanco data + model works", {
   expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
   expect_s3_class(res$stats_summ, c("tbl_df", "tbl", "data.frame"))
   expect_equal(
+    names(res$results),
+    c("id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
+      "ofv", "ss_w", "iter_ipred", "apriori", "CL", "V", "TH_CRCL",
+      "Q", "V2")
+  )
+  expect_equal(
     round(res$results$CL[1:5], 3),
     c(2.99, 2.685, 2.462, 2.430, 2.439)
+  )
+  expect_equal(
+    round(res$results$ofv[1:5], 3),
+    c(NA, 6.196, 11.846, 17.046, 21.563)
+  )
+  expect_equal(
+    round(res$results$ss_w[1:5], 3),
+    c(NA, 16.839, 11.241, 27.358, 30.944)
   )
 
   # Using PKPDsim model library:
