@@ -43,6 +43,15 @@ parse_nm_data <- function(data, covariates, group = NULL) {
   out <- list()
   out$covariates <- make_covariates_object(data, covariates)
   out$regimen <- PKPDsim::nm_to_regimen(data)
+  ## Temporary fix!!
+  out$regimen$cmt <- data |>
+    dplyr::filter(EVID == 1) |>
+    dplyr::pull(CMT)
+  out$regimen$type <- data |>
+    dplyr::filter(EVID == 1) |>
+    dplyr::mutate(type = dplyr::if_else(CMT == 1, "oral", "infusion")) |>
+    dplyr::pull(type)
+  ## /tmp
   obs <- data |>
     dplyr::filter(.data$EVID == 0)
   if(!is.null(group)) {
