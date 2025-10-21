@@ -20,6 +20,7 @@
 <url><loc>/reference/group_by_dose.html</loc></url>
 <url><loc>/reference/group_by_time.html</loc></url>
 <url><loc>/reference/handle_covariate_censoring.html</loc></url>
+<url><loc>/reference/handle_sample_weighting.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/is_timevarying.html</loc></url>
 <url><loc>/reference/mape.html</loc></url>
@@ -42,6 +43,7 @@
 <url><loc>/reference/run_eval.html</loc></url>
 <url><loc>/reference/run_eval_core.html</loc></url>
 <url><loc>/reference/run_vpc_core.html</loc></url>
+<url><loc>/reference/ss.html</loc></url>
 <url><loc>/reference/vpc_options.html</loc></url>
 </urlset>
 
