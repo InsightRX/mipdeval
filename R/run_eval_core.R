@@ -26,10 +26,15 @@ run_eval_core <- function(
 
   for(i in seq_along(iterations)) {
 
-    ## TODO: this will change once we support sample-weighting strategies
-    ##       For now this is just simple full-weighting for all previous points
-    weights <- rep(0, nrow(obs_data))
-    weights[obs_data[["_grouper"]] %in% iterations[1:i]] <- 1
+    ## Select which samples should be used in fit, for regular iterative
+    ## forecasting and incremental.
+    ## TODO: handle weighting down of earlier samples
+    weights <- handle_sample_weighting(
+      obs_data,
+      iterations,
+      incremental,
+      i
+    )
 
     ## Should covariate data be leaked? PsN::proseval does this,
     ## but for use in MIPD they should be censored.
@@ -42,10 +47,15 @@ run_eval_core <- function(
     ## Do a fit with PKPDmap, using only the points
     ## with weight=1. The rest of the points will get a predicted value
     ## in the output, but they were not weighted in the fit.
+    mod_upd <- mod_obj
+    if(incremental & i > 1) {
+      mod_upd$parameters <- fit$parameters # take params from previous fit
+      mod_upd$omega <- fit$vcov
+    }
     fit <- PKPDmap::get_map_estimates(
       model = mod_obj$model,
-      parameters = mod_obj$parameters,
-      omega = mod_obj$omega,
+      parameters = mod_upd$parameters,
+      omega = mod_upd$omega,
       error = mod_obj$ruv,
       fixed = mod_obj$fixed,
       as_eta = mod_obj$kappa,
@@ -65,6 +75,8 @@ run_eval_core <- function(
       dv = fit$dv,
       ipred = fit$ipred,
       pred = fit$pred,
+      ofv = fit$fit$value,
+      ss_w = ss(fit$dv, fit$ipred, weights),
       `_iteration` = iterations[i],
       `_grouper` = obs_data$`_grouper`
     )
@@ -76,6 +88,41 @@ run_eval_core <- function(
     )
   }
 
+  ## Get data for MAP fit
+  if(incremental) {
+    ## need to do an extra MAP Bayesian fit, because we can't use the
+    ## incrementally updated parameters + omega
+    fit_map <- PKPDmap::get_map_estimates(
+      model = mod_obj$model,
+      parameters = mod_obj$parameters, # use original model params!
+      omega = mod_obj$omega, # use original model params!
+      error = mod_obj$ruv,
+      fixed = mod_obj$fixed,
+      as_eta = mod_obj$kappa,
+      data = data$observations,
+      covariates = cov_data,
+      regimen = data$regimen,
+      weight_prior = weight_prior,
+      weights = NULL, # no sample weighting, full MAP Bayesian on all samples
+      iov_bins = mod_obj$bins,
+      verbose = FALSE
+    )
+    map_pred_data <- tibble::tibble(
+      id = obs_data$id,
+      t = obs_data$t,
+      dv = fit_map$dv,
+      ipred = fit_map$ipred,
+      pred = fit_map$pred,
+      ofv = fit_map$fit$value,
+      ss_w = ss(fit_map$dv, fit_map$ipred, w = NULL),
+      `_iteration` = iterations[i],
+      `_grouper` = obs_data$`_grouper`
+    )
+  } else {  # just take last fit object and pred_data
+    fit_map <- fit
+    map_pred_data <- pred_data
+  }
+
   ## pre-pend population predictions for the first observation
   # TODO: Refactor this logic into a function or functions, e.g., the first
   # argument to bind_rows() could be refactored into `get_apriori_data()`.
@@ -84,7 +131,9 @@ run_eval_core <- function(
       dplyr::filter(.data$`_iteration` == 1) |>
       dplyr::mutate(
         `_iteration` = 0,
-        ipred = .data$pred
+        ipred = .data$pred,
+        ofv = NA,
+        ss_w = NA
       ) |> # set to population parameters, not individual estimates
         dplyr::select(-!!names(mod_obj$parameters)) |>
         dplyr::left_join(
@@ -96,17 +145,17 @@ run_eval_core <- function(
     dplyr::filter(.data$`_iteration` == (.data$`_grouper` - 1)) |>
     dplyr::mutate(
       iter_ipred = .data$ipred,
-      map_ipred = pred_data$ipred, # ipred from last fit (full MAP)
+      map_ipred = map_pred_data$ipred, # ipred from full retrospective MAP
       apriori = (.data$`_iteration` == 0)
     ) |>
     dplyr::select(
       "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
+      "ofv", "ss_w",
       "iter_ipred", "apriori",
       !!names(mod_obj$parameters)
     )
 
   out
-
 }
 
 #' Handle covariate censoring
@@ -135,4 +184,32 @@ handle_covariate_censoring <- function(
     }
   }
   cov_data
+}
+
+#' Handle weighting of samples
+#'
+#' This function is used to select the samples used in the fit (1 or 0),
+#' but also to select their weight, if a sample weighting strategy is
+#' selected.
+#'
+#' @inheritParams run_eval_core
+#' @param obs_data tibble or data.frame with observed data for individual
+#' @param iterations numeric vector of groups
+#' @param i index
+#'
+#' @returns vector of weights (numeric)
+#'
+handle_sample_weighting <- function(
+  obs_data,
+  iterations,
+  incremental,
+  i
+) {
+  weights <- rep(0, nrow(obs_data))
+  if(incremental) { # just fit current sample or group
+    weights[obs_data[["_grouper"]] %in% iterations[i]] <- 1
+  } else { # fit all samples up until current sample
+    weights[obs_data[["_grouper"]] %in% iterations[1:i]] <- 1
+  }
+  weights
 }
