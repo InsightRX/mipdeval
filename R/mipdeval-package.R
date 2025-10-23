@@ -2,7 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom rlang .data
+#' @importFrom rlang .data caller_arg caller_env
 #' @importFrom utils read.csv
 ## usethis namespace: end
 NULL

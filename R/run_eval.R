@@ -28,6 +28,8 @@
 #'   approach has been called "model predictive control (MPC)"
 #'   (www.page-meeting.org/?abstract=9076) and may be more predictive than
 #'   "regular" MAP in some scenarios. Default is `FALSE`.
+#' @param .stats_summ_options Options for summary statistics. This must be the
+#'   result from a call to [stats_summ_options()].
 #' @param .vpc_options Options for VPC simulations. This must be the result from
 #'   a call to [vpc_options()].
 #' @param threads number of threads to divide computations on. Default is 1,
@@ -59,11 +61,15 @@ run_eval <- function(
   weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
+  .stats_summ_options = stats_summ_options(),
   .vpc_options = vpc_options(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
 ) {
+  # Evaluate options at the start so any errors are triggered immediately.
+  .stats_summ_options <- .stats_summ_options
+  .vpc_options <- .vpc_options
 
   if(progress) { # configure progressbars
     progressr::handlers(global = TRUE)
@@ -169,7 +175,12 @@ run_eval <- function(
   # res is NULL when vpc_options(..., vpc_only = TRUE).
   if (!is.null(res)) {
     if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
-    out$stats_summ <- calculate_stats(out)
+    out$stats_summ <- calculate_stats(
+      out,
+      rounding = .stats_summ_options$rounding,
+      acc_error_abs = .stats_summ_options$acc_error_abs,
+      acc_error_rel = .stats_summ_options$acc_error_rel
+    )
     out$shrinkage <- calculate_shrinkage(out)
     out$bayesian_impact <- calculate_bayesian_impact(out)
     cli::cli_progress_done()

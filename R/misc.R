@@ -26,6 +26,25 @@ is_timevarying <- function(.data, .cols) {
   )
 }
 
+#' Assert an argument has known prototype and/or size or is NULL
+#'
+#' @inheritParams vctrs::vec_assert
+#'
+#' @returns Either throws an error or returns `x`, invisibly.
+vec_assert_or_null <- function(
+    x,
+    ptype = NULL,
+    size = NULL,
+    arg = caller_arg(x),
+    call = caller_env()
+) {
+  if (!is.null(x)) {
+    vctrs::vec_assert(x = x, ptype = ptype, size = size, arg = arg, call = call)
+  } else {
+    NULL
+  }
+}
+
 #' Root-mean-squared error
 #'
 #' @param obs observations vector
