@@ -11,6 +11,7 @@ test_that("Basic run with vanco data + model works", {
     ruv = mod_obj$ruv,
     fixed = mod_obj$fixed,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
+    .stats_summ_options = stats_summ_options(acc_error_abs = 0.5, acc_error_rel = 0.25),
     .vpc_options = vpc_options(skip = TRUE),
     progress = FALSE
   )
@@ -43,6 +44,7 @@ test_that("Basic run with vanco data + model works", {
     model = "pkvancothomson",
     data = nm_vanco,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
+    .stats_summ_options = stats_summ_options(acc_error_abs = 0.5, acc_error_rel = 0.25),
     .vpc_options = vpc_options(skip = TRUE),
     progress = FALSE
   )
