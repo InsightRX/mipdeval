@@ -24,27 +24,15 @@ pak::pak("InsightRX/mipdeval")
 ## Usage
 
     run_eval(
-      model,
-      data
+      model = model,
+      data = data,
+      ... # additional arguments, see docs
     )
 
 <!--
 ## Documentation
 &#10;See at <pkgdown URL> and also in the installed package: `help(package = "mipdeval")`.
 -->
-
-## Roadmap
-
-The `mipdeval` package is currently under development, and there will
-likely be changes to core functionality in the upcoming months. The
-following features are on our short-term roadmap:
-
-- match functionality in PsN::proseval
-- allow timebased weighting of historical data
-- allow flattening of priors
-- allow adjustment of residual error magnitude
-- allow grouping of samples (e.g. peak/trough, or day-to-day
-  forecasting)
 
 ## Contributing
 
