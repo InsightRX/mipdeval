@@ -7,6 +7,7 @@
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/news/index.html</loc></url>
+<url><loc>/reference/accuracy.html</loc></url>
 <url><loc>/reference/add_grouping_column.html</loc></url>
 <url><loc>/reference/calc_eta.html</loc></url>
 <url><loc>/reference/calculate_bayesian_impact.html</loc></url>
@@ -44,6 +45,8 @@
 <url><loc>/reference/run_eval_core.html</loc></url>
 <url><loc>/reference/run_vpc_core.html</loc></url>
 <url><loc>/reference/ss.html</loc></url>
+<url><loc>/reference/stats_summ_options.html</loc></url>
+<url><loc>/reference/vec_assert_or_null.html</loc></url>
 <url><loc>/reference/vpc_options.html</loc></url>
 </urlset>
 

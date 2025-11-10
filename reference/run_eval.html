@@ -65,6 +65,7 @@
 <span>  weight_prior <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  censor_covariates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  incremental <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .stats_summ_options <span class="op">=</span> <span class="fu"><a href="stats_summ_options.html">stats_summ_options</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  .vpc_options <span class="op">=</span> <span class="fu"><a href="vpc_options.html">vpc_options</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  threads <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -159,6 +160,11 @@ approach has been called "model predictive control (MPC)"
 "regular" MAP in some scenarios. Default is <code>FALSE</code>.</p></dd>
 
 
+<dt id="arg--stats-summ-options">.stats_summ_options<a class="anchor" aria-label="anchor" href="#arg--stats-summ-options"></a></dt>
+<dd><p>Options for summary statistics. This must be the
+result from a call to <code><a href="stats_summ_options.html">stats_summ_options()</a></code>.</p></dd>
+
+
 <dt id="arg--vpc-options">.vpc_options<a class="anchor" aria-label="anchor" href="#arg--vpc-options"></a></dt>
 <dd><p>Options for VPC simulations. This must be the result from
 a call to <code><a href="vpc_options.html">vpc_options()</a></code>.</p></dd>
@@ -196,7 +202,7 @@ handlers obscure R output.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

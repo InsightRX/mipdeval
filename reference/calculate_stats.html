@@ -50,7 +50,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_stats</span><span class="op">(</span><span class="va">res</span>, rounding <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_stats</span><span class="op">(</span><span class="va">res</span>, rounding <span class="op">=</span> <span class="fl">3</span>, acc_error_abs <span class="op">=</span> <span class="cn">NULL</span>, acc_error_rel <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -64,6 +64,13 @@
 
 <dt id="arg-rounding">rounding<a class="anchor" aria-label="anchor" href="#arg-rounding"></a></dt>
 <dd><p>number of decimals to round to.</p></dd>
+
+
+<dt id="arg-acc-error-abs-acc-error-rel">acc_error_abs, acc_error_rel<a class="anchor" aria-label="anchor" href="#arg-acc-error-abs-acc-error-rel"></a></dt>
+<dd><p>For calculating <code><a href="accuracy.html">accuracy()</a></code>: Positive number
+providing an absolute or relative error margin. The cutoff is exclusive of
+the error margin. When <code>NULL</code> (the default), accuracy will not be
+calculated and will return <code>NA</code> instead.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -83,7 +90,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
