@@ -26,6 +26,25 @@ is_timevarying <- function(.data, .cols) {
   )
 }
 
+#' Assert an argument has known prototype and/or size or is NULL
+#'
+#' @inheritParams vctrs::vec_assert
+#'
+#' @returns Either throws an error or returns `x`, invisibly.
+vec_assert_or_null <- function(
+    x,
+    ptype = NULL,
+    size = NULL,
+    arg = caller_arg(x),
+    call = caller_env()
+) {
+  if (!is.null(x)) {
+    vctrs::vec_assert(x = x, ptype = ptype, size = size, arg = arg, call = call)
+  } else {
+    NULL
+  }
+}
+
 #' Root-mean-squared error
 #'
 #' @param obs observations vector
@@ -68,6 +87,63 @@ mpe <- function (obs, pred) {
   sum((obs - pred)/obs)/length(obs)
 }
 
+#' Accuracy
+#'
+#' Accuracy provides a measure of clinical suitability, defined by whether model
+#' predicted drug concentrations fall within an absolute OR relative error
+#' margin of the measured concentrations.
+#'
+#' @param obs Observations vector.
+#' @param pred Predictions vector.
+#' @param error_abs,error_rel Positive number providing an absolute or relative
+#'   error margin. The cutoff is exclusive of the error margin. Defaults to `0`,
+#'   meaning no predictions fall within the error margin.
+#'
+#' @returns For `is_accurate()`, `is_accurate_abs()`, and `is_accurate_rel()`: A
+#'   logical vector indicating whether or not each predicted drug concentration
+#'   was considered accurate according to the specified absolute or relative
+#'   error margin(s).
+#'
+#'   For `accuracy()`: A single value between 0 and 1 indicating the proportion
+#'   of predicted drug concentrations that fell within the specified absolute
+#'   and relative error margins.
+#'
+#' @examples
+#' # Does the predicted drug concentration fall within 0.5 mg/L error margin?
+#' is_accurate_abs(6, 5, error_abs = 0.5)
+#'
+#' # Does the predicted drug concentration fall within 25% error margin?
+#' is_accurate_rel(6, 5, error_rel = 0.25)
+#'
+#' # Does the predicted drug concentration fall within 0.5 mg/L OR 25%?
+#' is_accurate(6, 5, error_abs = 0.5, error_rel = 0.25)
+#'
+#' # What proportion of predicted drug concentrations fell within 0.5 mg/L OR 25%?
+#' accuracy(rnorm(10, 6), rnorm(10, 5), error_abs = 0.5, error_rel = 0.25)
+#'
+#' @export
+accuracy <- function(obs, pred, error_abs = 0, error_rel = 0) {
+  mean(is_accurate(obs, pred, error_abs, error_rel))
+}
+
+#' @rdname accuracy
+#' @export
+is_accurate <- function(obs, pred, error_abs = 0, error_rel = 0) {
+  is_accurate_abs(obs, pred, error_abs) | is_accurate_rel(obs, pred, error_rel)
+}
+
+#' @rdname accuracy
+#' @export
+is_accurate_abs <- function(obs, pred, error_abs = 0) {
+  abs(pred - obs) < error_abs
+}
+
+#' @rdname accuracy
+#' @export
+is_accurate_rel <- function(obs, pred, error_rel = 0) {
+  (pred/obs > 1 - error_rel) & (pred/obs < 1 + error_rel)
+}
+
 #' Weighted sum-of-squares of residuals
 #'
 #' @inheritParams rmse
@@ -83,3 +159,4 @@ ss <- function(obs, pred, w = NULL) {
   if(sum(w) == 0) return(NA)
   sum(w * (obs - pred)^2)
 }
+

@@ -11,6 +11,7 @@ test_that("Basic run with vanco data + model works", {
     ruv = mod_obj$ruv,
     fixed = mod_obj$fixed,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
+    .stats_summ_options = stats_summ_options(acc_error_abs = 0.5, acc_error_rel = 0.25),
     .vpc_options = vpc_options(skip = TRUE),
     progress = FALSE
   )
@@ -43,6 +44,7 @@ test_that("Basic run with vanco data + model works", {
     model = "pkvancothomson",
     data = nm_vanco,
     censor_covariates = FALSE, # shouldn't matter, since no time-varying covs
+    .stats_summ_options = stats_summ_options(acc_error_abs = 0.5, acc_error_rel = 0.25),
     .vpc_options = vpc_options(skip = TRUE),
     progress = FALSE
   )
@@ -148,12 +150,10 @@ test_that("Incremental Bayes method works", {
 "map_ipred", "pred", "pred"),
       apriori = c(0, 1, 0, 1, 0, 1),
       rmse = c(4.051, 8.299, 1.96, 4.319, 4.789, 8.299),
-      nrmse = c(0.411,
-    0.232, 0.199, 0.121, 0.486, 0.232),
-      mpe = c(-0.339, -0.004,
-    -0.045, -0.002, -0.415, -0.004),
-      mape = c(0.445, 0.246, 0.166,
-    0.118, 0.558, 0.246)
+      nrmse = c(0.411, 0.232, 0.199, 0.121, 0.486, 0.232),
+      mpe = c(-0.339, -0.004, -0.045, -0.002, -0.415, -0.004),
+      mape = c(0.445, 0.246, 0.166, 0.118, 0.558, 0.246),
+      accuracy = c(NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_)
     ),
     class = c("mipdeval_results_stats_summ","tbl_df", "tbl", "data.frame"),
     row.names = c(NA, -6L))
