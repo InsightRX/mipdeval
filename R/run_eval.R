@@ -49,6 +49,7 @@
 run_eval <- function(
   model,
   data,
+  dose_cmts,
   ids = NULL,
   parameters = NULL,
   fixed = NULL,
@@ -102,6 +103,7 @@ run_eval <- function(
     data = input_data,
     covariates = covariates,
     ids = ids,
+    dose_cmts = dose_cmts,
     group = group,
     verbose = verbose
   )

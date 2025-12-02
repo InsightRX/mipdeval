@@ -9,6 +9,7 @@ parse_input_data <- function(
     data,
     covariates,
     ids,
+    dose_cmts,
     group = NULL,
     verbose = TRUE
 ) {
@@ -31,6 +32,7 @@ parse_input_data <- function(
     new_data,
     parse_nm_data,
     covariates = covariates,
+    dose_cmts = dose_cmts,
     group = group
   )
 
@@ -39,10 +41,13 @@ parse_input_data <- function(
   out
 }
 
-parse_nm_data <- function(data, covariates, group = NULL) {
+parse_nm_data <- function(data, covariates, dose_cmts, group = NULL) {
   out <- list()
   out$covariates <- make_covariates_object(data, covariates)
-  out$regimen <- PKPDsim::nm_to_regimen(data)
+  out$regimen <- PKPDsim::nm_to_regimen(
+    data,
+    dose_cmts = dose_cmts
+  )
   obs <- data |>
     dplyr::filter(.data$EVID == 0)
   if(!is.null(group)) {
