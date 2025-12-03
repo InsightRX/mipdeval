@@ -32,6 +32,10 @@
 #'   result from a call to [stats_summ_options()].
 #' @param .vpc_options Options for VPC simulations. This must be the result from
 #'   a call to [vpc_options()].
+#' @param .fit_options Options for controlling MAP Bayesian fit. E.g.
+#' `.map_options = list(control = list(reltol = 1e-04))` will perform a slightly
+#' coarser fit (but more stable) which can be useful in some case (default 
+#' `reltol = 1e-05`).
 #' @param threads number of threads to divide computations on. Default is 1,
 #'   i.e. no parallel execution
 #' @param ruv residual error variability magnitude, specified as list.
@@ -63,6 +67,7 @@ run_eval <- function(
   incremental = FALSE,
   .stats_summ_options = stats_summ_options(),
   .vpc_options = vpc_options(),
+  .fit_options = list(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
@@ -127,6 +132,7 @@ run_eval <- function(
     weight_prior = weight_prior,
     incremental = incremental,
     progress_function = p,
+    .fit_options = .fit_options,
     .threads = threads,
     .skip = .vpc_options$vpc_only
   )

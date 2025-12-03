@@ -14,7 +14,8 @@ run_eval_core <- function(
   weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
-  progress_function = function() {}
+  progress_function = function() {},
+  .fit_options = NULL
 ) {
 
   progress_function()
@@ -52,20 +53,26 @@ run_eval_core <- function(
       mod_upd$parameters <- fit$parameters # take params from previous fit
       mod_upd$omega <- fit$vcov
     }
-    fit <- PKPDmap::get_map_estimates(
-      model = mod_obj$model,
-      parameters = mod_upd$parameters,
-      omega = mod_upd$omega,
-      error = mod_obj$ruv,
-      fixed = mod_obj$fixed,
-      as_eta = mod_obj$kappa,
-      data = data$observations,
-      covariates = cov_data,
-      regimen = data$regimen,
-      weight_prior = weight_prior,
-      weights = weights,
-      iov_bins = mod_obj$bins,
-      verbose = FALSE
+    fit <- do.call(
+      PKPDmap::get_map_estimates,
+      c(
+        list(
+          model = mod_obj$model,
+          parameters = mod_upd$parameters,
+          omega = mod_upd$omega,
+          error = mod_obj$ruv,
+          fixed = mod_obj$fixed,
+          as_eta = mod_obj$kappa,
+          data = data$observations,
+          covariates = cov_data,
+          regimen = data$regimen,
+          weight_prior = weight_prior,
+          weights = weights,
+          iov_bins = mod_obj$bins,
+          verbose = FALSE
+        ),
+        .fit_options
+      )
     )
     if(inherits(fit, "error")) {
       ## create NA records for this fit
