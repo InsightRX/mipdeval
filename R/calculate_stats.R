@@ -20,12 +20,17 @@ calculate_stats <- function(
   if(inherits(res, "mipdeval_results")) {
     res <- res$results
   }
+  ## Check for errors during fits / predictions
+  errors <- res |>
+    dplyr::filter(is.na(pred) | (is.na(map_ipred) & !apriori) | is.na(iter_ipred))
+  if(nrow(errors) > 0) {
+    cli::cli_warn("Errors where encountered in {nrow(errors)} out of {nrow(res)} evaluated predictions. The problems occurred in patient(s) {unique(errors$id)}.")
+  }
   out <- res |>
     tidyr::pivot_longer(
       cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
     ) |>
     dplyr::group_by(.data$type, .data$apriori) |>
-    dplyr::filter(!is.na(value)) |>
     dplyr::summarise(
       rmse = rmse(.data$dv, .data$value),
       nrmse = nrmse(.data$dv, .data$value),
