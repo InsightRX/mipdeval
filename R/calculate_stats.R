@@ -25,6 +25,7 @@ calculate_stats <- function(
       cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
     ) |>
     dplyr::group_by(.data$type, .data$apriori) |>
+    dplyr::filter(!is.na(value)) |>
     dplyr::summarise(
       rmse = rmse(.data$dv, .data$value),
       nrmse = nrmse(.data$dv, .data$value),
