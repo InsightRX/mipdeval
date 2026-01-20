@@ -22,12 +22,12 @@
 #' @returns tibble
 #'
 #' @export
-calculate_shrinkage <- function(res) {
-  om <- get_omega_for_parameters(res$mod_obj)
-  out <- res$results |>
+calculate_shrinkage <- function(.res) {
+  om <- get_omega_for_parameters(.res$mod_obj)
+  out <- .res$results |>
     dplyr::mutate(dplyr::across(
       .cols = names(om),
-      .fns  = ~ calc_eta(.x, dplyr::cur_column(), res$mod_obj$parameters),
+      .fns  = ~ calc_eta(.x, dplyr::cur_column(), .res$mod_obj$parameters),
       .names = "eta_{.col}"
     )) |>
     dplyr::group_by(.data$`_iteration`) |>

@@ -4,10 +4,10 @@
 \alias{calculate_bayesian_impact}
 \title{Calculate the impact of using Bayesian updating compared to population estimates}
 \usage{
-calculate_bayesian_impact(res)
+calculate_bayesian_impact(.res)
 }
 \arguments{
-\item{res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
+\item{.res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
 \code{data.frame} with raw results.}
 }
 \value{

@@ -4,10 +4,10 @@
 \alias{calculate_stats}
 \title{Calculate basic statistics, like RMSE, MPE, MAPE for forecasted data}
 \usage{
-calculate_stats(res, rounding = 3, acc_error_abs = NULL, acc_error_rel = NULL)
+calculate_stats(.res, rounding = 3, acc_error_abs = NULL, acc_error_rel = NULL)
 }
 \arguments{
-\item{res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
+\item{.res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
 \code{data.frame} with raw results.}
 
 \item{rounding}{number of decimals to round to.}

@@ -11,9 +11,9 @@
 #'
 #' @export
 calculate_bayesian_impact <- function(
-  res
+  .res
 ) {
-  out <- res$stats_summ |>
+  out <- .res$stats_summ |>
     dplyr::filter(!.data$apriori) |>
     dplyr::select("type", "apriori", "rmse", "mape") |>
     tidyr::pivot_wider(names_from = "type", values_from = c("rmse", "mape")) |>
