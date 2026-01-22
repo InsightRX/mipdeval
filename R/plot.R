@@ -20,12 +20,12 @@ plot.mipdeval_results <- function(x, type = "vpc", ...) {
   plot_fun(x, ...)
 }
 
-plot_vpc <- function(res, ...) {
+plot_vpc <- function(.res, ...) {
   rlang::check_installed("vpc", reason = "for VPC plotting.")
   rlang::check_dots_used()
   vpc::vpc(
-    sim = res$sim,
-    obs = dplyr::filter(res$data, .data$EVID == 0),
+    sim = .res$sim,
+    obs = dplyr::filter(.res$data, .data$EVID == 0),
     ...
   )
 }

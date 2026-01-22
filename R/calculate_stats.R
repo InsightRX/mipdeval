@@ -1,6 +1,6 @@
 #' Calculate basic statistics, like RMSE, MPE, MAPE for forecasted data
 #'
-#' @param res output object (`mipdeval_results`) from `run_eval()`, or
+#' @param .res output object (`mipdeval_results`) from `run_eval()`, or
 #' `data.frame` with raw results.
 #' @param rounding number of decimals to round to.
 #' @param acc_error_abs,acc_error_rel For calculating [accuracy()]: Positive number
@@ -12,15 +12,15 @@
 #'
 #' @export
 calculate_stats <- function(
-    res,
+    .res,
     rounding = 3,
     acc_error_abs = NULL,
     acc_error_rel = NULL
 ) {
-  if(inherits(res, "mipdeval_results")) {
-    res <- res$results
+  if(inherits(.res, "mipdeval_results")) {
+    .res <- .res$results
   }
-  out <- res |>
+  out <- .res |>
     tidyr::pivot_longer(
       cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
     ) |>

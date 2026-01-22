@@ -4,10 +4,10 @@
 \alias{calculate_shrinkage}
 \title{Calculate eta-shrinkage}
 \usage{
-calculate_shrinkage(res)
+calculate_shrinkage(.res)
 }
 \arguments{
-\item{res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
+\item{.res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
 \code{data.frame} with raw results.}
 }
 \value{
