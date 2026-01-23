@@ -22,9 +22,9 @@ test_that("Basic run with vanco data + model works", {
   expect_s3_class(res$stats_summ, c("tbl_df", "tbl", "data.frame"))
   expect_equal(
     names(res$results),
-    c("id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
-      "ofv", "ss_w", "iter_ipred", "apriori", "CL", "V", "TH_CRCL",
-      "Q", "V2")
+    c("id", "_iteration", "_grouper", "t", "dv", "pred", "res", "wres", "cwres",
+      "map_ipred", "ofv", "ss_w", "iter_ipred", "ires", "iwres", "apriori", "CL",
+      "V", "TH_CRCL", "Q", "V2")
   )
   expect_equal(
     round(res$results$CL[1:5], 3),

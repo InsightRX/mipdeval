@@ -74,6 +74,24 @@ run_eval_core <- function(
         .fit_options
       )
     )
+
+    ## Data frame with predictive data
+    pred_data <- tibble::tibble(
+      id = obs_data$id,
+      t = obs_data$t,
+      dv = fit$dv,
+      ipred = fit$ipred,
+      ires = fit$ires,
+      iwres = fit$iwres,
+      pred = fit$pred,
+      res = fit$res,
+      wres = fit$wres,
+      cwres = fit$cwres,
+      ofv = fit$fit$value,
+      ss_w = ss(fit$dv, fit$ipred, weights),
+      `_iteration` = iterations[i],
+      `_grouper` = obs_data$`_grouper`
+    )
     if(inherits(fit, "error")) {
       ## create NA records for this fit
       pred_data <- tibble::tibble(
@@ -97,7 +115,12 @@ run_eval_core <- function(
         t = obs_data$t,
         dv = fit$dv,
         ipred = fit$ipred,
+        ires = fit$ires,
+        iwres = fit$iwres,
         pred = fit$pred,
+        res = fit$res,
+        wres = fit$wres,
+        cwres = fit$cwres,
         ofv = fit$fit$value,
         ss_w = ss(fit$dv, fit$ipred, weights),
         `_iteration` = iterations[i],
@@ -136,7 +159,12 @@ run_eval_core <- function(
       t = obs_data$t,
       dv = fit_map$dv,
       ipred = fit_map$ipred,
+      ires = fit_map$ires,
+      iwres = fit_map$iwres,
       pred = fit_map$pred,
+      res = fit_map$res,
+      wres = fit_map$wres,
+      cwres = fit_map$cwres,
       ofv = fit_map$fit$value,
       ss_w = ss(fit_map$dv, fit_map$ipred, w = NULL),
       `_iteration` = iterations[i],
@@ -173,9 +201,8 @@ run_eval_core <- function(
       apriori = (.data$`_iteration` == 0)
     ) |>
     dplyr::select(
-      "id", "_iteration", "_grouper", "t", "dv", "pred", "map_ipred",
-      "ofv", "ss_w",
-      "iter_ipred", "apriori",
+      "id", "_iteration", "_grouper", "t", "dv", "pred", "res", "wres", "cwres",
+      "map_ipred", "ofv", "ss_w", "iter_ipred", "ires", "iwres", "apriori",
       !!names(mod_obj$parameters)
     )
 
