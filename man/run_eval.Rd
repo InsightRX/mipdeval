@@ -21,7 +21,7 @@ run_eval(
   incremental = FALSE,
   .stats_summ_options = stats_summ_options(),
   .vpc_options = vpc_options(),
-  .fit_options = list(),
+  .fit_options = fit_options(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
@@ -89,10 +89,8 @@ result from a call to \code{\link[=stats_summ_options]{stats_summ_options()}}.}
 \item{.vpc_options}{Options for VPC simulations. This must be the result from
 a call to \code{\link[=vpc_options]{vpc_options()}}.}
 
-\item{.fit_options}{Options for controlling MAP Bayesian fit. E.g.
-\code{.map_options = list(control = list(reltol = 1e-04))} will perform a slightly
-coarser fit (but more stable) which can be useful in some case (default
-\code{reltol = 1e-05}).}
+\item{.fit_options}{Options for controlling MAP Bayesian fit. This must be
+the result from a call to \code{\link[=fit_options]{fit_options()}}.}
 
 \item{threads}{number of threads to divide computations on. Default is 1,
 i.e. no parallel execution}

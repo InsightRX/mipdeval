@@ -48,10 +48,8 @@ approach has been called "model predictive control (MPC)"
 
 \item{progress_function}{function to increment progress bar}
 
-\item{.fit_options}{Options for controlling MAP Bayesian fit. E.g.
-\code{.map_options = list(control = list(reltol = 1e-04))} will perform a slightly
-coarser fit (but more stable) which can be useful in some case (default
-\code{reltol = 1e-05}).}
+\item{.fit_options}{Options for controlling MAP Bayesian fit. This must be
+the result from a call to \code{\link[=fit_options]{fit_options()}}.}
 }
 \value{
 a \code{data.frame} with individual predictions
