@@ -13,7 +13,8 @@ run_eval_core(
   censor_covariates = TRUE,
   incremental = FALSE,
   progress_function = function() {
- }
+ },
+  .fit_options = NULL
 )
 }
 \arguments{
@@ -46,6 +47,9 @@ approach has been called "model predictive control (MPC)"
 "regular" MAP in some scenarios. Default is \code{FALSE}.}
 
 \item{progress_function}{function to increment progress bar}
+
+\item{.fit_options}{Options for controlling MAP Bayesian fit. This must be
+the result from a call to \code{\link[=fit_options]{fit_options()}}.}
 }
 \value{
 a \code{data.frame} with individual predictions

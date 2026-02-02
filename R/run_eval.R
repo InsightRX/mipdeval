@@ -32,6 +32,8 @@
 #'   result from a call to [stats_summ_options()].
 #' @param .vpc_options Options for VPC simulations. This must be the result from
 #'   a call to [vpc_options()].
+#' @param .fit_options Options for controlling MAP Bayesian fit. This must be
+#'   the result from a call to [fit_options()].
 #' @param threads number of threads to divide computations on. Default is 1,
 #'   i.e. no parallel execution
 #' @param ruv residual error variability magnitude, specified as list.
@@ -63,6 +65,7 @@ run_eval <- function(
   incremental = FALSE,
   .stats_summ_options = stats_summ_options(),
   .vpc_options = vpc_options(),
+  .fit_options = fit_options(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
@@ -127,6 +130,7 @@ run_eval <- function(
     weight_prior = weight_prior,
     incremental = incremental,
     progress_function = p,
+    .fit_options = .fit_options,
     .threads = threads,
     .skip = .vpc_options$vpc_only
   )
@@ -188,4 +192,27 @@ run_eval <- function(
 
   ## 5. Return results
   out
+}
+
+#' Options for controlling MAP Bayesian fit
+#'
+#' @param ... These dots are reserved for future extensibility and must be empty.
+#' @param reltol Relative convergence tolerance. `reltol = 1e-04` will perform a
+#'   slightly coarser but more stable fit, which can be useful in some case.
+#'
+#' @returns A list.
+#' @export
+fit_options <- function(
+    ...,
+    reltol = 1e-05
+) {
+  rlang::check_dots_empty()
+  out <- list(
+    control = list(
+      reltol = vctrs::vec_assert(
+        reltol, ptype = numeric(), size = 1L, arg = "reltol"
+      )
+    )
+  )
+  structure(out, class = "mipdeval_fit_options")
 }

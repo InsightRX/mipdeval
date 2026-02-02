@@ -14,7 +14,8 @@ run_eval_core <- function(
   weight_prior = 1,
   censor_covariates = TRUE,
   incremental = FALSE,
-  progress_function = function() {}
+  progress_function = function() {},
+  .fit_options = NULL
 ) {
 
   progress_function()
@@ -52,20 +53,26 @@ run_eval_core <- function(
       mod_upd$parameters <- fit$parameters # take params from previous fit
       mod_upd$omega <- fit$vcov
     }
-    fit <- PKPDmap::get_map_estimates(
-      model = mod_obj$model,
-      parameters = mod_upd$parameters,
-      omega = mod_upd$omega,
-      error = mod_obj$ruv,
-      fixed = mod_obj$fixed,
-      as_eta = mod_obj$kappa,
-      data = data$observations,
-      covariates = cov_data,
-      regimen = data$regimen,
-      weight_prior = weight_prior,
-      weights = weights,
-      iov_bins = mod_obj$bins,
-      verbose = FALSE
+    fit <- do.call(
+      PKPDmap::get_map_estimates,
+      c(
+        list(
+          model = mod_obj$model,
+          parameters = mod_upd$parameters,
+          omega = mod_upd$omega,
+          error = mod_obj$ruv,
+          fixed = mod_obj$fixed,
+          as_eta = mod_obj$kappa,
+          data = data$observations,
+          covariates = cov_data,
+          regimen = data$regimen,
+          weight_prior = weight_prior,
+          weights = weights,
+          iov_bins = mod_obj$bins,
+          verbose = FALSE
+        ),
+        .fit_options
+      )
     )
 
     ## Data frame with predictive data
@@ -85,9 +92,44 @@ run_eval_core <- function(
       `_iteration` = iterations[i],
       `_grouper` = obs_data$`_grouper`
     )
+    if(inherits(fit, "error")) {
+      ## create NA records for this fit
+      pred_data <- tibble::tibble(
+        id = obs_data$id,
+        t = obs_data$t,
+        dv = NA,
+        ipred = NA,
+        pred = NA,
+        ofv = NA,
+        ss_w = NA,
+        `_iteration` = iterations[i],
+        `_grouper` = obs_data$`_grouper`
+      )
+      par_dummy <- as.data.frame(mod_upd$parameters)
+      par_dummy[, 1:ncol(par_dummy)] <- NA
+      fit_pars <- dplyr::mutate(as.data.frame(par_dummy), id = obs_data$id[1])
+    } else {
+      ## Data frame with predictive data
+      pred_data <- tibble::tibble(
+        id = obs_data$id,
+        t = obs_data$t,
+        dv = fit$dv,
+        ipred = fit$ipred,
+        ires = fit$ires,
+        iwres = fit$iwres,
+        pred = fit$pred,
+        res = fit$res,
+        wres = fit$wres,
+        cwres = fit$cwres,
+        ofv = fit$fit$value,
+        ss_w = ss(fit$dv, fit$ipred, weights),
+        `_iteration` = iterations[i],
+        `_grouper` = obs_data$`_grouper`
+      )
+      ## Add parameter estimates
+      fit_pars <- dplyr::mutate(as.data.frame(fit$parameters), id = obs_data$id[1])
+    }
 
-    ## Add parameter estimates
-    fit_pars <- dplyr::mutate(as.data.frame(fit$parameters), id = obs_data$id[1])
     comb <- dplyr::bind_rows(
       comb, dplyr::left_join(pred_data, fit_pars, by = "id")
     )
