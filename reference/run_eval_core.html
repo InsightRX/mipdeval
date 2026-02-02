@@ -60,7 +60,8 @@ an individual's dataset</p>
 <span>  censor_covariates <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  incremental <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress_function <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
-<span> <span class="op">}</span></span>
+<span> <span class="op">}</span>,</span>
+<span>  .fit_options <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,6 +111,11 @@ approach has been called "model predictive control (MPC)"
 
 <dt id="arg-progress-function">progress_function<a class="anchor" aria-label="anchor" href="#arg-progress-function"></a></dt>
 <dd><p>function to increment progress bar</p></dd>
+
+
+<dt id="arg--fit-options">.fit_options<a class="anchor" aria-label="anchor" href="#arg--fit-options"></a></dt>
+<dd><p>Options for controlling MAP Bayesian fit. This must be
+the result from a call to <code><a href="fit_options.html">fit_options()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
