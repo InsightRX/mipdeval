@@ -27,6 +27,9 @@ devtools::document()
 
 # Full package check
 devtools::check()
+
+## Create documentation
+devtools::document()
 ```
 
 ## Architecture
@@ -64,3 +67,12 @@ The main entry point is `run_eval()` (`R/run_eval.R`), which orchestrates:
 ### Test Infrastructure
 
 Tests use testthat edition 3. `tests/testthat/setup.R` installs required PKPDsim model libraries (`pkvancothomson`, `pkvbusulfanshukla`) before tests run. Visual regression tests use `vdiffr`. Reference PsN proseval results live in `inst/extdata/vanco_thomson.csv` and are used to validate results within ~10% tolerance.
+
+## Development Rules
+
+
+## General notes
+
+- After any change that affects project structure, file locations, or architecture, update this file to reflect the new state.
+- **Documentation**: After making any change in function description, always update the package documentation by running `devtools::document()` to regenerate `man/` files. Files in `man/` themselves can be ignored.
+
