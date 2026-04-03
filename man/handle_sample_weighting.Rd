@@ -4,7 +4,7 @@
 \alias{handle_sample_weighting}
 \title{Handle weighting of samples}
 \usage{
-handle_sample_weighting(obs_data, iterations, incremental, i)
+handle_sample_weighting(obs_data, iterations, incremental, i, weights = NULL)
 }
 \arguments{
 \item{obs_data}{tibble or data.frame with observed data for individual}
@@ -20,12 +20,21 @@ approach has been called "model predictive control (MPC)"
 "regular" MAP in some scenarios. Default is \code{FALSE}.}
 
 \item{i}{index}
+
+\item{weights}{optional sample downweighting scheme based on how long ago
+observations were taken. Either a string naming the scheme (e.g.
+\code{"weight_gradient_exponential"}), or a named list with a \code{scheme} element
+plus any scheme-specific parameters (e.g.
+\code{list(scheme = "weight_gradient_exponential", t12_decay = 72)}). See
+\code{\link[=calculate_fit_weights]{calculate_fit_weights()}} for all available schemes and their parameters.
+Default is \code{NULL} (no downweighting; all included samples are weighted
+equally).}
 }
 \value{
 vector of weights (numeric)
 }
 \description{
-This function is used to select the samples used in the fit (1 or 0),
-but also to select their weight, if a sample weighting strategy is
-selected.
+Binary selection of which samples are used in the fit (0 = excluded,
+1 = included), combined with optional continuous downweighting of older
+samples via a time-based scheme (see \code{\link[=calculate_fit_weights]{calculate_fit_weights()}}).
 }

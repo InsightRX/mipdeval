@@ -14,6 +14,14 @@
 #'   this can be used to group peaks and troughs together, or to group
 #'   observations on the same day together. Grouping will be done prior to
 #'   running the analysis, so cannot be changed afterwards.
+#' @param weights optional sample downweighting scheme based on how long ago
+#'   observations were taken. Either a string naming the scheme (e.g.
+#'   `"weight_gradient_exponential"`), or a named list with a `scheme` element
+#'   plus any scheme-specific parameters (e.g.
+#'   `list(scheme = "weight_gradient_exponential", t12_decay = 72)`). See
+#'   [calculate_fit_weights()] for all available schemes and their parameters.
+#'   Default is `NULL` (no downweighting; all included samples are weighted
+#'   equally).
 #' @param censor_covariates with the `proseval` tool in PsN, there is “data
 #'   leakage” (of future covariates data): since the NONMEM dataset in each step
 #'   contains the covariates for the future, this is technically data leakage,
@@ -126,6 +134,7 @@ run_eval <- function(
     .x = data_parsed,
     .f = run_eval_core,
     mod_obj = mod_obj,
+    weights = weights,
     censor_covariates = censor_covariates,
     weight_prior = weight_prior,
     incremental = incremental,
