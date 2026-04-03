@@ -22,10 +22,14 @@ run_eval_core(
 
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
-\item{weights}{vector of weights for error. Length of vector should be same 
-as length of observation vector. If NULL (default), all weights are equal. 
-Used in both MAP and NP methods. Note that `weights` argument will also 
-affect residuals (residuals will be scaled too).}
+\item{weights}{optional sample downweighting scheme based on how long ago
+observations were taken. Either a string naming the scheme (e.g.
+\verb{”weight_gradient_exponential”}), or a named list with a \code{scheme} element
+plus any scheme-specific parameters (e.g.
+\verb{list(scheme = “weight_gradient_exponential”, t12_decay = 72)}). See
+\code{\link[=calculate_fit_weights]{calculate_fit_weights()}} for all available schemes and their parameters.
+Default is \code{NULL} (no downweighting; all included samples are weighted
+equally).}
 
 \item{weight_prior}{weighting of priors in relationship to observed data, 
 default = 1}

@@ -95,6 +95,56 @@ test_that("handle_sample_weighting handles edge case with single observation", {
   expect_equal(weights_inc, c(1))
 })
 
+test_that("handle_sample_weighting applies weight scheme to active samples", {
+  obs_data <- data.frame(
+    t = c(0, 12, 24, 48),
+    `_grouper` = c(1, 2, 3, 4),
+    check.names = FALSE
+  )
+  iterations <- c(1, 2, 3, 4)
+
+  # At iteration 3, samples 1-3 are active. weight_last_only should
+
+  # give weight 1 only to the most recent active sample (t=24).
+  result <- handle_sample_weighting(
+    obs_data, iterations, incremental = FALSE, i = 3,
+    weights = "weight_last_only"
+  )
+  expect_equal(result, c(0, 0, 1, 0))
+})
+
+test_that("handle_sample_weighting applies exponential weights to active samples", {
+  obs_data <- data.frame(
+    t = c(0, 24, 48),
+    `_grouper` = c(1, 2, 3),
+    check.names = FALSE
+  )
+  iterations <- c(1, 2, 3)
+
+  result <- handle_sample_weighting(
+    obs_data, iterations, incremental = FALSE, i = 3,
+    weights = list(scheme = "weight_gradient_exponential", t12_decay = 48)
+  )
+  expect_equal(result[3], 1)
+  expect_equal(result[1], 0.5, tolerance = 1e-10)
+  expect_true(result[2] > result[1] && result[2] < result[3])
+})
+
+test_that("handle_sample_weighting without weights gives binary result", {
+  obs_data <- data.frame(
+    t = c(0, 12, 24),
+    `_grouper` = c(1, 2, 3),
+    check.names = FALSE
+  )
+  iterations <- c(1, 2, 3)
+
+  result <- handle_sample_weighting(
+    obs_data, iterations, incremental = FALSE, i = 2,
+    weights = NULL
+  )
+  expect_equal(result, c(1, 1, 0))
+})
+
 test_that("handle_sample_weighting maintains correct vector length", {
   # Test with various data sizes
   for(n_obs in c(1, 5, 10, 100)) {

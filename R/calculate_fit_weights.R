@@ -58,6 +58,12 @@ calculate_fit_weights <- function(weights = NULL, t = NULL) {
     if (is.list(weights) && !is.null(weights$gradient)) {
       gradient[names(weights$gradient)] <- weights$gradient
     }
+    if (gradient$t2 > gradient$t1) {
+      warning(
+        "weight_gradient_linear: t2 (", gradient$t2, ") > t1 (", gradient$t1,
+        "). t1 should be the older threshold and t2 the more recent one."
+      )
+    }
     t_start <- max(c(0, max(t) - gradient$t1 * 24))
     t_end   <- max(c(0, max(t) - gradient$t2 * 24))
     if (t_end <= t_start) {
@@ -86,13 +92,14 @@ calculate_fit_weights <- function(weights = NULL, t = NULL) {
 
   if (scheme == "weight_last_only") {
     weight_vec <- rep(0, length(t))
-    weight_vec[length(t)] <- 1
+    weight_vec[which.max(t)] <- 1
   }
 
   if (scheme == "weight_last_two_only") {
     weight_vec <- rep(0, length(t))
-    weight_vec[length(t)] <- 1
-    if (length(t) > 1) weight_vec[length(t) - 1] <- 1
+    ranked <- order(t, decreasing = TRUE)
+    weight_vec[ranked[1]] <- 1
+    if (length(t) > 1) weight_vec[ranked[2]] <- 1
   }
 
   if (scheme == "weight_all") {
