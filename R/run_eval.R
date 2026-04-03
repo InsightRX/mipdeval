@@ -16,9 +16,9 @@
 #'   running the analysis, so cannot be changed afterwards.
 #' @param weights optional sample downweighting scheme based on how long ago
 #'   observations were taken. Either a string naming the scheme (e.g.
-#'   `”weight_gradient_exponential”`), or a named list with a `scheme` element
+#'   `"weight_gradient_exponential"`), or a named list with a `scheme` element
 #'   plus any scheme-specific parameters (e.g.
-#'   `list(scheme = “weight_gradient_exponential”, t12_decay = 72)`). See
+#'   `list(scheme = "weight_gradient_exponential", t12_decay = 72)`). See
 #'   [calculate_fit_weights()] for all available schemes and their parameters.
 #'   Default is `NULL` (no downweighting; all included samples are weighted
 #'   equally).
