@@ -28,13 +28,14 @@ run_eval_core <- function(
   for(i in seq_along(iterations)) {
 
     ## Select which samples should be used in fit, for regular iterative
-    ## forecasting and incremental.
-    ## TODO: handle weighting down of earlier samples
-    weights <- handle_sample_weighting(
+    ## forecasting and incremental. Applies time-based downweighting if a
+    ## weighting scheme is provided via the `weights` argument.
+    sample_weights <- handle_sample_weighting(
       obs_data,
       iterations,
       incremental,
-      i
+      i,
+      weights = weights
     )
 
     ## Should covariate data be leaked? PsN::proseval does this,
@@ -67,7 +68,7 @@ run_eval_core <- function(
           covariates = cov_data,
           regimen = data$regimen,
           weight_prior = weight_prior,
-          weights = weights,
+          weights = sample_weights,
           iov_bins = mod_obj$bins,
           verbose = FALSE
         ),
@@ -88,7 +89,7 @@ run_eval_core <- function(
       wres = fit$wres,
       cwres = fit$cwres,
       ofv = fit$fit$value,
-      ss_w = ss(fit$dv, fit$ipred, weights),
+      ss_w = ss(fit$dv, fit$ipred, sample_weights),
       `_iteration` = iterations[i],
       `_grouper` = obs_data$`_grouper`
     )
@@ -122,7 +123,7 @@ run_eval_core <- function(
         wres = fit$wres,
         cwres = fit$cwres,
         ofv = fit$fit$value,
-        ss_w = ss(fit$dv, fit$ipred, weights),
+        ss_w = ss(fit$dv, fit$ipred, sample_weights),
         `_iteration` = iterations[i],
         `_grouper` = obs_data$`_grouper`
       )
@@ -239,9 +240,9 @@ handle_covariate_censoring <- function(
 
 #' Handle weighting of samples
 #'
-#' This function is used to select the samples used in the fit (1 or 0),
-#' but also to select their weight, if a sample weighting strategy is
-#' selected.
+#' Binary selection of which samples are used in the fit (0 = excluded,
+#' 1 = included), combined with optional continuous downweighting of older
+#' samples via a time-based scheme (see [calculate_fit_weights()]).
 #'
 #' @inheritParams run_eval_core
 #' @param obs_data tibble or data.frame with observed data for individual
@@ -254,13 +255,24 @@ handle_sample_weighting <- function(
   obs_data,
   iterations,
   incremental,
-  i
+  i,
+  weights = NULL
 ) {
-  weights <- rep(0, nrow(obs_data))
+  binary_weights <- rep(0, nrow(obs_data))
   if(incremental) { # just fit current sample or group
-    weights[obs_data[["_grouper"]] %in% iterations[i]] <- 1
+    binary_weights[obs_data[["_grouper"]] %in% iterations[i]] <- 1
   } else { # fit all samples up until current sample
-    weights[obs_data[["_grouper"]] %in% iterations[1:i]] <- 1
+    binary_weights[obs_data[["_grouper"]] %in% iterations[1:i]] <- 1
   }
-  weights
+  if (!is.null(weights)) {
+    active_idx <- which(binary_weights == 1)
+    scheme_weights <- calculate_fit_weights(
+      weights = weights,
+      t = obs_data$t[active_idx]
+    )
+    if (!is.null(scheme_weights)) {
+      binary_weights[active_idx] <- scheme_weights
+    }
+  }
+  binary_weights
 }
