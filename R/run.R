@@ -7,7 +7,7 @@ run <- function(.x, .f, ..., .threads = 1, .skip = FALSE) {
     # TODO: consider using purrr::in_parallel() in the future when it's stable.
     future::plan(future::multisession, workers = .threads)
     res <- purrr::list_rbind(furrr::future_map(
-      .x = .x, .f = .f, ...
+      .x = .x, .f = .f, ..., .options = furrr::furrr_options(seed = TRUE)
     ))
   } else {
     res <- purrr::list_rbind(purrr::map(
