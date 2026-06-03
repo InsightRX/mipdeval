@@ -75,23 +75,6 @@ run_eval_core <- function(
       )
     )
 
-    ## Data frame with predictive data
-    pred_data <- tibble::tibble(
-      id = obs_data$id,
-      t = obs_data$t,
-      dv = fit$dv,
-      ipred = fit$ipred,
-      ires = fit$ires,
-      iwres = fit$iwres,
-      pred = fit$pred,
-      res = fit$res,
-      wres = fit$wres,
-      cwres = fit$cwres,
-      ofv = fit$fit$value,
-      ss_w = ss(fit$dv, fit$ipred, weights),
-      `_iteration` = iterations[i],
-      `_grouper` = obs_data$`_grouper`
-    )
     if(inherits(fit, "error")) {
       ## create NA records for this fit
       pred_data <- tibble::tibble(
@@ -99,7 +82,12 @@ run_eval_core <- function(
         t = obs_data$t,
         dv = NA,
         ipred = NA,
+        ires = NA,
+        iwres = NA,
         pred = NA,
+        res = NA,
+        wres = NA,
+        cwres = NA,
         ofv = NA,
         ss_w = NA,
         `_iteration` = iterations[i],
