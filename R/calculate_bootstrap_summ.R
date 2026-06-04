@@ -17,8 +17,8 @@
 #' @param conf_level The confidence level to use for the confidence interval.
 #'   Must be strictly between 0 and 1. Defaults to a 95 percent confidence
 #'   interval.
-#' @param .by Optional character vector of additional columns to group by, on top
-#'   of `apriori`.
+#' @param .by Optional vector of additional columns to group by, on top of
+#'   `apriori`.
 #'
 #' @details
 #' The following error metrics are bootstrapped: RMSE, NRMSE, MPE, and MAPE,
@@ -55,7 +55,9 @@ calculate_bootstrap_summ <- function(
     .pred_eval = dplyr::if_else(.data$apriori, .data$pred, .data$iter_ipred)
   )
 
-  by_cols <- c("apriori", .by)
+  # Resolve `.by` (tidy-select or character) to column names, then always group
+  # by `apriori` on top:
+  by_cols <- c("apriori", names(dplyr::select(.res, {{ .by }})))
 
   boots <- bootstrap_metrics(
     .res,

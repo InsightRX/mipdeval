@@ -31,8 +31,8 @@ sampling.}
 Must be strictly between 0 and 1. Defaults to a 95 percent confidence
 interval.}
 
-\item{.by}{Optional character vector of additional columns to group by, on top
-of \code{apriori}.}
+\item{.by}{Optional vector of additional columns to group by, on top of
+\code{apriori}.}
 }
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}} with one row per \code{apriori} (and \code{.by}) group and,

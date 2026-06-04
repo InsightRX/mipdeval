@@ -40,6 +40,23 @@ test_that("calculate_bootstrap_summ() bootstraps accuracy only with both margins
   )
 })
 
+test_that("calculate_bootstrap_summ() accepts tidy-select or character `.by`", {
+  results <- data.frame(
+    id = rep(1:10, each = 2),
+    apriori = rep(c(TRUE, FALSE), 10),
+    dv = rnorm(20, 10, 2),
+    pred = rnorm(20, 10, 2),
+    iter_ipred = rnorm(20, 10, 2),
+    model = rep(c("A", "B"), each = 10)
+  )
+  tidyselect <- calculate_bootstrap_summ(results, .by = model, n_boots = 10, seed = 1)
+  character <- calculate_bootstrap_summ(results, .by = "model", n_boots = 10, seed = 1)
+
+  expect_identical(tidyselect, character)
+  expect_true(all(c("apriori", "model") %in% names(tidyselect)))
+  expect_equal(nrow(tidyselect), 4) # apriori x model
+})
+
 # bootstrap_options() ---------------------------------------------------------
 test_that("bootstrap_options() validates and stores its inputs", {
   opts <- bootstrap_options(n_boots = 200, seed = 7)
