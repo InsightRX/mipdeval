@@ -24,7 +24,8 @@ test_that("Basic run with vanco data + model works", {
     names(res$results),
     c("id", "_iteration", "_grouper", "t", "dv", "pred", "res", "wres", "cwres",
       "map_ipred", "ofv", "ss_w", "iter_ipred", "ires", "iwres", "apriori", "CL",
-      "V", "TH_CRCL", "Q", "V2")
+      "V", "TH_CRCL", "Q", "V2", "TDM_INIT", "eta01", "eta02", "eta03", "eta04",
+      "map_eta01", "map_eta02", "map_eta03", "map_eta04")
   )
   expect_equal(
     round(res$results$CL[1:5], 3),

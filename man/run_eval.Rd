@@ -102,8 +102,69 @@ handlers obscure R output.}
 \item{verbose}{show more output}
 }
 \value{
-A named list of data frames.
+An \code{mipdeval_results} object, which is a named list with the following
+elements:
+\itemize{
+\item \code{results}: A tibble with one row per (iterative) prediction, holding the
+identifiers (\code{id}, \verb{_iteration}, \verb{_grouper}, \code{t}), the observation (\code{dv}),
+population predictions and residuals (\code{pred}, \code{res}, \code{wres}, \code{cwres}),
+individual predictions and residuals (\code{iter_ipred}, \code{map_ipred}, \code{ires},
+\code{iwres}), the objective function value (\code{ofv}), the weighted sum-of-squares
+(\code{ss_w}), an \code{apriori} flag, one column per model parameter, and two
+families of eta (random-effect) columns: the iterative \verb{eta<nn>} and the
+full-data \verb{map_eta<nn>} estimates (see Details).
+\item \code{mod_obj}: The parsed model object (see \code{\link[=parse_model]{parse_model()}}): a named list of
+model information, including \code{model}, \code{parameters}, \code{omega}, \code{ruv},
+\code{fixed}, \code{bins}, and \code{kappa}.
+\item \code{data}: The input data after reading and validation (see
+\code{\link[=read_input_data]{read_input_data()}} and \code{\link[=check_input_data]{check_input_data()}}), as a data frame of the
+NONMEM-style records used in the analysis.
+\item \code{sim}: Simulated data used for the visual predictive check (VPC) and NPDE,
+or \code{NULL} when simulations are skipped (\code{vpc_options(skip = TRUE)}).
+\item \code{stats_summ}: A tibble summarising forecasting performance statistics (see
+\code{\link[=calculate_stats]{calculate_stats()}}).
+\item \code{shrinkage}: A tibble of eta-shrinkage per iteration (see
+\code{\link[=calculate_shrinkage]{calculate_shrinkage()}}).
+\item \code{bayesian_impact}: A tibble of Bayesian-impact values based on RMSE and
+MAPE (see \code{\link[=calculate_bayesian_impact]{calculate_bayesian_impact()}}).
+}
+
+\code{stats_summ}, \code{shrinkage}, and \code{bayesian_impact} are \code{NULL} when no
+predictions are produced (e.g. \code{vpc_options(vpc_only = TRUE)}).
 }
 \description{
 Run iterative predictive analysis, looping over each individual's data
+}
+\details{
+\code{run_eval()} evaluates predictive performance the way a model would be used
+for model-informed precision dosing (MIPD): for each subject it walks through
+the observations in time order and, at each step, refits the individual using
+only the data available \emph{up to that point} to predict the next observation(s).
+This produces an a priori (population) prediction followed by progressively
+more informed a posteriori (forecasting) predictions, mirroring the iterative
+flow of PsN's \code{proseval} tool.
+
+Because of this design the \code{results} tibble reports quantities at three levels
+of individualization, which are easy to confuse. The predictions:
+\itemize{
+\item \code{pred}: the \strong{population} prediction (typical individual, using no
+individual-level data)---the a priori prediction.
+\item \code{iter_ipred}: the \strong{iterative ("forecasting")} individual prediction, using
+only the data available up to that point---the a posteriori prediction. On
+the a priori rows it falls back to \code{pred}.
+\item \code{map_ipred}: the \strong{full-data MAP} individual prediction, from a single
+retrospective fit on all of a subject's data at once.
+}
+
+The random-effect (eta) estimates follow the same structure:
+\itemize{
+\item The \verb{eta<nn>} columns are the iterative ("forecasting") empirical Bayes
+estimates that pair with \code{iter_ipred}; they evolve down the rows and are 0
+on the a priori (population) rows.
+\item The \verb{map_eta<nn>} columns are the full-data MAP empirical Bayes estimates
+that pair with \code{map_ipred}. They are constant per subject and appear on
+every row, including the a priori row. These are the equivalent of the etas
+reported in a NONMEM output table, and are what you want for an empirical
+eta-distribution plot (one value per subject).
+}
 }
