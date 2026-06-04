@@ -22,6 +22,7 @@ run_eval(
   .stats_summ_options = stats_summ_options(),
   .vpc_options = vpc_options(),
   .fit_options = fit_options(),
+  .bootstrap_options = bootstrap_options(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
@@ -91,6 +92,9 @@ a call to \code{\link[=vpc_options]{vpc_options()}}.}
 
 \item{.fit_options}{Options for controlling MAP Bayesian fit. This must be
 the result from a call to \code{\link[=fit_options]{fit_options()}}.}
+
+\item{.bootstrap_options}{Options for controlling bootstraps. This must be the
+result from a call to \code{\link[=bootstrap_options]{bootstrap_options()}}.}
 
 \item{threads}{number of threads to divide computations on. Default is 1,
 i.e. no parallel execution}
