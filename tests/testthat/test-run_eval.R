@@ -163,3 +163,41 @@ test_that("Incremental Bayes method works", {
     c(2.99, 2.685, 2.529, 2.668, 2.666) # should be different CL progression (expect first 2 values) than from test above (non-incremental)
   )
 })
+
+test_that("run_eval() bootstraps when enabled via stats_summ_options(bootstrap=)", {
+  local_mipdeval_options()
+  mod_obj <- parse_model("pkvancothomson")
+  res <- run_eval(
+    model = mod_obj$model,
+    data = nm_vanco,
+    parameters = mod_obj$parameters,
+    omega = mod_obj$omega,
+    ruv = mod_obj$ruv,
+    fixed = mod_obj$fixed,
+    .stats_summ_options = stats_summ_options(
+      acc_error_abs = 0.5,
+      acc_error_rel = 0.25,
+      bootstrap = bootstrap_options(skip = FALSE, n_boots = 25)
+    ),
+    .vpc_options = vpc_options(skip = TRUE),
+    progress = FALSE,
+    verbose = FALSE
+  )
+  expect_s3_class(res$bootstrap_summ, "mipdeval_results_bootstrap_summ")
+
+  expect_true(all(
+    c("rmse_mid", "rmse_lower", "rmse_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("nrmse_mid", "nrmse_lower", "nrmse_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("mpe_mid", "mpe_lower", "mpe_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("mape_mid", "mape_lower", "mape_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("accuracy_mid", "accuracy_lower", "accuracy_upper") %in% names(res$bootstrap_summ)
+  ))
+})

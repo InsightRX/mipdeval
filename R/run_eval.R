@@ -34,8 +34,6 @@
 #'   a call to [vpc_options()].
 #' @param .fit_options Options for controlling MAP Bayesian fit. This must be
 #'   the result from a call to [fit_options()].
-#' @param .bootstrap_options Options for controlling bootstraps. This must be the
-#'   result from a call to [bootstrap_options()].
 #' @param threads number of threads to divide computations on. Default is 1,
 #'   i.e. no parallel execution
 #' @param ruv residual error variability magnitude, specified as list.
@@ -68,15 +66,14 @@ run_eval <- function(
   .stats_summ_options = stats_summ_options(),
   .vpc_options = vpc_options(),
   .fit_options = fit_options(),
-  .bootstrap_options = bootstrap_options(),
   threads = 1,
   progress = TRUE,
   verbose = TRUE
 ) {
   # Evaluate options at the start so any errors are triggered immediately.
   .stats_summ_options <- .stats_summ_options
+  .bootstrap_options <- .stats_summ_options$bootstrap
   .vpc_options <- .vpc_options
-  .bootstrap_options <- .bootstrap_options
 
   if(progress) { # configure progressbars
     progressr::handlers(global = TRUE)
@@ -194,15 +191,14 @@ run_eval <- function(
       if(verbose) cli::cli_progress_step("Bootstrapping forecasting statistics")
       out$bootstrap_summ <- calculate_bootstrap_summ(
         out,
-        error_metrics = .bootstrap_options$error_metrics,
         acc_error_abs = .stats_summ_options$acc_error_abs,
         acc_error_rel = .stats_summ_options$acc_error_rel,
         n_boots = .bootstrap_options$n_boots,
         seed = .bootstrap_options$seed,
         conf_level = .bootstrap_options$conf_level
       )
-      cli::cli_progress_done()
     }
+    if(verbose) cli::cli_progress_step("Calculating shrinkage and Bayesian impact")
     out$shrinkage <- calculate_shrinkage(out)
     out$bayesian_impact <- calculate_bayesian_impact(out)
     cli::cli_progress_done()

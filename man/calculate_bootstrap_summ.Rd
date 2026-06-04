@@ -2,11 +2,10 @@
 % Please edit documentation in R/calculate_bootstrap_summ.R
 \name{calculate_bootstrap_summ}
 \alias{calculate_bootstrap_summ}
-\title{Bootstrap a confidence interval for forecasting error metrics}
+\title{Bootstrap confidence intervals for forecasting error metrics}
 \usage{
 calculate_bootstrap_summ(
   .res,
-  error_metrics = c("rmse", "mpe"),
   acc_error_abs = NULL,
   acc_error_rel = NULL,
   n_boots = 1000,
@@ -19,12 +18,9 @@ calculate_bootstrap_summ(
 \item{.res}{output object (\code{mipdeval_results}) from \code{\link[=run_eval]{run_eval()}}, or a
 \code{data.frame} with raw results (the \code{results} element).}
 
-\item{error_metrics}{Character vector of error metrics to bootstrap. One or
-more of \code{"rmse"}, \code{"nrmse"}, \code{"mpe"}, \code{"mape"}, and \code{"accuracy"}.}
-
-\item{acc_error_abs, acc_error_rel}{For the \code{"accuracy"} metric: Positive
-number providing an absolute or relative error margin. See \code{\link[=accuracy]{accuracy()}}.
-Both must be supplied when \code{"accuracy"} is requested.}
+\item{acc_error_abs, acc_error_rel}{Positive number providing an absolute or
+relative error margin for the accuracy metric. See \code{\link[=accuracy]{accuracy()}}. Accuracy is
+bootstrapped only when both are supplied.}
 
 \item{n_boots}{Number of bootstrapped samples to create (per group).}
 
@@ -40,16 +36,19 @@ of \code{apriori}.}
 }
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}} with one row per \code{apriori} (and \code{.by}) group and,
-for each requested metric, columns suffixed \verb{_mid}, \verb{_lower}, and \verb{_upper}.
+for each metric, columns suffixed \verb{_mid}, \verb{_lower}, and \verb{_upper}.
 }
 \description{
 Bootstraps point and confidence interval estimates of forecasting error
 metrics from the results of \code{\link[=run_eval]{run_eval()}}. This is the engine behind the
 \code{bootstrap_summ} element of a \code{run_eval()} result; it is exported so that the
 bootstrap summary can be (re)computed, for example with additional grouping
-variables or a different set of metrics, without re-running the analysis.
+variables, without re-running the analysis.
 }
 \details{
+The following error metrics are bootstrapped: RMSE, NRMSE, MPE, and MAPE,
+plus accuracy when both error margins are supplied.
+
 For each row, the prediction that is evaluated depends on whether the
 prediction is \emph{a priori} or \emph{a posteriori}: a priori predictions are evaluated
 against the population prediction (\code{pred}) and a posteriori predictions

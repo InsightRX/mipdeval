@@ -6,7 +6,6 @@
 \usage{
 bootstrap_options(
   ...,
-  error_metrics = c("rmse", "nrmse", "mpe", "mape"),
   n_boots = 1000,
   seed = 123,
   conf_level = 0.95,
@@ -15,12 +14,6 @@ bootstrap_options(
 }
 \arguments{
 \item{...}{These dots are reserved for future extensibility and must be empty.}
-
-\item{error_metrics}{Character vector of error metrics to bootstrap. One or
-more of \code{"rmse"}, \code{"nrmse"}, \code{"mpe"}, \code{"mape"}, and \code{"accuracy"}. \code{"accuracy"}
-is not bootstrapped by default; when requested, its error margins are taken
-from \code{\link[=stats_summ_options]{stats_summ_options()}} (\code{acc_error_abs} and \code{acc_error_rel}), both of
-which must be set.}
 
 \item{n_boots}{Number of bootstrapped samples to create (per group).}
 
@@ -31,12 +24,16 @@ sampling.}
 Must be strictly between 0 and 1. Defaults to a 95 percent confidence
 interval.}
 
-\item{skip}{Logical. Skip bootstrap simulations? Defaults to \code{TRUE}, since
+\item{skip}{Logical. Skip bootstrapping? Defaults to \code{TRUE}, since
 bootstrapping can be expensive.}
 }
 \value{
 A list.
 }
 \description{
-Options for bootstrapping error metrics
+Configures bootstrapping of confidence intervals around the forecasting error
+metrics. The result is passed to the \code{bootstrap} argument of
+\code{\link[=stats_summ_options]{stats_summ_options()}} (which also supplies the accuracy error margins shared
+with the point estimates). All metrics are bootstrapped; there is no metric
+selection here.
 }

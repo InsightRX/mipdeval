@@ -59,7 +59,7 @@ The main entry point is `run_eval()` (`R/run_eval.R`), which orchestrates:
 
 ### Key Design Patterns
 
-- **Configuration helpers**: `vpc_options()`, `fit_options()`, `stats_summ_options()` return typed option lists—use these instead of raw lists for arguments.
+- **Configuration helpers**: `vpc_options()`, `fit_options()`, `stats_summ_options()` return typed option lists—use these instead of raw lists for arguments. Bootstrap settings (`bootstrap_options()`) are nested inside `stats_summ_options(bootstrap = ...)`, sharing its accuracy error margins.
 - **Sample weighting** (`calculate_fit_weights.R`): Multiple schemes (weight_all, weight_last_only, weight_last_two_only, weight_gradient_linear, weight_gradient_exponential).
 - **Grouping columns** (`add_grouping_column.R`): Group observations by dose or time range with `group_by_dose()` / `group_by_time()`.
 - **Parallelism**: `run.R` wraps `purrr::map()` with optional `furrr` parallelism.
