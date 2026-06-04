@@ -47,3 +47,23 @@ test_that("bootstrap_options() validates and stores its inputs", {
   expect_error(bootstrap_options(error_metrics = "nope"))
   expect_error(bootstrap_options(skip = "yes"))
 })
+
+test_that("bootstrap_options() does not bootstrap accuracy by default", {
+  # accuracy requires error margins, so it is opt-in.
+  expect_false("accuracy" %in% bootstrap_options()$error_metrics)
+  expect_equal(bootstrap_options()$error_metrics, c("rmse", "nrmse", "mpe", "mape"))
+  # but it can still be requested explicitly:
+  expect_true("accuracy" %in% bootstrap_options(error_metrics = "accuracy")$error_metrics)
+})
+
+test_that("bootstrap_options() rejects an out-of-range conf_level", {
+  expect_error(bootstrap_options(conf_level = 95), "between 0 and 1")
+  expect_error(bootstrap_options(conf_level = 0), "between 0 and 1")
+  expect_error(bootstrap_options(conf_level = 1), "between 0 and 1")
+  expect_error(
+    bootstrap_options(conf_level = c(0.9, 0.95)),
+    "`conf_level` must have size 1, not size 2."
+  )
+  expect_no_error(bootstrap_options(conf_level = 0.9))
+})
+

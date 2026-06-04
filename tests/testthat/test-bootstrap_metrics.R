@@ -210,6 +210,19 @@ test_that("summarise_bootstrap_metrics() respects .conf_level", {
   )
 })
 
+test_that("summarise_bootstrap_metrics() rejects an out-of-range .conf_level", {
+  boots <- bootstrap_metrics(
+    data.frame(obs = rnorm(50), pred = rnorm(50)),
+    rmse = rmse(obs, pred), .n_boots = 10
+  )
+  expect_error(summarise_bootstrap_metrics(boots, .conf_level = 95), "between 0 and 1")
+  expect_error(summarise_bootstrap_metrics(boots, .conf_level = 0), "between 0 and 1")
+  expect_error(
+    summarise_bootstrap_metrics(boots, .conf_level = c(0.9, 0.95)),
+    "`.conf_level` must have size 1, not size 2."
+  )
+})
+
 test_that("summarize_bootstrap_metrics() is an alias", {
   expect_identical(summarize_bootstrap_metrics, summarise_bootstrap_metrics)
 })

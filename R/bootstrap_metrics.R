@@ -54,7 +54,7 @@
 #'   df,
 #'   rmse = rmse(tdm, tdm - res),
 #'   nrmse = nrmse(tdm, tdm - res),
-#'   accuracy = accuracy(tdm, tdm - res, 2.5, 20),
+#'   accuracy = accuracy(tdm, tdm - res, 2.5, 0.2),
 #'   .by = c(model, patient_type, prediction_type),
 #'   .n_boots = 100
 #' )
@@ -90,6 +90,7 @@ bootstrap_metrics <- function(
 #' @rdname bootstrap_metrics
 #' @export
 summarise_bootstrap_metrics <- function(.data, .by = NULL, .conf_level = 0.95) {
+  check_conf_level(.conf_level)
   lower <- (1 - .conf_level) / 2
   upper <- 1 - lower
   .data |>
@@ -111,3 +112,30 @@ summarise_bootstrap_metrics <- function(.data, .by = NULL, .conf_level = 0.95) {
 #' @rdname bootstrap_metrics
 #' @export
 summarize_bootstrap_metrics <- summarise_bootstrap_metrics
+
+#' Validate a confidence level
+#'
+#' Internal helper asserting that a confidence level is a single number strictly
+#' between 0 and 1.
+#'
+#' @param conf_level The confidence level to check.
+#' @param arg,call Used for error reporting.
+#'
+#' @returns `conf_level`, invisibly, or throws an error.
+#' @keywords internal
+check_conf_level <- function(
+    conf_level,
+    arg = caller_arg(conf_level),
+    call = caller_env()
+) {
+  vctrs::vec_assert(
+    conf_level, ptype = numeric(), size = 1L, arg = arg, call = call
+  )
+  if (is.na(conf_level) || conf_level <= 0 || conf_level >= 1) {
+    cli::cli_abort(
+      "{.arg {arg}} must be a single number strictly between 0 and 1, not {conf_level}.",
+      call = call
+    )
+  }
+  invisible(conf_level)
+}

@@ -6,7 +6,7 @@
 \usage{
 bootstrap_options(
   ...,
-  error_metrics = c("rmse", "nrmse", "mpe", "mape", "accuracy"),
+  error_metrics = c("rmse", "nrmse", "mpe", "mape"),
   n_boots = 1000,
   seed = 123,
   conf_level = 0.95,
@@ -17,8 +17,10 @@ bootstrap_options(
 \item{...}{These dots are reserved for future extensibility and must be empty.}
 
 \item{error_metrics}{Character vector of error metrics to bootstrap. One or
-more of \code{"rmse"}, \code{"nrmse"}, \code{"mpe"}, \code{"mape"}, and \code{"accuracy"}. Margins for
-the \code{"accuracy"} metric are taken from \code{\link[=stats_summ_options]{stats_summ_options()}}.}
+more of \code{"rmse"}, \code{"nrmse"}, \code{"mpe"}, \code{"mape"}, and \code{"accuracy"}. \code{"accuracy"}
+is not bootstrapped by default; when requested, its error margins are taken
+from \code{\link[=stats_summ_options]{stats_summ_options()}} (\code{acc_error_abs} and \code{acc_error_rel}), both of
+which must be set.}
 
 \item{n_boots}{Number of bootstrapped samples to create (per group).}
 

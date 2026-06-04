@@ -75,7 +75,7 @@ boots <- bootstrap_metrics(
   df,
   rmse = rmse(tdm, tdm - res),
   nrmse = nrmse(tdm, tdm - res),
-  accuracy = accuracy(tdm, tdm - res, 2.5, 20),
+  accuracy = accuracy(tdm, tdm - res, 2.5, 0.2),
   .by = c(model, patient_type, prediction_type),
   .n_boots = 100
 )

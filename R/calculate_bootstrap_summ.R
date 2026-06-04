@@ -125,8 +125,10 @@ bootstrap_metric_exprs <- function(
 #'
 #' @param ... These dots are reserved for future extensibility and must be empty.
 #' @param error_metrics Character vector of error metrics to bootstrap. One or
-#'   more of `"rmse"`, `"nrmse"`, `"mpe"`, `"mape"`, and `"accuracy"`. Margins for
-#'   the `"accuracy"` metric are taken from [stats_summ_options()].
+#'   more of `"rmse"`, `"nrmse"`, `"mpe"`, `"mape"`, and `"accuracy"`. `"accuracy"`
+#'   is not bootstrapped by default; when requested, its error margins are taken
+#'   from [stats_summ_options()] (`acc_error_abs` and `acc_error_rel`), both of
+#'   which must be set.
 #' @param n_boots Number of bootstrapped samples to create (per group).
 #' @param seed Single value for the random seed, used for reproducible random
 #'   sampling.
@@ -140,7 +142,7 @@ bootstrap_metric_exprs <- function(
 #' @export
 bootstrap_options <- function(
     ...,
-    error_metrics = c("rmse", "nrmse", "mpe", "mape", "accuracy"),
+    error_metrics = c("rmse", "nrmse", "mpe", "mape"),
     n_boots = 1000,
     seed = 123,
     conf_level = 0.95,
@@ -152,15 +154,14 @@ bootstrap_options <- function(
     values = c("rmse", "nrmse", "mpe", "mape", "accuracy"),
     multiple = TRUE
   )
+  check_conf_level(conf_level)
   out <- list(
     error_metrics = error_metrics,
     n_boots = vctrs::vec_assert(
       n_boots, ptype = numeric(), size = 1L, arg = "n_boots"
     ),
     seed = seed,
-    conf_level = vctrs::vec_assert(
-      conf_level, ptype = numeric(), size = 1L, arg = "conf_level"
-    ),
+    conf_level = conf_level,
     skip = vctrs::vec_assert(
       skip, ptype = logical(), size = 1L, arg = "skip"
     )
