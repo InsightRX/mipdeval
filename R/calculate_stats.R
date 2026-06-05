@@ -46,7 +46,9 @@ calculate_stats <- function(
         NA
       )
     ) |>
-    dplyr::mutate(dplyr::across(dplyr::everything(), round, rounding)) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::everything(), \(.x) round(.x, digits = rounding))
+    ) |>
     dplyr::as_tibble()
   class(out) <- c("mipdeval_results_stats_summ", class(out))
   out
