@@ -23,6 +23,7 @@ run_eval_core <- function(
   obs_data <- data$observations
   comb <- data.frame()
   fit_pars <- data.frame()
+  eta_names <- character(0) # captured from first successful fit below
   iterations <- unique(obs_data[["_grouper"]])
 
   for(i in seq_along(iterations)) {
@@ -95,6 +96,9 @@ run_eval_core <- function(
       )
       par_dummy <- as.data.frame(mod_upd$parameters)
       par_dummy[, 1:ncol(par_dummy)] <- NA
+      ## Also emit NA eta columns if a previous fit told us their names, so a
+      ## failed fit has the same shape as a successful one.
+      par_dummy[, eta_names] <- NA_real_
       fit_pars <- dplyr::mutate(as.data.frame(par_dummy), id = obs_data$id[1])
     } else {
       ## Data frame with predictive data
@@ -114,8 +118,9 @@ run_eval_core <- function(
         `_iteration` = iterations[i],
         `_grouper` = obs_data$`_grouper`
       )
-      ## Add parameter estimates
-      fit_pars <- dplyr::mutate(as.data.frame(fit$parameters), id = obs_data$id[1])
+      ## Add parameter estimates and etas:
+      eta_names <- names(fit$fit$par)
+      fit_pars <- dplyr::mutate(as.data.frame(c(fit$parameters, fit$fit$par)), id = obs_data$id[1])
     }
 
     comb <- dplyr::bind_rows(
@@ -163,6 +168,19 @@ run_eval_core <- function(
     map_pred_data <- pred_data
   }
 
+  ## Full-data MAP etas (empirical Bayes estimates), constant per subject and
+  ## named to parallel `map_ipred`. These differ from the iterative `eta_names`
+  ## columns, which only use the data available up to each forecast. NA if the
+  ## MAP fit failed.
+  map_etas <- if(!is.null(fit_map$fit$par)) {
+    as.list(fit_map$fit$par[eta_names])
+  } else {
+    as.list(rep(NA_real_, length(eta_names)))
+  }
+  ## guard against the no-successful-fit case where `eta_names` is empty.
+  map_eta_names <- if(length(eta_names) > 0) paste0("map_", eta_names) else character(0)
+  names(map_etas) <- map_eta_names
+
   ## pre-pend population predictions for the first observation
   # TODO: Refactor this logic into a function or functions, e.g., the first
   # argument to bind_rows() could be refactored into `get_apriori_data()`.
@@ -173,7 +191,8 @@ run_eval_core <- function(
         `_iteration` = 0,
         ipred = .data$pred,
         ofv = NA,
-        ss_w = NA
+        ss_w = NA,
+        dplyr::across(dplyr::all_of(eta_names), ~ 0) # population etas are 0
       ) |> # set to population parameters, not individual estimates
         dplyr::select(-!!names(mod_obj$parameters)) |>
         dplyr::left_join(
@@ -186,12 +205,13 @@ run_eval_core <- function(
     dplyr::mutate(
       iter_ipred = .data$ipred,
       map_ipred = map_pred_data$ipred, # ipred from full retrospective MAP
-      apriori = (.data$`_iteration` == 0)
+      apriori = (.data$`_iteration` == 0),
+      !!!map_etas # full-data MAP etas, constant per subject
     ) |>
     dplyr::select(
       "id", "_iteration", "_grouper", "t", "dv", "pred", "res", "wres", "cwres",
       "map_ipred", "ofv", "ss_w", "iter_ipred", "ires", "iwres", "apriori",
-      !!names(mod_obj$parameters)
+      !!names(mod_obj$parameters), !!eta_names, !!map_eta_names
     )
 
   out

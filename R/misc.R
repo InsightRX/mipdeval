@@ -51,6 +51,7 @@ vec_assert_or_null <- function(
 #' @param pred predictions vector
 #'
 #' @returns A numeric vector
+#' @export
 rmse <- function (obs, pred) {
   res_sq <- (pred - obs)^2
   sqrt(mean(res_sq, na.rm = TRUE))
@@ -62,7 +63,7 @@ rmse <- function (obs, pred) {
 #' @param pred predictions vector
 #'
 #' @returns A numeric vector
-#'
+#' @export
 nrmse <- function (obs, pred) {
   res_sq <- (pred - obs)^2
   rmse <- sqrt(mean(res_sq, na.rm = TRUE))
@@ -74,6 +75,7 @@ nrmse <- function (obs, pred) {
 #' @inheritParams rmse
 #'
 #' @returns A numeric vector
+#' @export
 mape <- function (obs, pred) {
   mean(abs((obs - pred))/obs, na.rm = TRUE)
 }
@@ -83,6 +85,7 @@ mape <- function (obs, pred) {
 #' @inheritParams rmse
 #'
 #' @returns A numeric vector
+#' @export
 mpe <- function (obs, pred) {
   mean((obs - pred)/obs, na.rm = TRUE)
 }

@@ -45,7 +45,65 @@
 #'   debugging the package it is useful to have it off, since progress bar
 #'   handlers obscure R output.
 #'
-#' @returns A named list of data frames.
+#' @details
+#' `run_eval()` evaluates predictive performance the way a model would be used
+#' for model-informed precision dosing (MIPD): for each subject it walks through
+#' the observations in time order and, at each step, refits the individual using
+#' only the data available *up to that point* to predict the next observation(s).
+#' This produces an a priori (population) prediction followed by progressively
+#' more informed a posteriori (forecasting) predictions, mirroring the iterative
+#' flow of PsN's `proseval` tool.
+#'
+#' Because of this design the `results` tibble reports quantities at three levels
+#' of individualization, which are easy to confuse. The predictions:
+#'
+#' - `pred`: the **population** prediction (typical individual, using no
+#'   individual-level data)---the a priori prediction.
+#' - `iter_ipred`: the **iterative ("forecasting")** individual prediction, using
+#'   only the data available up to that point---the a posteriori prediction. On
+#'   the a priori rows it falls back to `pred`.
+#' - `map_ipred`: the **full-data MAP** individual prediction, from a single
+#'   retrospective fit on all of a subject's data at once.
+#'
+#' The random-effect (eta) estimates follow the same structure:
+#'
+#' - The `eta<nn>` columns are the iterative ("forecasting") empirical Bayes
+#'   estimates that pair with `iter_ipred`; they evolve down the rows and are 0
+#'   on the a priori (population) rows.
+#' - The `map_eta<nn>` columns are the full-data MAP empirical Bayes estimates
+#'   that pair with `map_ipred`. They are constant per subject and appear on
+#'   every row, including the a priori row. These are the equivalent of the etas
+#'   reported in a NONMEM output table, and are what you want for an empirical
+#'   eta-distribution plot (one value per subject).
+#'
+#' @returns An `mipdeval_results` object, which is a named list with the following
+#'   elements:
+#'
+#'   - `results`: A tibble with one row per (iterative) prediction, holding the
+#'     identifiers (`id`, `_iteration`, `_grouper`, `t`), the observation (`dv`),
+#'     population predictions and residuals (`pred`, `res`, `wres`, `cwres`),
+#'     individual predictions and residuals (`iter_ipred`, `map_ipred`, `ires`,
+#'     `iwres`), the objective function value (`ofv`), the weighted sum-of-squares
+#'     (`ss_w`), an `apriori` flag, one column per model parameter, and two
+#'     families of eta (random-effect) columns: the iterative `eta<nn>` and the
+#'     full-data `map_eta<nn>` estimates (see Details).
+#'   - `mod_obj`: The parsed model object (see [parse_model()]): a named list of
+#'     model information, including `model`, `parameters`, `omega`, `ruv`,
+#'     `fixed`, `bins`, and `kappa`.
+#'   - `data`: The input data after reading and validation (see
+#'     [read_input_data()] and [check_input_data()]), as a data frame of the
+#'     NONMEM-style records used in the analysis.
+#'   - `sim`: Simulated data used for the visual predictive check (VPC) and NPDE,
+#'     or `NULL` when simulations are skipped (`vpc_options(skip = TRUE)`).
+#'   - `stats_summ`: A tibble summarising forecasting performance statistics (see
+#'     [calculate_stats()]).
+#'   - `shrinkage`: A tibble of eta-shrinkage per iteration (see
+#'     [calculate_shrinkage()]).
+#'   - `bayesian_impact`: A tibble of Bayesian-impact values based on RMSE and
+#'     MAPE (see [calculate_bayesian_impact()]).
+#'
+#'   `stats_summ`, `shrinkage`, and `bayesian_impact` are `NULL` when no
+#'   predictions are produced (e.g. `vpc_options(vpc_only = TRUE)`).
 #'
 #' @export
 run_eval <- function(
@@ -178,12 +236,14 @@ run_eval <- function(
 
   # res is NULL when vpc_options(..., vpc_only = TRUE).
   if (!is.null(res)) {
+    check_failed_fits(res)
     if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
     out$stats_summ <- calculate_stats(
       out,
       rounding = .stats_summ_options$rounding,
       acc_error_abs = .stats_summ_options$acc_error_abs,
-      acc_error_rel = .stats_summ_options$acc_error_rel
+      acc_error_rel = .stats_summ_options$acc_error_rel,
+      warn = FALSE # Avoid a duplicate warning from check_failed_fits()
     )
     out$shrinkage <- calculate_shrinkage(out)
     out$bayesian_impact <- calculate_bayesian_impact(out)

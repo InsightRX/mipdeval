@@ -4,7 +4,13 @@
 \alias{calculate_stats}
 \title{Calculate basic statistics, like RMSE, MPE, MAPE for forecasted data}
 \usage{
-calculate_stats(.res, rounding = 3, acc_error_abs = NULL, acc_error_rel = NULL)
+calculate_stats(
+  .res,
+  rounding = 3,
+  acc_error_abs = NULL,
+  acc_error_rel = NULL,
+  warn = TRUE
+)
 }
 \arguments{
 \item{.res}{output object (\code{mipdeval_results}) from \code{run_eval()}, or
@@ -16,6 +22,9 @@ calculate_stats(.res, rounding = 3, acc_error_abs = NULL, acc_error_rel = NULL)
 providing an absolute or relative error margin. The cutoff is exclusive of
 the error margin. When \code{NULL} (the default), accuracy will not be
 calculated and will return \code{NA} instead.}
+
+\item{warn}{should a warning be emitted when failed fits (NA predictions) are
+detected?}
 }
 \value{
 tibble
