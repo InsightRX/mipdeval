@@ -119,7 +119,7 @@ test_that("run_eval() returns NA results with a warning when all fits fail", {
   ## Should still return a usable object rather than erroring out:
   expect_equal(
     names(res),
-    c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact")
+    c("results", "mod_obj", "data", "sim", "stats_summ", "bootstrap_summ", "shrinkage", "bayesian_impact")
   )
   expect_s3_class(res, "mipdeval_results")
 
