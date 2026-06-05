@@ -7,6 +7,8 @@
 #'   providing an absolute or relative error margin. The cutoff is exclusive of
 #'   the error margin. When `NULL` (the default), accuracy will not be
 #'   calculated and will return `NA` instead.
+#' @param warn should a warning be emitted when failed fits (NA predictions) are
+#'   detected?
 #'
 #' @returns tibble
 #'
@@ -15,21 +17,14 @@ calculate_stats <- function(
     .res,
     rounding = 3,
     acc_error_abs = NULL,
-    acc_error_rel = NULL
+    acc_error_rel = NULL,
+    warn = TRUE
 ) {
   if(inherits(.res, "mipdeval_results")) {
     .res <- .res$results
   }
-  ## Check for errors during fits / predictions
-  errors <- dplyr::filter(
-    .res,
-    is.na(.data$pred) |
-    (is.na(.data$map_ipred) & !.data$apriori) |
-    is.na(.data$iter_ipred)
-  )
-  if(nrow(errors) > 0) {
-    cli::cli_warn("Errors were encountered in {nrow(errors)} out of {nrow(.res)} evaluated predictions. The problems occurred in patient(s) {unique(errors$id)}.")
-  }
+  ## Warn about any failed fits / predictions (NA), unless the caller opts out.
+  if (isTRUE(warn)) check_failed_fits(.res)
   out <- .res |>
     tidyr::pivot_longer(
       cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
