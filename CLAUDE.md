@@ -46,6 +46,8 @@ The main entry point is `run_eval()` (`R/run_eval.R`), which orchestrates:
 
 4. **Statistics** (`calculate_stats.R`, `calculate_shrinkage.R`, `calculate_bayesian_impact.R`): Computes RMSE, NRMSE, MAPE, MPE, accuracy, shrinkage, and Bayesian impact metrics.
 
+Failed fits (which surface as `NA` predictions) are detected and reported by `check_failed_fits.R`. `run_eval()` calls it once after the per-subject loop to emit a single warning; `calculate_stats()` also calls it (controllable via its `warn` argument, which `run_eval()` sets to `FALSE` to avoid a duplicate warning).
+
 ### Output Structure
 
 `run_eval()` returns a list with class `"mipdeval_results"`:

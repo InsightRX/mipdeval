@@ -236,12 +236,14 @@ run_eval <- function(
 
   # res is NULL when vpc_options(..., vpc_only = TRUE).
   if (!is.null(res)) {
+    check_failed_fits(res)
     if(verbose) cli::cli_progress_step("Calculating forecasting statistics")
     out$stats_summ <- calculate_stats(
       out,
       rounding = .stats_summ_options$rounding,
       acc_error_abs = .stats_summ_options$acc_error_abs,
-      acc_error_rel = .stats_summ_options$acc_error_rel
+      acc_error_rel = .stats_summ_options$acc_error_rel,
+      warn = FALSE # Avoid a duplicate warning from check_failed_fits()
     )
     out$shrinkage <- calculate_shrinkage(out)
     out$bayesian_impact <- calculate_bayesian_impact(out)

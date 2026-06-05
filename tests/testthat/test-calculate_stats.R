@@ -52,6 +52,20 @@ test_that("calculate_stats() warns when predictions contain errors (NAs)", {
   expect_all_false(is.na(out$accuracy))
 })
 
+test_that("calculate_stats(warn = FALSE) does not warn about failed fits", {
+  res <- data.frame(
+    id = c(1, 1, 2, 2, 3, 3),
+    apriori = c(FALSE, TRUE, FALSE, TRUE, FALSE, TRUE),
+    dv = c(10, 12, NA, NA, 8, 14),
+    pred = c(9, 13, NA, NA, 7, 15),
+    map_ipred = c(10, 11, NA, NA, 9, 13),
+    iter_ipred = c(11, 12, NA, NA, 8, 14)
+  )
+  expect_no_warning(
+    calculate_stats(res, acc_error_abs = 0.2, acc_error_rel = 0.05, warn = FALSE)
+  )
+})
+
 # stats_summ_options() --------------------------------------------------------
 test_that("stats_summ_options() works", {
   actual <- stats_summ_options(
