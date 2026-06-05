@@ -65,8 +65,8 @@ rmse <- function (obs, pred) {
 #'
 nrmse <- function (obs, pred) {
   res_sq <- (pred - obs)^2
-  rmse <- sqrt(mean(res_sq, na.rm = T))
-  rmse/mean(obs, na.rm = T)
+  rmse <- sqrt(mean(res_sq, na.rm = TRUE))
+  rmse/mean(obs, na.rm = TRUE)
 }
 
 #' Mean absolute percentage error
@@ -75,7 +75,7 @@ nrmse <- function (obs, pred) {
 #'
 #' @returns A numeric vector
 mape <- function (obs, pred) {
-  sum(abs((obs - pred))/obs)/length(obs)
+  mean(abs((obs - pred))/obs, na.rm = TRUE)
 }
 
 #' Mean percentage error
@@ -84,7 +84,7 @@ mape <- function (obs, pred) {
 #'
 #' @returns A numeric vector
 mpe <- function (obs, pred) {
-  sum((obs - pred)/obs)/length(obs)
+  mean((obs - pred)/obs, na.rm = TRUE)
 }
 
 #' Accuracy
@@ -123,7 +123,7 @@ mpe <- function (obs, pred) {
 #'
 #' @export
 accuracy <- function(obs, pred, error_abs = 0, error_rel = 0) {
-  mean(is_accurate(obs, pred, error_abs, error_rel))
+  mean(is_accurate(obs, pred, error_abs, error_rel), na.rm = TRUE)
 }
 
 #' @rdname accuracy
