@@ -96,6 +96,9 @@ run_eval_core <- function(
       )
       par_dummy <- as.data.frame(mod_upd$parameters)
       par_dummy[, 1:ncol(par_dummy)] <- NA
+      ## Also emit NA eta columns if a previous fit told us their names, so a
+      ## failed fit has the same shape as a successful one.
+      par_dummy[, eta_names] <- NA_real_
       fit_pars <- dplyr::mutate(as.data.frame(par_dummy), id = obs_data$id[1])
     } else {
       ## Data frame with predictive data
@@ -169,12 +172,13 @@ run_eval_core <- function(
   ## named to parallel `map_ipred`. These differ from the iterative `eta_names`
   ## columns, which only use the data available up to each forecast. NA if the
   ## MAP fit failed.
-  map_eta_names <- paste0("map_", eta_names)
   map_etas <- if(!is.null(fit_map$fit$par)) {
     as.list(fit_map$fit$par[eta_names])
   } else {
     as.list(rep(NA_real_, length(eta_names)))
   }
+  ## guard against the no-successful-fit case where `eta_names` is empty.
+  map_eta_names <- if(length(eta_names) > 0) paste0("map_", eta_names) else character(0)
   names(map_etas) <- map_eta_names
 
   ## pre-pend population predictions for the first observation

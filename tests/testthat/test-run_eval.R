@@ -88,6 +88,47 @@ test_that("Run also works when `model` argument just references the package", {
   # TODO: test outputs
 })
 
+test_that("run_eval() returns NA results with a warning when all fits fail", {
+  local_mipdeval_options(rlib_warning_verbosity = "default")
+
+  # Force every MAP Bayesian fit to fail. get_map_estimates returns (rather than
+  # throws) an error object on failure, so we mock that behaviour.
+  local_mocked_bindings(
+    get_map_estimates = function(...) simpleError("forced failure for test"),
+    .package = "PKPDmap"
+  )
+
+  mod_obj <- parse_model("pkvancothomson")
+  expect_warning(
+    res <- run_eval(
+      model = mod_obj$model,
+      data = nm_vanco,
+      parameters = mod_obj$parameters,
+      omega = mod_obj$omega,
+      ruv = mod_obj$ruv,
+      fixed = mod_obj$fixed,
+      censor_covariates = FALSE,
+      ids = c(1, 2),
+      .vpc_options = vpc_options(skip = TRUE),
+      progress = FALSE,
+      verbose = FALSE
+    ),
+    regexp = "Errors were encountered in 10 out of 10 evaluated predictions"
+  )
+
+  ## Should still return a usable object rather than erroring out:
+  expect_equal(
+    names(res),
+    c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact")
+  )
+  expect_s3_class(res, "mipdeval_results")
+
+  ## Predictions are all NA, but the result structure is intact:
+  expect_all_true(is.na(res$results$pred))
+  expect_all_true(is.na(res$results$iter_ipred))
+  expect_all_true(is.na(res$results$map_ipred))
+})
+
 test_that("Flattening of prior results in different predictions", {
   local_mipdeval_options()
   res <- run_eval(
