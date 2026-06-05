@@ -50,7 +50,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_stats</span><span class="op">(</span><span class="va">.res</span>, rounding <span class="op">=</span> <span class="fl">3</span>, acc_error_abs <span class="op">=</span> <span class="cn">NULL</span>, acc_error_rel <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_stats</span><span class="op">(</span></span>
+<span>  <span class="va">.res</span>,</span>
+<span>  rounding <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  acc_error_abs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  acc_error_rel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  warn <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -71,6 +77,11 @@
 providing an absolute or relative error margin. The cutoff is exclusive of
 the error margin. When <code>NULL</code> (the default), accuracy will not be
 calculated and will return <code>NA</code> instead.</p></dd>
+
+
+<dt id="arg-warn">warn<a class="anchor" aria-label="anchor" href="#arg-warn"></a></dt>
+<dd><p>should a warning be emitted when failed fits (NA predictions) are
+detected?</p></dd>
 
 </dl></div>
     <div id="value">

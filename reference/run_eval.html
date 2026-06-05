@@ -193,8 +193,58 @@ handlers obscure R output.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A named list of data frames.</p>
+    <p>An <code>mipdeval_results</code> object, which is a named list with the following
+elements:</p><ul><li><p><code>results</code>: A tibble with one row per (iterative) prediction, holding the
+identifiers (<code>id</code>, <code>_iteration</code>, <code>_grouper</code>, <code>t</code>), the observation (<code>dv</code>),
+population predictions and residuals (<code>pred</code>, <code>res</code>, <code>wres</code>, <code>cwres</code>),
+individual predictions and residuals (<code>iter_ipred</code>, <code>map_ipred</code>, <code>ires</code>,
+<code>iwres</code>), the objective function value (<code>ofv</code>), the weighted sum-of-squares
+(<code>ss_w</code>), an <code>apriori</code> flag, one column per model parameter, and two
+families of eta (random-effect) columns: the iterative <code>eta&lt;nn&gt;</code> and the
+full-data <code>map_eta&lt;nn&gt;</code> estimates (see Details).</p></li>
+<li><p><code>mod_obj</code>: The parsed model object (see <code><a href="parse_model.html">parse_model()</a></code>): a named list of
+model information, including <code>model</code>, <code>parameters</code>, <code>omega</code>, <code>ruv</code>,
+<code>fixed</code>, <code>bins</code>, and <code>kappa</code>.</p></li>
+<li><p><code>data</code>: The input data after reading and validation (see
+<code><a href="read_input_data.html">read_input_data()</a></code> and <code><a href="check_input_data.html">check_input_data()</a></code>), as a data frame of the
+NONMEM-style records used in the analysis.</p></li>
+<li><p><code>sim</code>: Simulated data used for the visual predictive check (VPC) and NPDE,
+or <code>NULL</code> when simulations are skipped (<code>vpc_options(skip = TRUE)</code>).</p></li>
+<li><p><code>stats_summ</code>: A tibble summarising forecasting performance statistics (see
+<code><a href="calculate_stats.html">calculate_stats()</a></code>).</p></li>
+<li><p><code>shrinkage</code>: A tibble of eta-shrinkage per iteration (see
+<code><a href="calculate_shrinkage.html">calculate_shrinkage()</a></code>).</p></li>
+<li><p><code>bayesian_impact</code>: A tibble of Bayesian-impact values based on RMSE and
+MAPE (see <code><a href="calculate_bayesian_impact.html">calculate_bayesian_impact()</a></code>).</p></li>
+</ul><p><code>stats_summ</code>, <code>shrinkage</code>, and <code>bayesian_impact</code> are <code>NULL</code> when no
+predictions are produced (e.g. <code>vpc_options(vpc_only = TRUE)</code>).</p>
     </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p><code>run_eval()</code> evaluates predictive performance the way a model would be used
+for model-informed precision dosing (MIPD): for each subject it walks through
+the observations in time order and, at each step, refits the individual using
+only the data available <em>up to that point</em> to predict the next observation(s).
+This produces an a priori (population) prediction followed by progressively
+more informed a posteriori (forecasting) predictions, mirroring the iterative
+flow of PsN's <code>proseval</code> tool.</p>
+<p>Because of this design the <code>results</code> tibble reports quantities at three levels
+of individualization, which are easy to confuse. The predictions:</p><ul><li><p><code>pred</code>: the <strong>population</strong> prediction (typical individual, using no
+individual-level data)—the a priori prediction.</p></li>
+<li><p><code>iter_ipred</code>: the <strong>iterative ("forecasting")</strong> individual prediction, using
+only the data available up to that point—the a posteriori prediction. On
+the a priori rows it falls back to <code>pred</code>.</p></li>
+<li><p><code>map_ipred</code>: the <strong>full-data MAP</strong> individual prediction, from a single
+retrospective fit on all of a subject's data at once.</p></li>
+</ul><p>The random-effect (eta) estimates follow the same structure:</p><ul><li><p>The <code>eta&lt;nn&gt;</code> columns are the iterative ("forecasting") empirical Bayes
+estimates that pair with <code>iter_ipred</code>; they evolve down the rows and are 0
+on the a priori (population) rows.</p></li>
+<li><p>The <code>map_eta&lt;nn&gt;</code> columns are the full-data MAP empirical Bayes estimates
+that pair with <code>map_ipred</code>. They are constant per subject and appear on
+every row, including the a priori row. These are the equivalent of the etas
+reported in a NONMEM output table, and are what you want for an empirical
+eta-distribution plot (one value per subject).</p></li>
+</ul></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
