@@ -10,10 +10,14 @@
 <url><loc>/news/index.html</loc></url>
 <url><loc>/reference/accuracy.html</loc></url>
 <url><loc>/reference/add_grouping_column.html</loc></url>
+<url><loc>/reference/bootstrap_metrics.html</loc></url>
+<url><loc>/reference/bootstrap_options.html</loc></url>
 <url><loc>/reference/calc_eta.html</loc></url>
 <url><loc>/reference/calculate_bayesian_impact.html</loc></url>
+<url><loc>/reference/calculate_bootstrap_summ.html</loc></url>
 <url><loc>/reference/calculate_shrinkage.html</loc></url>
 <url><loc>/reference/calculate_stats.html</loc></url>
+<url><loc>/reference/check_conf_level.html</loc></url>
 <url><loc>/reference/check_failed_fits.html</loc></url>
 <url><loc>/reference/check_input_data.html</loc></url>
 <url><loc>/reference/check_installed_model_library.html</loc></url>

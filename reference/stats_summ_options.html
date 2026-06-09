@@ -54,7 +54,8 @@
 <span>  <span class="va">...</span>,</span>
 <span>  rounding <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  acc_error_abs <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  acc_error_rel <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  acc_error_rel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bootstrap <span class="op">=</span> <span class="fu"><a href="bootstrap_options.html">bootstrap_options</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -75,6 +76,12 @@
 providing an absolute or relative error margin. The cutoff is exclusive of
 the error margin. When <code>NULL</code> (the default), accuracy will not be
 calculated and will return <code>NA</code> instead.</p></dd>
+
+
+<dt id="arg-bootstrap">bootstrap<a class="anchor" aria-label="anchor" href="#arg-bootstrap"></a></dt>
+<dd><p>Options for bootstrapping confidence intervals around the
+summary statistics. This must be the result from a call to
+<code><a href="bootstrap_options.html">bootstrap_options()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">

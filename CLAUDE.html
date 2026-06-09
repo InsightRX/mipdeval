@@ -90,7 +90,7 @@
 <div class="section level3">
 <h3 id="key-design-patterns">Key Design Patterns<a class="anchor" aria-label="anchor" href="#key-design-patterns"></a></h3>
 <ul><li>
-<strong>Configuration helpers</strong>: <code><a href="reference/vpc_options.html">vpc_options()</a></code>, <code><a href="reference/fit_options.html">fit_options()</a></code>, <code><a href="reference/stats_summ_options.html">stats_summ_options()</a></code> return typed option lists—use these instead of raw lists for arguments.</li>
+<strong>Configuration helpers</strong>: <code><a href="reference/vpc_options.html">vpc_options()</a></code>, <code><a href="reference/fit_options.html">fit_options()</a></code>, <code><a href="reference/stats_summ_options.html">stats_summ_options()</a></code> return typed option lists—use these instead of raw lists for arguments. Bootstrap settings (<code><a href="reference/bootstrap_options.html">bootstrap_options()</a></code>) are nested inside <code>stats_summ_options(bootstrap = ...)</code>, sharing its accuracy error margins.</li>
 <li>
 <strong>Sample weighting</strong> (<code>calculate_fit_weights.R</code>): Multiple schemes (weight_all, weight_last_only, weight_last_two_only, weight_gradient_linear, weight_gradient_exponential).</li>
 <li>
