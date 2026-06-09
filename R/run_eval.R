@@ -130,6 +130,7 @@ run_eval <- function(
 ) {
   # Evaluate options at the start so any errors are triggered immediately.
   .stats_summ_options <- .stats_summ_options
+  .bootstrap_options <- .stats_summ_options$bootstrap
   .vpc_options <- .vpc_options
 
   if(progress) { # configure progressbars
@@ -229,6 +230,7 @@ run_eval <- function(
     data = input_data,
     sim = res_vpc,
     stats_summ = NULL,
+    bootstrap_summ = NULL,
     shrinkage = NULL,
     bayesian_impact = NULL
   )
@@ -245,6 +247,18 @@ run_eval <- function(
       acc_error_rel = .stats_summ_options$acc_error_rel,
       warn = FALSE # Avoid a duplicate warning from check_failed_fits()
     )
+    if (!.bootstrap_options$skip) {
+      if(verbose) cli::cli_progress_step("Bootstrapping forecasting statistics")
+      out$bootstrap_summ <- calculate_bootstrap_summ(
+        out,
+        acc_error_abs = .stats_summ_options$acc_error_abs,
+        acc_error_rel = .stats_summ_options$acc_error_rel,
+        n_boots = .bootstrap_options$n_boots,
+        seed = .bootstrap_options$seed,
+        conf_level = .bootstrap_options$conf_level
+      )
+    }
+    if(verbose) cli::cli_progress_step("Calculating shrinkage and Bayesian impact")
     out$shrinkage <- calculate_shrinkage(out)
     out$bayesian_impact <- calculate_bayesian_impact(out)
     cli::cli_progress_done()

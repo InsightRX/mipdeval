@@ -53,6 +53,9 @@ calculate_stats <- function(
 #'
 #' @param ... These dots are reserved for future extensibility and must be empty.
 #' @inheritParams calculate_stats
+#' @param bootstrap Options for bootstrapping confidence intervals around the
+#'   summary statistics. This must be the result from a call to
+#'   [bootstrap_options()].
 #'
 #' @returns A list.
 #' @export
@@ -60,10 +63,16 @@ stats_summ_options <- function(
     ...,
     rounding = 3,
     acc_error_abs = NULL,
-    acc_error_rel = NULL
+    acc_error_rel = NULL,
+    bootstrap = bootstrap_options()
 ) {
   rlang::check_dots_empty()
   check_required_accuracy(acc_error_abs, acc_error_rel)
+  if (!inherits(bootstrap, "mipdeval_bootstrap_options")) {
+    cli::cli_abort(
+      "{.arg bootstrap} must be the result of a call to {.fn bootstrap_options}."
+    )
+  }
   out <- list(
     rounding = vctrs::vec_assert(
       rounding, ptype = numeric(), size = 1L, arg = "rounding"
@@ -73,7 +82,8 @@ stats_summ_options <- function(
     ),
     acc_error_rel = vec_assert_or_null(
       acc_error_rel, ptype = numeric(), size = 1L, arg = "acc_error_rel"
-    )
+    ),
+    bootstrap = bootstrap
   )
   structure(out, class = "mipdeval_stats_summ_options")
 }

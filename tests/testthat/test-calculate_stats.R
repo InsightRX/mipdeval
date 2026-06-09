@@ -71,7 +71,10 @@ test_that("stats_summ_options() works", {
   actual <- stats_summ_options(
     rounding = 2, acc_error_abs = 3, acc_error_rel = 4
   )
-  expected <- list(rounding = 2, acc_error_abs = 3, acc_error_rel = 4)
+  expected <- list(
+    rounding = 2, acc_error_abs = 3, acc_error_rel = 4,
+    bootstrap = bootstrap_options()
+  )
   expect_s3_class(actual, "mipdeval_stats_summ_options")
   expect_identical(unclass(actual), expected)
 })
@@ -87,5 +90,14 @@ test_that("stats_summ_options() throws error for incomplete accuracy args", {
   )
   expect_no_error(
     stats_summ_options(rounding = 2, acc_error_abs = NULL, acc_error_rel = NULL)
+  )
+})
+
+test_that("stats_summ_options() nests and validates bootstrap options", {
+  expect_s3_class(stats_summ_options()$bootstrap, "mipdeval_bootstrap_options")
+  expect_true(stats_summ_options()$bootstrap$skip) # skip bootstrap by default
+  expect_error(
+    stats_summ_options(bootstrap = list(skip = FALSE)),
+    "must be the result of a call to"
   )
 })

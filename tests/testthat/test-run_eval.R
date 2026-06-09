@@ -17,7 +17,7 @@ test_that("Basic run with vanco data + model works", {
   )
 
   ## Expected structure:
-  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "bootstrap_summ", "shrinkage", "bayesian_impact"))
   expect_s3_class(res$results, c("tbl_df", "tbl", "data.frame"))
   expect_s3_class(res$stats_summ, c("tbl_df", "tbl", "data.frame"))
   expect_equal(
@@ -84,7 +84,7 @@ test_that("Run also works when `model` argument just references the package", {
     progress = FALSE,
     ids = c(1:3)
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "bootstrap_summ", "shrinkage", "bayesian_impact"))
   # TODO: test outputs
 })
 
@@ -119,7 +119,7 @@ test_that("run_eval() returns NA results with a warning when all fits fail", {
   ## Should still return a usable object rather than erroring out:
   expect_equal(
     names(res),
-    c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact")
+    c("results", "mod_obj", "data", "sim", "stats_summ", "bootstrap_summ", "shrinkage", "bayesian_impact")
   )
   expect_s3_class(res, "mipdeval_results")
 
@@ -146,7 +146,7 @@ test_that("Flattening of prior results in different predictions", {
     progress = FALSE,
     ids = c(1:3)
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "bootstrap_summ", "shrinkage", "bayesian_impact"))
   expect_true(
     all(
       res$results |>
@@ -172,7 +172,7 @@ test_that("Run also works when `dictionary` is used", {
     progress = FALSE,
     ids = 1
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "bootstrap_summ", "shrinkage", "bayesian_impact"))
 })
 
 test_that("Incremental Bayes method works", {
@@ -184,7 +184,7 @@ test_that("Incremental Bayes method works", {
     progress = F,
     ids = c(1:3)
   )
-  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "shrinkage", "bayesian_impact"))
+  expect_equal(names(res), c("results", "mod_obj", "data", "sim", "stats_summ", "bootstrap_summ", "shrinkage", "bayesian_impact"))
   expect_equal(
     res$stats_summ,
     structure(list(
@@ -204,4 +204,42 @@ test_that("Incremental Bayes method works", {
     round(res$results$CL[1:5], 3),
     c(2.99, 2.685, 2.529, 2.668, 2.666) # should be different CL progression (expect first 2 values) than from test above (non-incremental)
   )
+})
+
+test_that("run_eval() bootstraps when enabled via stats_summ_options(bootstrap=)", {
+  local_mipdeval_options()
+  mod_obj <- parse_model("pkvancothomson")
+  res <- run_eval(
+    model = mod_obj$model,
+    data = nm_vanco,
+    parameters = mod_obj$parameters,
+    omega = mod_obj$omega,
+    ruv = mod_obj$ruv,
+    fixed = mod_obj$fixed,
+    .stats_summ_options = stats_summ_options(
+      acc_error_abs = 0.5,
+      acc_error_rel = 0.25,
+      bootstrap = bootstrap_options(skip = FALSE, n_boots = 25)
+    ),
+    .vpc_options = vpc_options(skip = TRUE),
+    progress = FALSE,
+    verbose = FALSE
+  )
+  expect_s3_class(res$bootstrap_summ, "mipdeval_results_bootstrap_summ")
+
+  expect_true(all(
+    c("rmse_mid", "rmse_lower", "rmse_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("nrmse_mid", "nrmse_lower", "nrmse_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("mpe_mid", "mpe_lower", "mpe_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("mape_mid", "mape_lower", "mape_upper") %in% names(res$bootstrap_summ)
+  ))
+  expect_true(all(
+    c("accuracy_mid", "accuracy_lower", "accuracy_upper") %in% names(res$bootstrap_summ)
+  ))
 })
