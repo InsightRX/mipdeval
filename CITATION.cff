@@ -1,0 +1,291 @@
+# ------------------------------------------------
+# CITATION.cff file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# ------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "mipdeval" in publications use:'
+type: software
+license: MIT
+title: 'mipdeval: Run evaluation of iterative predictive performance based on historical
+  datasets'
+version: 0.1.0.9000
+abstract: The package provides functionality to run through a NONMEM-style dataset
+  iteratively, performing MAP Bayesian updating and forecasting at each step. This
+  is very much like the `proseval` tool in PsN, however this package provides more
+  options, specifically for use in MIPD, such as flattening priors, time-based weighting,
+  sample grouping, etc.
+authors:
+- family-names: Keizer
+  given-names: Ron
+  email: ron@insight-rx.com
+- family-names: McCarthy
+  given-names: Michael
+  email: michael.mccarthy@insight-rx.com
+contact:
+- family-names: Keizer
+  given-names: Ron
+  email: ron@insight-rx.com
+references:
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  url: https://www.R-project.org/
+  authors:
+  - name: R Core Team
+  institution:
+    name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2026'
+  version: '>= 4.2.0'
+- type: software
+  title: furrr
+  abstract: 'furrr: Apply Mapping Functions in Parallel using Futures'
+  notes: Imports
+  url: https://furrr.futureverse.org/
+  repository: https://CRAN.R-project.org/package=furrr
+  authors:
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@rstudio.com
+  - family-names: Dancho
+    given-names: Matt
+    email: mdancho@business-science.io
+  year: '2026'
+  doi: 10.32614/CRAN.package.furrr
+- type: software
+  title: future
+  abstract: 'future: Unified Parallel and Distributed Processing in R for Everyone'
+  notes: Imports
+  url: https://future.futureverse.org
+  repository: https://CRAN.R-project.org/package=future
+  authors:
+  - family-names: Bengtsson
+    given-names: Henrik
+    email: henrikb@braju.com
+    orcid: https://orcid.org/0000-0002-7579-5165
+  year: '2026'
+  doi: 10.32614/CRAN.package.future
+- type: software
+  title: PKPDmap
+  abstract: 'PKPDmap: MAP Bayesian estimates'
+  notes: Imports
+  authors:
+  - family-names: Keizer
+    given-names: Ron
+  - family-names: Hughes
+    given-names: Jasmine
+  - family-names: Woo
+    given-names: Kara
+  year: '2026'
+- type: software
+  title: PKPDsim
+  abstract: 'PKPDsim: Tools for Performing Pharmacokinetic-Pharmacodynamic Simulations'
+  notes: Imports
+  url: https://insightrx.github.io/PKPDsim/
+  repository: https://CRAN.R-project.org/package=PKPDsim
+  authors:
+  - family-names: Keizer
+    given-names: Ron
+    email: ron@insight-rx.com
+  - family-names: Hughes
+    given-names: Jasmine
+    email: jasmine@insight-rx.com
+  - family-names: Tong
+    given-names: Dominic
+    email: dominic@insight-rx.com
+  - family-names: Woo
+    given-names: Kara
+    email: kara@insight-rx.com
+  - family-names: Brooks
+    given-names: Jordan
+    email: jordan.brooks@insight-rx.com
+  year: '2026'
+  doi: 10.32614/CRAN.package.PKPDsim
+- type: software
+  title: progressr
+  abstract: 'progressr: An Inclusive, Unifying API for Progress Updates'
+  notes: Imports
+  url: https://progressr.futureverse.org
+  repository: https://CRAN.R-project.org/package=progressr
+  authors:
+  - family-names: Bengtsson
+    given-names: Henrik
+    email: henrikb@braju.com
+    orcid: https://orcid.org/0000-0002-7579-5165
+  year: '2026'
+  doi: 10.32614/CRAN.package.progressr
+- type: software
+  title: purrr
+  abstract: 'purrr: Functional Programming Tools'
+  notes: Imports
+  url: https://purrr.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=purrr
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  year: '2026'
+  doi: 10.32614/CRAN.package.purrr
+- type: software
+  title: rlang
+  abstract: 'rlang: Functions for Base Types and Core R and ''Tidyverse'' Features'
+  notes: Imports
+  url: https://rlang.r-lib.org
+  repository: https://CRAN.R-project.org/package=rlang
+  authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  year: '2026'
+  doi: 10.32614/CRAN.package.rlang
+- type: software
+  title: tidyr
+  abstract: 'tidyr: Tidy Messy Data'
+  notes: Imports
+  url: https://tidyr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=tidyr
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@posit.co
+  - family-names: Girlich
+    given-names: Maximilian
+  year: '2026'
+  doi: 10.32614/CRAN.package.tidyr
+- type: software
+  title: vctrs
+  abstract: 'vctrs: Vector Helpers'
+  notes: Imports
+  url: https://vctrs.r-lib.org/
+  repository: https://CRAN.R-project.org/package=vctrs
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@posit.co
+  year: '2026'
+  doi: 10.32614/CRAN.package.vctrs
+- type: software
+  title: knitr
+  abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
+  notes: Suggests
+  url: https://yihui.org/knitr/
+  repository: https://CRAN.R-project.org/package=knitr
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2026'
+  doi: 10.32614/CRAN.package.knitr
+- type: software
+  title: rmarkdown
+  abstract: 'rmarkdown: Dynamic Documents for R'
+  notes: Suggests
+  url: https://pkgs.rstudio.com/rmarkdown/
+  repository: https://CRAN.R-project.org/package=rmarkdown
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+    email: jj@posit.co
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: Dervieux
+    given-names: Christophe
+    email: cderv@posit.co
+    orcid: https://orcid.org/0000-0003-4474-2498
+  - family-names: McPherson
+    given-names: Jonathan
+    email: jonathan@posit.co
+  - family-names: Luraschi
+    given-names: Javier
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevin@posit.co
+  - family-names: Atkins
+    given-names: Aron
+    email: aron@posit.co
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Cheng
+    given-names: Joe
+    email: joe@posit.co
+  - family-names: Chang
+    given-names: Winston
+    email: winston@posit.co
+  - family-names: Iannone
+    given-names: Richard
+    email: rich@posit.co
+    orcid: https://orcid.org/0000-0003-3925-190X
+  year: '2026'
+  doi: 10.32614/CRAN.package.rmarkdown
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  year: '2026'
+  doi: 10.32614/CRAN.package.testthat
+  version: '>= 3.2.0'
+- type: software
+  title: vdiffr
+  abstract: 'vdiffr: Visual Regression Testing and Graphical Diffing'
+  notes: Suggests
+  url: https://vdiffr.r-lib.org/
+  repository: https://CRAN.R-project.org/package=vdiffr
+  authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  - family-names: Pedersen
+    given-names: Thomas Lin
+    email: thomas.pedersen@posit.co
+    orcid: https://orcid.org/0000-0002-5147-4711
+  - family-names: Luciani
+    given-names: T Jake
+    email: jake@apache.org
+  - family-names: Decorde
+    given-names: Matthieu
+    email: matthieu.decorde@ens-lyon.fr
+  - family-names: Lise
+    given-names: Vaudor
+    email: lise.vaudor@ens-lyon.fr
+  year: '2026'
+  doi: 10.32614/CRAN.package.vdiffr
+- type: software
+  title: vpc
+  abstract: 'vpc: Create Visual Predictive Checks'
+  notes: Suggests
+  url: https://github.com/ronkeizer/vpc
+  repository: https://CRAN.R-project.org/package=vpc
+  authors:
+  - family-names: Keizer
+    given-names: Ron
+    email: ronkeizer@gmail.com
+  year: '2026'
+  doi: 10.32614/CRAN.package.vpc
+
