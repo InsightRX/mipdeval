@@ -3,6 +3,7 @@
 #' @param model PKPDsim model object
 #'
 #' @returns A character vector of covariate names.
+#' @keywords internal
 get_required_covariates <- function(model) {
   unique(purrr::list_c(purrr::map(model, "covariates")))
 }
@@ -14,6 +15,7 @@ get_required_covariates <- function(model) {
 #' @param .cols vector of column names
 #'
 #' @returns A data.frame
+#' @keywords internal
 is_timevarying <- function(.data, .cols) {
   out <- dplyr::summarise(
     .data, dplyr::across(dplyr::all_of(.cols), \(.x) length(unique(.x)) > 1)
@@ -31,6 +33,7 @@ is_timevarying <- function(.data, .cols) {
 #' @inheritParams vctrs::vec_assert
 #'
 #' @returns Either throws an error or returns `x`, invisibly.
+#' @keywords internal
 vec_assert_or_null <- function(
     x,
     ptype = NULL,
@@ -152,6 +155,7 @@ is_accurate_rel <- function(obs, pred, error_rel = 0) {
 #' @inheritParams rmse
 #' @param w weights
 #'
+#' @keywords internal
 ss <- function(obs, pred, w = NULL) {
   if(is.null(w)) {
     w <- rep(1, length(obs))

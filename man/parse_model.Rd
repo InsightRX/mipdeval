@@ -47,3 +47,4 @@ A named list.
 Parse model information from PKPDsim model object or an installed PKPDsim
 model library.
 }
+\keyword{internal}

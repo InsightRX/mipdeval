@@ -21,3 +21,4 @@ with potentially censored future data.
 \description{
 This removes new covariate information after a certain time cutoff
 }
+\keyword{internal}

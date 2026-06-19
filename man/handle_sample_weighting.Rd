@@ -29,3 +29,4 @@ This function is used to select the samples used in the fit (1 or 0),
 but also to select their weight, if a sample weighting strategy is
 selected.
 }
+\keyword{internal}

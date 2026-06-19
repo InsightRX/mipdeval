@@ -4,6 +4,7 @@
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @export
+#' @keywords internal
 print.mipdeval_results <- function(x, ...) {
   if(is.null(x$results)) {
     cli::cli_alert_info("No forecasting info available, did you run with `vpc_only=TRUE`?")
@@ -20,6 +21,7 @@ print.mipdeval_results <- function(x, ...) {
 #' @param x stats summary object in output from `run_eval()`.
 #'
 #' @export
+#' @keywords internal
 print.mipdeval_results_stats_summ <- function(x, ...) {
   x |>
     dplyr::mutate(
@@ -39,6 +41,7 @@ print.mipdeval_results_stats_summ <- function(x, ...) {
 #' @param x shrinkage object in output from `run_eval()`.
 #'
 #' @export
+#' @keywords internal
 print.mipdeval_results_shrinkage <- function(x, ...) {
   x |>
     dplyr::rename("Iteration" = .data$`_iteration`) |>
@@ -52,6 +55,7 @@ print.mipdeval_results_shrinkage <- function(x, ...) {
 #' @param x bayesian impact object in output from `run_eval()`.
 #'
 #' @export
+#' @keywords internal
 print.mipdeval_results_bayesian_impact <- function(x, ...) {
   x |>
     rlang::set_names(gsub("bi_", "", names(x))) |>

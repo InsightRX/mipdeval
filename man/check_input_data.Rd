@@ -21,3 +21,4 @@ a data.frame
 E.g. confirm that all required columns are included, and column names are
 all lower-case.
 }
+\keyword{internal}

@@ -3,6 +3,7 @@
 #' @inheritParams run_eval
 #'
 #' @returns data.frame
+#' @keywords internal
 read_input_data <- function(data, verbose = TRUE) {
   if(verbose) cli::cli_progress_step("Reading input data")
   if(inherits(data, "character")) {

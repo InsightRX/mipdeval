@@ -8,6 +8,15 @@
 \description{
 The package provides functionality to run through a NONMEM-style dataset iteratively, performing MAP Bayesian updating and forecasting at each step. This is very much like the `proseval` tool in PsN, however this package provides more options, specifically for use in MIPD, such as flattening priors, time-based weighting, sample grouping, etc.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://insightrx.github.io/mipdeval}
+  \item \url{https://github.com/InsightRX/mipdeval}
+  \item Report bugs at \url{https://github.com/InsightRX/mipdeval/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Ron Keizer \email{ron@insight-rx.com}
 

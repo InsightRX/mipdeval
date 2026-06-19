@@ -30,3 +30,4 @@ the PKPDsim model library is installed or returns an error otherwise.
 \description{
 Check if PKPDsim model library is installed
 }
+\keyword{internal}

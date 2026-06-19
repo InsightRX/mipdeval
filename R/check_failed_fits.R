@@ -8,6 +8,7 @@
 #'   `data.frame` with raw results.
 #'
 #' @returns invisibly, a `data.frame` of the rows with failed predictions.
+#' @keywords internal
 check_failed_fits <- function(.res) {
   if(inherits(.res, "mipdeval_results")) {
     .res <- .res$results

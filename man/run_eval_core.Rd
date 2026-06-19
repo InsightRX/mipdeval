@@ -58,3 +58,4 @@ a \code{data.frame} with individual predictions
 Core iterative simulation and MAP estimation function that loops over
 an individual's dataset
 }
+\keyword{internal}

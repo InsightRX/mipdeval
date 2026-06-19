@@ -18,3 +18,4 @@ Detects predictions that came back as \code{NA}, which indicates the underlying
 MAP Bayesian fit failed, and---when \code{warn = TRUE}---emits a warning
 summarising how many predictions failed and in which subjects.
 }
+\keyword{internal}

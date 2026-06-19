@@ -7,6 +7,7 @@
 #' @inheritParams rlang::args_dots_used
 #'
 #' @returns A named list.
+#' @keywords internal
 parse_model <- function(model, ...) {
   rlang::check_dots_used()
   UseMethod("parse_model")
@@ -113,6 +114,7 @@ parse_model.PKPDsim <- function(
 #'
 #' @returns This function is called for its side effects and returns `NULL` if
 #'   the PKPDsim model library is installed or returns an error otherwise.
+#' @keywords internal
 check_installed_model_library <- function(model, call = rlang::caller_env()) {
   rlang::try_fetch(
     rlang::with_interactive(rlang::check_installed(model), value = FALSE),

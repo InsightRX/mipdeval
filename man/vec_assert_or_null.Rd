@@ -37,3 +37,4 @@ Either throws an error or returns \code{x}, invisibly.
 \description{
 Assert an argument has known prototype and/or size or is NULL
 }
+\keyword{internal}
