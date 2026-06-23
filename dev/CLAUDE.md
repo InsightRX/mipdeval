@@ -1,0 +1,127 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working
+with code in this repository.
+
+## Package Overview
+
+`mipdeval` is an R package for evaluating predictive performance of
+PK/PD models in historical datasets for model-informed precision dosing
+(MIPD). It iteratively loops through NONMEM-style datasets, performing
+MAP Bayesian updating and forecasting at each step—similar to PsN’s
+`proseval` tool, but with MIPD-specific features like prior flattening,
+time-based weighting, and sample grouping.
+
+Core dependencies: - **PKPDmap** (InsightRX/PKPDmap): MAP Bayesian
+fitting via `get_map_estimates()` - **PKPDsim** (InsightRX/PKPDsim):
+PK/PD model objects and regimen handling
+
+## Common Commands
+
+``` r
+
+# Load package for development
+devtools::load_all()
+
+# Run all tests
+devtools::test()
+
+# Run a single test file
+devtools::test(filter = "run_eval")
+
+# Regenerate documentation (required after changing roxygen2 comments)
+devtools::document()
+
+# Full package check
+devtools::check()
+
+## Create documentation
+devtools::document()
+```
+
+## Architecture
+
+### Core Evaluation Flow
+
+The main entry point is
+[`run_eval()`](https://insightrx.github.io/mipdeval/dev/reference/run_eval.md)
+(`R/run_eval.R`), which orchestrates:
+
+1.  **Model parsing** (`parse_model.R`): S3 dispatch handles PKPDsim
+    objects, character strings (model library names), or PKPDsim object
+    types. Extracts parameters, omega, ruv, fixed effects, and IOV bins.
+
+2.  **Data parsing** (`parse_input_data.R`): Splits NONMEM-style data by
+    subject ID, creates regimen/observation/covariate structures,
+    applies grouping logic.
+
+3.  **Core iterative loop** (`run_eval_core.R`): Called per-subject
+    (parallelized via `furrr`). For each iterative observation group:
+    applies sample weights, censors future covariates to prevent data
+    leakage, calls
+    [`PKPDmap::get_map_estimates()`](https://rdrr.io/pkg/PKPDmap/man/get_map_estimates.html),
+    and generates population/individual/iterative predictions.
+
+4.  **Statistics** (`calculate_stats.R`, `calculate_shrinkage.R`,
+    `calculate_bayesian_impact.R`): Computes RMSE, NRMSE, MAPE, MPE,
+    accuracy, shrinkage, and Bayesian impact metrics.
+
+Failed fits (which surface as `NA` predictions) are detected and
+reported by `check_failed_fits.R`.
+[`run_eval()`](https://insightrx.github.io/mipdeval/dev/reference/run_eval.md)
+calls it once after the per-subject loop to emit a single warning;
+[`calculate_stats()`](https://insightrx.github.io/mipdeval/dev/reference/calculate_stats.md)
+also calls it (controllable via its `warn` argument, which
+[`run_eval()`](https://insightrx.github.io/mipdeval/dev/reference/run_eval.md)
+sets to `FALSE` to avoid a duplicate warning).
+
+### Output Structure
+
+[`run_eval()`](https://insightrx.github.io/mipdeval/dev/reference/run_eval.md)
+returns a list with class `"mipdeval_results"`: - `results`: Full
+prediction and parameter data - `mod_obj`: Parsed model information -
+`data`: Input dataset - `sim`: VPC simulations (if requested) -
+`stats_summ`: Summary statistics - `shrinkage`: Shrinkage metrics -
+`bayesian_impact`: Bayesian updating impact
+
+### Key Design Patterns
+
+- **Configuration helpers**:
+  [`vpc_options()`](https://insightrx.github.io/mipdeval/dev/reference/vpc_options.md),
+  [`fit_options()`](https://insightrx.github.io/mipdeval/dev/reference/fit_options.md),
+  [`stats_summ_options()`](https://insightrx.github.io/mipdeval/dev/reference/stats_summ_options.md)
+  return typed option lists—use these instead of raw lists for
+  arguments. Bootstrap settings
+  ([`bootstrap_options()`](https://insightrx.github.io/mipdeval/dev/reference/bootstrap_options.md))
+  are nested inside `stats_summ_options(bootstrap = ...)`, sharing its
+  accuracy error margins.
+- **Sample weighting** (`calculate_fit_weights.R`): Multiple schemes
+  (weight_all, weight_last_only, weight_last_two_only,
+  weight_gradient_linear, weight_gradient_exponential).
+- **Grouping columns** (`add_grouping_column.R`): Group observations by
+  dose or time range with
+  [`group_by_dose()`](https://insightrx.github.io/mipdeval/dev/reference/group_by_dose.md)
+  /
+  [`group_by_time()`](https://insightrx.github.io/mipdeval/dev/reference/group_by_time.md).
+- **Parallelism**: `run.R` wraps
+  [`purrr::map()`](https://purrr.tidyverse.org/reference/map.html) with
+  optional `furrr` parallelism.
+
+### Test Infrastructure
+
+Tests use testthat edition 3. `tests/testthat/setup.R` installs required
+PKPDsim model libraries (`pkvancothomson`, `pkvbusulfanshukla`) before
+tests run. Visual regression tests use `vdiffr`. Reference PsN proseval
+results live in `inst/extdata/vanco_thomson.csv` and are used to
+validate results within ~10% tolerance.
+
+## Development Rules
+
+## General notes
+
+- After any change that affects project structure, file locations, or
+  architecture, update this file to reflect the new state.
+- **Documentation**: After making any change in function description,
+  always update the package documentation by running
+  `devtools::document()` to regenerate `man/` files. Files in `man/`
+  themselves can be ignored.

@@ -1,0 +1,9 @@
+pandoc: 3.8.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  mipdeval: mipdeval.html
+last_built: 2026-06-23T22:06Z
+urls:
+  reference: https://insightrx.github.io/mipdeval/reference
+  article: https://insightrx.github.io/mipdeval/articles
