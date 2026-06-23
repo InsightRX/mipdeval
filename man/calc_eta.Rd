@@ -23,3 +23,4 @@ shape for IIV, i.e. \code{PAR = TV_PAR * EXP(ETA(n))}, and
 additive shape for IOV (kappa's), i.e. \code{PAR = TV_PAR + ETA(n)} or when
 final parameter estimate is 0.
 }
+\keyword{internal}

@@ -15,3 +15,4 @@ A character vector of covariate names.
 \description{
 Get required covariates from a PKPDsim model object
 }
+\keyword{internal}

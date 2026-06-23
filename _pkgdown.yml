@@ -1,0 +1,74 @@
+url: https://insightrx.github.io/mipdeval/
+
+development:
+  mode: auto
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Run iterative predictive analysis
+  desc: >
+    All iterative predictive analyses begin with a call to `run_eval()`,
+    supplying a either a PKPDsim model object or library and a NONMEM-style
+    dataset.
+  contents:
+  - run_eval
+  - plot.mipdeval_results
+
+- title: Set options for iterative predictive analysis
+  desc: >
+    Pass these functions as arguments to `run_eval()` to set various options
+    for iterative predictive analysis, including the control of how and whether
+    various summary statistics are calculated.
+  contents:
+  - fit_options
+  - bootstrap_options
+  - stats_summ_options
+  - vpc_options
+
+- title: Calculate summary statistics for an iterative predictive analysis
+  desc: >
+    These functions calculate various summary statistics from the results of
+    `run_eval()`. All of these calculations can be included in the outputs of
+    `run_eval()` by setting various options; they are primarly exported here
+    for situations where additional post-processing is desired before running
+    calculations.
+  contents:
+  - calculate_bayesian_impact
+  - calculate_shrinkage
+  - calculate_stats
+  - calculate_bootstrap_summ
+
+- title: Group observations in a NONMEM dataset
+  desc: >
+    Helper functions for grouping observations in NONMEM datasets.
+  contents:
+  - add_grouping_column
+  - group_by_dose
+  - group_by_time
+
+- title: Built in datasets
+  desc:
+  contents:
+  - nm_busulfan
+  - nm_vanco
+
+- title: Bootstrapping and error metrics
+  desc: >
+    Lower-level functions for bootstrapping and calculating error metrics.
+  contents:
+  - bootstrap_metrics
+  - accuracy
+  - mape
+  - mpe
+  - nrmse
+  - rmse
+
+- title: Compare results with PsN
+  desc: >
+    Helper functions to compare the results of `run_eval()` with the PsN
+    `execute` and `proseval` tools.
+  contents:
+  - compare-psn-results
+  - parse_psn_proseval_results

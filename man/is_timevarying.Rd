@@ -19,3 +19,4 @@ A data.frame
 For requested columns in a dataset, check if values vary or not across
 rows
 }
+\keyword{internal}

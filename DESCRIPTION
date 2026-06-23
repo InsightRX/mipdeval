@@ -14,7 +14,9 @@ Description: The package provides functionality to run through a
   specifically for use in MIPD, such as flattening priors, 
   time-based weighting, sample grouping, etc.
 License: MIT + file LICENSE
-Depends: 
+URL: https://insightrx.github.io/mipdeval, https://github.com/InsightRX/mipdeval
+BugReports: https://github.com/InsightRX/mipdeval/issues
+Depends:
     R (>= 4.2.0)
 Imports: 
     cli,

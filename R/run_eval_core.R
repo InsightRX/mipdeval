@@ -7,6 +7,7 @@
 #'
 #' @returns a `data.frame` with individual predictions
 #'
+#' @keywords internal
 run_eval_core <- function(
   mod_obj,
   data,
@@ -228,7 +229,7 @@ run_eval_core <- function(
 #'
 #' @returns list with similar shape as `covariates` object, just
 #' with potentially censored future data.
-#'
+#' @keywords internal
 handle_covariate_censoring <- function(
   covariates,
   t,
@@ -257,7 +258,7 @@ handle_covariate_censoring <- function(
 #' @param i index
 #'
 #' @returns vector of weights (numeric)
-#'
+#' @keywords internal
 handle_sample_weighting <- function(
   obs_data,
   iterations,
