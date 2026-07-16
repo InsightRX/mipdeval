@@ -46,6 +46,8 @@ The main entry point is `run_eval()` (`R/run_eval.R`), which orchestrates:
 
 4. **Statistics** (`calculate_stats.R`, `calculate_shrinkage.R`, `calculate_bayesian_impact.R`): Computes RMSE, NRMSE, MAPE, MPE, accuracy, shrinkage, and Bayesian impact metrics.
 
+Failed fits (which surface as `NA` predictions) are detected and reported by `check_failed_fits.R`. `run_eval()` calls it once after the per-subject loop to emit a single warning; `calculate_stats()` also calls it (controllable via its `warn` argument, which `run_eval()` sets to `FALSE` to avoid a duplicate warning).
+
 ### Output Structure
 
 `run_eval()` returns a list with class `"mipdeval_results"`:
@@ -59,7 +61,7 @@ The main entry point is `run_eval()` (`R/run_eval.R`), which orchestrates:
 
 ### Key Design Patterns
 
-- **Configuration helpers**: `vpc_options()`, `fit_options()`, `stats_summ_options()` return typed option lists—use these instead of raw lists for arguments.
+- **Configuration helpers**: `vpc_options()`, `fit_options()`, `stats_summ_options()` return typed option lists—use these instead of raw lists for arguments. Bootstrap settings (`bootstrap_options()`) are nested inside `stats_summ_options(bootstrap = ...)`, sharing its accuracy error margins.
 - **Sample weighting** (`calculate_fit_weights.R`): Multiple schemes (weight_all, weight_last_only, weight_last_two_only, weight_gradient_linear, weight_gradient_exponential).
 - **Grouping columns** (`add_grouping_column.R`): Group observations by dose or time range with `group_by_dose()` / `group_by_time()`.
 - **Parallelism**: `run.R` wraps `purrr::map()` with optional `furrr` parallelism.

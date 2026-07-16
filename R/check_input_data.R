@@ -6,6 +6,7 @@
 #' @inheritParams run_eval
 #'
 #' @returns a data.frame
+#' @keywords internal
 check_input_data <- function(data, dictionary, verbose = TRUE) {
   if(verbose) cli::cli_progress_step("Checking integrity of input data")
   if(!is.null(dictionary) && length(dictionary) > 0) {

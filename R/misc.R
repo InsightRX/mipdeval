@@ -3,6 +3,7 @@
 #' @param model PKPDsim model object
 #'
 #' @returns A character vector of covariate names.
+#' @keywords internal
 get_required_covariates <- function(model) {
   unique(purrr::list_c(purrr::map(model, "covariates")))
 }
@@ -14,6 +15,7 @@ get_required_covariates <- function(model) {
 #' @param .cols vector of column names
 #'
 #' @returns A data.frame
+#' @keywords internal
 is_timevarying <- function(.data, .cols) {
   out <- dplyr::summarise(
     .data, dplyr::across(dplyr::all_of(.cols), \(.x) length(unique(.x)) > 1)
@@ -31,6 +33,7 @@ is_timevarying <- function(.data, .cols) {
 #' @inheritParams vctrs::vec_assert
 #'
 #' @returns Either throws an error or returns `x`, invisibly.
+#' @keywords internal
 vec_assert_or_null <- function(
     x,
     ptype = NULL,
@@ -51,6 +54,7 @@ vec_assert_or_null <- function(
 #' @param pred predictions vector
 #'
 #' @returns A numeric vector
+#' @export
 rmse <- function (obs, pred) {
   res_sq <- (pred - obs)^2
   sqrt(mean(res_sq, na.rm = TRUE))
@@ -62,11 +66,11 @@ rmse <- function (obs, pred) {
 #' @param pred predictions vector
 #'
 #' @returns A numeric vector
-#'
+#' @export
 nrmse <- function (obs, pred) {
   res_sq <- (pred - obs)^2
-  rmse <- sqrt(mean(res_sq, na.rm = T))
-  rmse/mean(obs, na.rm = T)
+  rmse <- sqrt(mean(res_sq, na.rm = TRUE))
+  rmse/mean(obs, na.rm = TRUE)
 }
 
 #' Mean absolute percentage error
@@ -74,8 +78,9 @@ nrmse <- function (obs, pred) {
 #' @inheritParams rmse
 #'
 #' @returns A numeric vector
+#' @export
 mape <- function (obs, pred) {
-  sum(abs((obs - pred))/obs)/length(obs)
+  mean(abs((obs - pred))/obs, na.rm = TRUE)
 }
 
 #' Mean percentage error
@@ -83,8 +88,9 @@ mape <- function (obs, pred) {
 #' @inheritParams rmse
 #'
 #' @returns A numeric vector
+#' @export
 mpe <- function (obs, pred) {
-  sum((obs - pred)/obs)/length(obs)
+  mean((obs - pred)/obs, na.rm = TRUE)
 }
 
 #' Accuracy
@@ -123,7 +129,7 @@ mpe <- function (obs, pred) {
 #'
 #' @export
 accuracy <- function(obs, pred, error_abs = 0, error_rel = 0) {
-  mean(is_accurate(obs, pred, error_abs, error_rel))
+  mean(is_accurate(obs, pred, error_abs, error_rel), na.rm = TRUE)
 }
 
 #' @rdname accuracy
@@ -149,6 +155,7 @@ is_accurate_rel <- function(obs, pred, error_rel = 0) {
 #' @inheritParams rmse
 #' @param w weights
 #'
+#' @keywords internal
 ss <- function(obs, pred, w = NULL) {
   if(is.null(w)) {
     w <- rep(1, length(obs))

@@ -8,7 +8,8 @@ stats_summ_options(
   ...,
   rounding = 3,
   acc_error_abs = NULL,
-  acc_error_rel = NULL
+  acc_error_rel = NULL,
+  bootstrap = bootstrap_options()
 )
 }
 \arguments{
@@ -20,6 +21,10 @@ stats_summ_options(
 providing an absolute or relative error margin. The cutoff is exclusive of
 the error margin. When \code{NULL} (the default), accuracy will not be
 calculated and will return \code{NA} instead.}
+
+\item{bootstrap}{Options for bootstrapping confidence intervals around the
+summary statistics. This must be the result from a call to
+\code{\link[=bootstrap_options]{bootstrap_options()}}.}
 }
 \value{
 A list.

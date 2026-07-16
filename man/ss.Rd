@@ -16,3 +16,4 @@ ss(obs, pred, w = NULL)
 \description{
 Weighted sum-of-squares of residuals
 }
+\keyword{internal}

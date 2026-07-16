@@ -7,6 +7,7 @@
 #' @param seed Seed for random number generation.
 #'
 #' @returns data.frame
+#' @keywords internal
 run_vpc_core <- function(
     data,
     mod_obj,

@@ -38,3 +38,4 @@ Binary selection of which samples are used in the fit (0 = excluded,
 1 = included), combined with optional continuous downweighting of older
 samples via a time-based scheme (see \code{\link[=calculate_fit_weights]{calculate_fit_weights()}}).
 }
+\keyword{internal}

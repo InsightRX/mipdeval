@@ -51,6 +51,7 @@ calculate_shrinkage <- function(.res) {
 #' @param par_name name of parameter in model
 #' @param parameters list of parameter values, should include entry for
 #'   `par_name`
+#' @keywords internal
 calc_eta <- function(ind, par_name, parameters) {
   pop <- parameters[[par_name]]
   if(grepl("^kappa_", par_name) || pop == 0) { ## PAR = TV_PAR + ETA()
@@ -72,6 +73,7 @@ calc_shrinkage <- function(eta, par_name, om) {
 #' @inheritParams run_eval_core
 #'
 #' @returns list
+#' @keywords internal
 get_omega_for_parameters <- function(mod_obj) {
   pars <- names(mod_obj$parameters)
   pars <- pars[!(pars %in% mod_obj$fixed)]

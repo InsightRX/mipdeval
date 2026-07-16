@@ -7,6 +7,8 @@
 #'   providing an absolute or relative error margin. The cutoff is exclusive of
 #'   the error margin. When `NULL` (the default), accuracy will not be
 #'   calculated and will return `NA` instead.
+#' @param warn should a warning be emitted when failed fits (NA predictions) are
+#'   detected?
 #'
 #' @returns tibble
 #'
@@ -15,21 +17,14 @@ calculate_stats <- function(
     .res,
     rounding = 3,
     acc_error_abs = NULL,
-    acc_error_rel = NULL
+    acc_error_rel = NULL,
+    warn = TRUE
 ) {
   if(inherits(.res, "mipdeval_results")) {
     .res <- .res$results
   }
-  ## Check for errors during fits / predictions
-  errors <- dplyr::filter(
-    .res,
-    is.na(.data$pred) |
-    (is.na(.data$map_ipred) & !.data$apriori) |
-    is.na(.data$iter_ipred)
-  )
-  if(nrow(errors) > 0) {
-    cli::cli_warn("Errors were encountered in {nrow(errors)} out of {nrow(.res)} evaluated predictions. The problems occurred in patient(s) {unique(errors$id)}.")
-  }
+  ## Warn about any failed fits / predictions (NA), unless the caller opts out.
+  if (isTRUE(warn)) check_failed_fits(.res)
   out <- .res |>
     tidyr::pivot_longer(
       cols = c("pred", "map_ipred", "iter_ipred"), names_to = "type"
@@ -46,7 +41,9 @@ calculate_stats <- function(
         NA
       )
     ) |>
-    dplyr::mutate(dplyr::across(dplyr::everything(), round, rounding)) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::everything(), \(.x) round(.x, digits = rounding))
+    ) |>
     dplyr::as_tibble()
   class(out) <- c("mipdeval_results_stats_summ", class(out))
   out
@@ -56,6 +53,9 @@ calculate_stats <- function(
 #'
 #' @param ... These dots are reserved for future extensibility and must be empty.
 #' @inheritParams calculate_stats
+#' @param bootstrap Options for bootstrapping confidence intervals around the
+#'   summary statistics. This must be the result from a call to
+#'   [bootstrap_options()].
 #'
 #' @returns A list.
 #' @export
@@ -63,10 +63,16 @@ stats_summ_options <- function(
     ...,
     rounding = 3,
     acc_error_abs = NULL,
-    acc_error_rel = NULL
+    acc_error_rel = NULL,
+    bootstrap = bootstrap_options()
 ) {
   rlang::check_dots_empty()
   check_required_accuracy(acc_error_abs, acc_error_rel)
+  if (!inherits(bootstrap, "mipdeval_bootstrap_options")) {
+    cli::cli_abort(
+      "{.arg bootstrap} must be the result of a call to {.fn bootstrap_options}."
+    )
+  }
   out <- list(
     rounding = vctrs::vec_assert(
       rounding, ptype = numeric(), size = 1L, arg = "rounding"
@@ -76,7 +82,8 @@ stats_summ_options <- function(
     ),
     acc_error_rel = vec_assert_or_null(
       acc_error_rel, ptype = numeric(), size = 1L, arg = "acc_error_rel"
-    )
+    ),
+    bootstrap = bootstrap
   )
   structure(out, class = "mipdeval_stats_summ_options")
 }

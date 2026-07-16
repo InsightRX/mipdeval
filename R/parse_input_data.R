@@ -5,6 +5,7 @@
 #'
 #' @returns list of lists, within each list regimen, observations, and
 #' covariates
+#' @keywords internal
 parse_input_data <- function(
     data,
     covariates,

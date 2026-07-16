@@ -25,3 +25,4 @@ data.frame
 Core function for creating visual predictive checks (VPCs). Runs \code{n_samples}
 simulations for a single subject
 }
+\keyword{internal}

@@ -15,3 +15,4 @@ list
 \description{
 Return all diagonal om^2 elements for each non-fixed parameter, as a list
 }
+\keyword{internal}
