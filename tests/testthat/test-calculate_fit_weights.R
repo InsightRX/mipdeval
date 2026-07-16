@@ -117,3 +117,82 @@ test_that("scheme passed as list with scheme element works", {
   result <- calculate_fit_weights(list(scheme = "weight_all"), t = c(0, 12))
   expect_equal(result, c(1, 1))
 })
+
+# ---- fit_weights() constructor ----
+
+test_that("fit_weights returns a fit_weights object with scheme and params", {
+  fw <- fit_weights("weight_gradient_exponential", t12_decay = 72)
+  expect_s3_class(fw, "fit_weights")
+  expect_equal(fw$scheme, "weight_gradient_exponential")
+  expect_equal(fw$params, list(t12_decay = 72))
+})
+
+test_that("fit_weights defaults to weight_all and supports partial matching", {
+  expect_equal(fit_weights()$scheme, "weight_all")
+  expect_equal(fit_weights("weight_last_two")$scheme, "weight_last_two_only")
+})
+
+test_that("fit_weights errors on unknown scheme", {
+  expect_error(fit_weights("nonexistent_scheme"))
+})
+
+# ---- calculate_fit_weights() with fit_weights objects ----
+
+test_that("fit_weights object produces same result as string form", {
+  t <- c(0, 12, 24, 48)
+  expect_equal(
+    calculate_fit_weights(fit_weights("weight_last_only"), t = t),
+    calculate_fit_weights("weight_last_only", t = t)
+  )
+})
+
+test_that("fit_weights object passes scheme params through", {
+  t <- c(0, 24)
+  from_obj  <- calculate_fit_weights(fit_weights("weight_gradient_exponential", t12_decay = 24), t = t)
+  from_list <- calculate_fit_weights(list(scheme = "weight_gradient_exponential", t12_decay = 24), t = t)
+  expect_equal(from_obj, from_list)
+  expect_equal(from_obj[2], 1)
+  expect_equal(from_obj[1], 0.5, tolerance = 1e-10)
+})
+
+test_that("fit_weights object passes linear gradient param through", {
+  result <- calculate_fit_weights(
+    fit_weights("weight_gradient_linear", gradient = list(t1 = 3, w1 = 0.2, t2 = 1, w2 = 0.9)),
+    t = c(0, 24, 48, 72)
+  )
+  expect_equal(result[4], 0.9)
+})
+
+# ---- input validation guards ----
+
+test_that("NA scheme returns NULL with warning", {
+  expect_warning(
+    result <- calculate_fit_weights(NA_character_, t = c(0, 12)),
+    "not recognized"
+  )
+  expect_null(result)
+})
+
+test_that("non-scalar scheme returns NULL with warning", {
+  expect_warning(
+    result <- calculate_fit_weights(c("weight_all", "weight_last_only"), t = c(0, 12)),
+    "not recognized"
+  )
+  expect_null(result)
+})
+
+test_that("numeric weights input returns NULL with warning", {
+  expect_warning(
+    result <- calculate_fit_weights(c(1, 0, 1), t = c(0, 12, 24)),
+    "not recognized"
+  )
+  expect_null(result)
+})
+
+test_that("list without scheme element returns NULL with warning", {
+  expect_warning(
+    result <- calculate_fit_weights(list(t12_decay = 48), t = c(0, 12)),
+    "not recognized"
+  )
+  expect_null(result)
+})
