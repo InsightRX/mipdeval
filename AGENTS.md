@@ -64,9 +64,12 @@ The main entry point is `run_eval()` (`R/run_eval.R`), which orchestrates:
    list that is passed down the pipeline.
 
 2. **Data reading and validation** (`read_input_data.R`, `check_input_data.R`):
-   accepts a file path or a `data.frame`. Requires columns `ID`, `TIME`, `EVID`,
-   `DV`; a `dictionary` argument renames non-standard columns and its names must
-   be a subset of those four.
+   accepts a file path or a `data.frame`. `check_required_cols()` validates only
+   `ID`, `TIME`, `EVID`, `DV`, but `AMT` and `CMT` are also required in practice:
+   downstream `parse_nm_data()` errors without them. A `dictionary` argument
+   renames non-standard columns, but its names must be a subset of the four
+   validated columns, so `AMT`/`CMT` cannot be renamed and must already carry
+   those names.
 
 3. **Data parsing** (`parse_input_data.R`): splits the dataset by subject `ID`
    and builds per-subject regimen / observation / covariate structures in the
@@ -124,9 +127,9 @@ this order (tests assert on exactly these names):
 - `shrinkage`: shrinkage metrics
 - `bayesian_impact`: Bayesian updating impact
 
-`print()` and `plot()` methods exist for `mipdeval_results` and for the
-`stats_summ` / `shrinkage` / `bayesian_impact` sub-objects
-(`print_functions.R`, `plot.R`).
+`print()` methods exist for `mipdeval_results` and for the `stats_summ` /
+`shrinkage` / `bayesian_impact` sub-objects (`print_functions.R`). `plot()` is
+only defined for the top-level `mipdeval_results` object (`plot.R`).
 
 ### Key Design Patterns
 
