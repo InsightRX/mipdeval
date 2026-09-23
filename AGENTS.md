@@ -84,7 +84,7 @@ The main entry point is `run_eval()` (`R/run_eval.R`), which orchestrates:
      get weight 1), or only the current group when `incremental = TRUE`;
    - censors future covariates via `handle_covariate_censoring()` to prevent
      data leakage (`censor_covariates = TRUE`; set `FALSE` to reproduce
-     `PsN::proseval` behaviour exactly);
+     PsN's `proseval` behaviour exactly);
    - when `incremental = TRUE`, feeds the previous iteration's MAP estimates and
      their uncertainty (`fit$vcov`) in as the new `parameters`/`omega` — the
      "model predictive control (MPC)" approach;
