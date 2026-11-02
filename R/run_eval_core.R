@@ -104,7 +104,6 @@ run_eval_core <- function(
       fit_pars <- dplyr::mutate(as.data.frame(par_dummy), id = obs_data$id[1])
     } else {
       ## Data frame with predictive data
-      ## Data frame with predictive data
       pred_data <- tibble::tibble(
         id = obs_data$id,
         t = obs_data$t,
