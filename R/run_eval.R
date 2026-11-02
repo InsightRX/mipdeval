@@ -15,11 +15,11 @@
 #'   observations on the same day together. Grouping will be done prior to
 #'   running the analysis, so cannot be changed afterwards.
 #' @param weights optional sample downweighting scheme based on how long ago
-#'   observations were taken. Either a string naming the scheme (e.g.
-#'   `"weight_gradient_exponential"`), or a named list with a `scheme` element
-#'   plus any scheme-specific parameters (e.g.
-#'   `list(scheme = "weight_gradient_exponential", t12_decay = 72)`). See
-#'   [calculate_fit_weights()] for all available schemes and their parameters.
+#'   observations were taken. Preferably a [fit_weights()] object (e.g.
+#'   `fit_weights("weight_gradient_exponential", t12_decay = 72)`), but a
+#'   string naming the scheme or a named list with a `scheme` element plus any
+#'   scheme-specific parameters are also accepted. See [fit_weights()] for all
+#'   available schemes and their parameters.
 #'   Default is `NULL` (no downweighting; all included samples are weighted
 #'   equally).
 #' @param censor_covariates with the `proseval` tool in PsN, there is “data

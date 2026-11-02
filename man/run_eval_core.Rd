@@ -23,11 +23,11 @@ run_eval_core(
 \item{data}{NONMEM-style data.frame, or path to CSV file with NONMEM data}
 
 \item{weights}{optional sample downweighting scheme based on how long ago
-observations were taken. Either a string naming the scheme (e.g.
-\code{"weight_gradient_exponential"}), or a named list with a \code{scheme} element
-plus any scheme-specific parameters (e.g.
-\code{list(scheme = "weight_gradient_exponential", t12_decay = 72)}). See
-\code{\link[=calculate_fit_weights]{calculate_fit_weights()}} for all available schemes and their parameters.
+observations were taken. Preferably a \code{\link[=fit_weights]{fit_weights()}} object (e.g.
+\code{fit_weights("weight_gradient_exponential", t12_decay = 72)}), but a
+string naming the scheme or a named list with a \code{scheme} element plus any
+scheme-specific parameters are also accepted. See \code{\link[=fit_weights]{fit_weights()}} for all
+available schemes and their parameters.
 Default is \code{NULL} (no downweighting; all included samples are weighted
 equally).}
 
