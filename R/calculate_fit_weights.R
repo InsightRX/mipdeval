@@ -1,8 +1,11 @@
 #' Calculate time-based sample weights for MAP Bayesian fitting
 #'
-#' Downweights older observations relative to more recent ones during the
-#' iterative MAP Bayesian fitting step. Can be passed as the `weights`
-#' argument to [run_eval()].
+#' Computes the weights a weighting scheme assigns to a set of observation
+#' times. This is the calculation [run_eval()] applies internally at each
+#' iteration when a scheme is passed to its `weights` argument, and is
+#' exported so the effect of a scheme and its parameters can be previewed
+#' before running an evaluation. To use a scheme in [run_eval()], pass a
+#' [fit_weights()] object, not the output of this function.
 #'
 #' `weights` may be a [fit_weights()] object, a string naming a scheme, or a
 #' named list with a `scheme` element plus optional scheme-specific parameters
@@ -16,6 +19,13 @@
 #'
 #' @returns numeric vector of weights the same length as `t`, or `NULL` if
 #'   `weights` is `NULL` or the scheme is not recognized.
+#' @examples
+#' t <- c(0, 24, 48, 96)
+#' calculate_fit_weights(fit_weights("weight_last_two_only"), t = t)
+#' calculate_fit_weights(
+#'   fit_weights("weight_gradient_exponential", t12_decay = 72),
+#'   t = t
+#' )
 #' @export
 calculate_fit_weights <- function(weights = NULL, t = NULL) {
   if (is.null(weights) || is.null(t)) return(NULL)

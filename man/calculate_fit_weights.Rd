@@ -18,13 +18,24 @@ numeric vector of weights the same length as \code{t}, or \code{NULL} if
 \code{weights} is \code{NULL} or the scheme is not recognized.
 }
 \description{
-Downweights older observations relative to more recent ones during the
-iterative MAP Bayesian fitting step. Can be passed as the \code{weights}
-argument to \code{\link[=run_eval]{run_eval()}}.
+Computes the weights a weighting scheme assigns to a set of observation
+times. This is the calculation \code{\link[=run_eval]{run_eval()}} applies internally at each
+iteration when a scheme is passed to its \code{weights} argument, and is
+exported so the effect of a scheme and its parameters can be previewed
+before running an evaluation. To use a scheme in \code{\link[=run_eval]{run_eval()}}, pass a
+\code{\link[=fit_weights]{fit_weights()}} object, not the output of this function.
 }
 \details{
 \code{weights} may be a \code{\link[=fit_weights]{fit_weights()}} object, a string naming a scheme, or a
 named list with a \code{scheme} element plus optional scheme-specific parameters
 (e.g. \code{list(scheme = "weight_gradient_exponential", t12_decay = 72)}). See
 \code{\link[=fit_weights]{fit_weights()}} for the available schemes and their parameters.
+}
+\examples{
+t <- c(0, 24, 48, 96)
+calculate_fit_weights(fit_weights("weight_last_two_only"), t = t)
+calculate_fit_weights(
+  fit_weights("weight_gradient_exponential", t12_decay = 72),
+  t = t
+)
 }
