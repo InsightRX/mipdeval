@@ -40,9 +40,13 @@ export(stats_summ_options)
 export(summarise_bootstrap_metrics)
 export(summarize_bootstrap_metrics)
 export(vpc_options)
-importFrom(PKPDsim,install_default_literature_model)
-importFrom(PKPDsim,new_ode_model)
-importFrom(rlang,.data)
-importFrom(rlang,caller_arg)
-importFrom(rlang,caller_env)
+importFrom(PKPDsim,
+  install_default_literature_model,
+  new_ode_model
+)
+importFrom(rlang,
+  .data,
+  caller_arg,
+  caller_env
+)
 importFrom(utils,read.csv)

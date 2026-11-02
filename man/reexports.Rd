@@ -12,6 +12,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{PKPDsim}{\code{\link[PKPDsim]{install_default_literature_model}}, \code{\link[PKPDsim]{new_ode_model}}}
+  \item{PKPDsim}{\code{\link[PKPDsim:install_default_literature_model]{install_default_literature_model()}}, \code{\link[PKPDsim:new_ode_model]{new_ode_model()}}}
 }}
 
