@@ -10,3 +10,5 @@
 ^nm$
 ^CITATION\.cff$
 ^AGENTS\.md$
+^\.claude$
+^CLAUDE\.md$

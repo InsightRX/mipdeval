@@ -22,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Ron Keizer \email{ron@insight-rx.com}
   \item Michael McCarthy \email{michael.mccarthy@insight-rx.com}
 }
 

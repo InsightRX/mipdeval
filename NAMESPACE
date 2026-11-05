@@ -14,11 +14,13 @@ export(bootstrap_metrics)
 export(bootstrap_options)
 export(calculate_bayesian_impact)
 export(calculate_bootstrap_summ)
+export(calculate_fit_weights)
 export(calculate_shrinkage)
 export(calculate_stats)
 export(compare_psn_execute_results)
 export(compare_psn_proseval_results)
 export(fit_options)
+export(fit_weights)
 export(group_by_dose)
 export(group_by_time)
 export(install_default_literature_model)
@@ -38,9 +40,13 @@ export(stats_summ_options)
 export(summarise_bootstrap_metrics)
 export(summarize_bootstrap_metrics)
 export(vpc_options)
-importFrom(PKPDsim,install_default_literature_model)
-importFrom(PKPDsim,new_ode_model)
-importFrom(rlang,.data)
-importFrom(rlang,caller_arg)
-importFrom(rlang,caller_env)
+importFrom(PKPDsim,
+  install_default_literature_model,
+  new_ode_model
+)
+importFrom(rlang,
+  .data,
+  caller_arg,
+  caller_env
+)
 importFrom(utils,read.csv)
