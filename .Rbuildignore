@@ -9,3 +9,5 @@
 ^pkgdown$
 ^nm$
 ^CITATION\.cff$
+^\.claude$
+^CLAUDE\.md$

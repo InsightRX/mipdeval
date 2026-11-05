@@ -48,6 +48,15 @@ reference:
   - group_by_dose
   - group_by_time
 
+- title: Weight observations in the MAP Bayesian fit
+  desc: >
+    Helpers for downweighting older observations during iterative fitting.
+    Pass the result of `fit_weights()` to the `weights` argument of
+    `run_eval()`.
+  contents:
+  - fit_weights
+  - calculate_fit_weights
+
 - title: Built in datasets
   desc:
   contents:
