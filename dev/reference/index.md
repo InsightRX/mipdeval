@@ -66,6 +66,19 @@ Helper functions for grouping observations in NONMEM datasets.
 - [`group_by_time()`](https://insightrx.github.io/mipdeval/dev/reference/group_by_time.md)
   : Group data by time using bin separators
 
+## Weight observations in the MAP Bayesian fit
+
+Helpers for downweighting older observations during iterative fitting.
+Pass the result of
+[`fit_weights()`](https://insightrx.github.io/mipdeval/dev/reference/fit_weights.md)
+to the `weights` argument of
+[`run_eval()`](https://insightrx.github.io/mipdeval/dev/reference/run_eval.md).
+
+- [`fit_weights()`](https://insightrx.github.io/mipdeval/dev/reference/fit_weights.md)
+  : Construct a fit-weighting scheme specification
+- [`calculate_fit_weights()`](https://insightrx.github.io/mipdeval/dev/reference/calculate_fit_weights.md)
+  : Calculate time-based sample weights for MAP Bayesian fitting
+
 ## Built in datasets
 
 - [`nm_busulfan`](https://insightrx.github.io/mipdeval/dev/reference/nm_busulfan.md)

@@ -22,6 +22,8 @@ Useful links:
 
 Authors:
 
+- Ron Keizer <ron@insight-rx.com>
+
 - Michael McCarthy <michael.mccarthy@insight-rx.com>
 
 Other contributors:

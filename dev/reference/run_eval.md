@@ -84,10 +84,16 @@ run_eval(
 
 - weights:
 
-  vector of weights for error. Length of vector should be same as length
-  of observation vector. If NULL (default), all weights are equal. Used
-  in both MAP and NP methods. Note that \`weights\` argument will also
-  affect residuals (residuals will be scaled too).
+  optional sample downweighting scheme based on how long ago
+  observations were taken. Preferably a
+  [`fit_weights()`](https://insightrx.github.io/mipdeval/dev/reference/fit_weights.md)
+  object (e.g.
+  `fit_weights("weight_gradient_exponential", t12_decay = 72)`), but a
+  string naming the scheme or a named list with a `scheme` element plus
+  any scheme-specific parameters are also accepted. See
+  [`fit_weights()`](https://insightrx.github.io/mipdeval/dev/reference/fit_weights.md)
+  for all available schemes and their parameters. Default is `NULL` (no
+  downweighting; all included samples are weighted equally).
 
 - weight_prior:
 

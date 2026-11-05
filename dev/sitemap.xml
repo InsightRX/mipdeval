@@ -14,6 +14,7 @@
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/calc_eta.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/calculate_bayesian_impact.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/calculate_bootstrap_summ.html</loc></url>
+<url><loc>https://insightrx.github.io/mipdeval/dev/reference/calculate_fit_weights.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/calculate_shrinkage.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/calculate_stats.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/check_conf_level.html</loc></url>
@@ -22,6 +23,7 @@
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/check_installed_model_library.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/compare-psn-results.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/fit_options.html</loc></url>
+<url><loc>https://insightrx.github.io/mipdeval/dev/reference/fit_weights.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/get_omega_for_parameters.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/get_required_covariates.html</loc></url>
 <url><loc>https://insightrx.github.io/mipdeval/dev/reference/group_by_dose.html</loc></url>
